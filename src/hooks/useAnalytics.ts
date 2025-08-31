@@ -1,109 +1,126 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+interface AnalyticsData {
+  totalViews: number;
+  uniqueVisitors: number;
+  bounceRate: number;
+  avgSessionDuration: number;
+  topPages: Array<{ page: string; views: number }>;
+  recentViews: Array<{
+    page_path: string;
+    visitor_ip: string;
+    country: string;
+    city: string;
+    device_type: string;
+    browser: string;
+    created_at: string;
+  }>;
+  dailyStats: Array<{
+    date: string;
+    views: number;
+    visitors: number;
+  }>;
+}
+
 export const useAnalytics = () => {
+  const [analytics, setAnalytics] = useState<AnalyticsData>({
+    totalViews: 0,
+    uniqueVisitors: 0,
+    bounceRate: 0,
+    avgSessionDuration: 0,
+    topPages: [],
+    recentViews: [],
+    dailyStats: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAnalytics = async () => {
+    try {
+      setLoading(true);
+      
+      // Get total page views
+      const { count: totalViews } = await supabase
+        .from('page_views')
+        .select('*', { count: 'exact', head: true });
+
+      // Get unique visitors (distinct IPs)
+      const { data: uniqueData } = await supabase
+        .from('page_views')
+        .select('visitor_ip');
+      
+      const uniqueVisitors = new Set(uniqueData?.map(v => v.visitor_ip)).size;
+
+      // Get recent views
+      const { data: recentViews } = await supabase
+        .from('page_views')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      // Get top pages
+      const { data: pageViewsData } = await supabase
+        .from('page_views')
+        .select('page_path');
+
+      const pageCounts = pageViewsData?.reduce((acc, view) => {
+        acc[view.page_path] = (acc[view.page_path] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+
+      const topPages = Object.entries(pageCounts)
+        .map(([page, views]) => ({ page, views }))
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 10);
+
+      // Get daily stats
+      const { data: dailyStatsData } = await supabase
+        .from('daily_stats')
+        .select('*')
+        .order('date', { ascending: false })
+        .limit(30);
+
+      setAnalytics({
+        totalViews: totalViews || 0,
+        uniqueVisitors,
+        bounceRate: 0, // Calculate based on your needs
+        avgSessionDuration: 0, // Calculate based on your needs
+        topPages,
+        recentViews: recentViews || [],
+        dailyStats: dailyStatsData?.map(stat => ({
+          date: stat.date,
+          views: stat.total_views,
+          visitors: stat.unique_visitors
+        })) || []
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل التحليلات');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const trackPageView = async (pageData: {
+    page_path: string;
+    visitor_ip?: string;
+    user_agent?: string;
+    referrer?: string;
+    country?: string;
+    city?: string;
+    device_type?: string;
+    browser?: string;
+  }) => {
+    try {
+      await supabase.from('page_views').insert([pageData]);
+    } catch (error) {
+      console.error('Error tracking page view:', error);
+    }
+  };
+
   useEffect(() => {
-    const trackPageView = async () => {
-      try {
-        // Get visitor information
-        const visitorInfo = {
-          page_path: window.location.pathname,
-          referrer: document.referrer || null,
-          user_agent: navigator.userAgent || null,
-          visitor_ip: null // Will be set by server
-        };
-
-        // Insert page view
-        await supabase
-          .from('page_views')
-          .insert(visitorInfo);
-
-        // Update daily stats
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Get current stats for today
-        const { data: todayStats } = await supabase
-          .from('daily_stats')
-          .select('*')
-          .eq('date', today)
-          .single();
-
-        if (todayStats) {
-          // Update existing stats
-          await supabase
-            .from('daily_stats')
-            .update({
-              total_views: todayStats.total_views + 1
-            })
-            .eq('date', today);
-        } else {
-          // Create new stats for today
-          await supabase
-            .from('daily_stats')
-            .insert({
-              date: today,
-              total_views: 1,
-              unique_visitors: 1
-            });
-        }
-      } catch (error) {
-        console.error('Analytics tracking error:', error);
-      }
-    };
-
-    trackPageView();
+    fetchAnalytics();
   }, []);
-};
 
-export const usePageSEO = (pageSlug: string) => {
-  useEffect(() => {
-    const loadSEO = async () => {
-      try {
-        const { data: seoData } = await supabase
-          .from('page_seo')
-          .select('*')
-          .eq('page_slug', pageSlug)
-          .single();
-
-        if (seoData) {
-          // Update document title
-          const isRTL = document.documentElement.dir === 'rtl';
-          document.title = isRTL ? seoData.title_ar : seoData.title_en;
-
-          // Update meta description
-          const metaDescription = document.querySelector('meta[name="description"]');
-          if (metaDescription) {
-            metaDescription.setAttribute('content', isRTL ? seoData.description_ar : seoData.description_en);
-          }
-
-          // Update keywords
-          const keywords = isRTL ? seoData.keywords_ar : seoData.keywords_en;
-          if (keywords && keywords.length > 0) {
-            let metaKeywords = document.querySelector('meta[name="keywords"]');
-            if (!metaKeywords) {
-              metaKeywords = document.createElement('meta');
-              metaKeywords.setAttribute('name', 'keywords');
-              document.head.appendChild(metaKeywords);
-            }
-            metaKeywords.setAttribute('content', keywords.join(', '));
-          }
-
-          // Update canonical URL
-          if (seoData.canonical_url) {
-            let canonical = document.querySelector('link[rel="canonical"]');
-            if (!canonical) {
-              canonical = document.createElement('link');
-              canonical.setAttribute('rel', 'canonical');
-              document.head.appendChild(canonical);
-            }
-            canonical.setAttribute('href', seoData.canonical_url);
-          }
-        }
-      } catch (error) {
-        console.error('SEO loading error:', error);
-      }
-    };
-
-    loadSEO();
-  }, [pageSlug]);
+  return { analytics, loading, error, refetch: fetchAnalytics, trackPageView };
 };
