@@ -3,41 +3,46 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Clock, User, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useBlogs } from '@/hooks/useBlogs';
 
 const Blog = () => {
   const { t, isRTL } = useLanguage();
+  const { blogs, loading, error } = useBlogs();
 
-  const blogPosts = [
-    {
-      title: isRTL ? 'اتجاهات التسويق الرقمي في 2024' : 'Digital Marketing Trends in 2024',
-      excerpt: isRTL ? 'اكتشف أحدث اتجاهات التسويق الرقمي وكيفية الاستفادة منها لتنمية عملك' : 'Discover the latest digital marketing trends and how to leverage them for business growth',
-      image: '/placeholder.svg',
-      author: isRTL ? 'أحمد محمد' : 'Ahmed Mohamed',
-      date: '2024-01-15',
-      readTime: isRTL ? '5 دقائق' : '5 min read',
-      category: isRTL ? 'التسويق الرقمي' : 'Digital Marketing'
-    },
-    {
-      title: isRTL ? 'أساسيات تطوير المواقع الحديثة' : 'Modern Web Development Fundamentals',
-      excerpt: isRTL ? 'دليل شامل لأساسيات تطوير المواقع الحديثة والتقنيات المستخدمة' : 'Comprehensive guide to modern web development fundamentals and technologies',
-      image: '/placeholder.svg',
-      author: isRTL ? 'سارة أحمد' : 'Sara Ahmed',
-      date: '2024-01-12',
-      readTime: isRTL ? '8 دقائق' : '8 min read',
-      category: isRTL ? 'تطوير الويب' : 'Web Development'
-    },
-    {
-      title: isRTL ? 'أهمية التصميم في تجربة المستخدم' : 'The Importance of Design in User Experience',
-      excerpt: isRTL ? 'كيف يؤثر التصميم الجيد على تجربة المستخدم ونجاح المنتج الرقمي' : 'How good design impacts user experience and digital product success',
-      image: '/placeholder.svg',
-      author: isRTL ? 'محمد علي' : 'Mohamed Ali',
-      date: '2024-01-10',
-      readTime: isRTL ? '6 دقائق' : '6 min read',
-      category: isRTL ? 'التصميم' : 'Design'
-    }
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-16">
+          <div className="container mx-auto px-4 py-20">
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="mr-2">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-16">
+          <div className="container mx-auto px-4 py-20">
+            <div className="text-center">
+              <p className="text-destructive">{error}</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,21 +62,21 @@ const Blog = () => {
 
             {/* Blog Posts Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
+              {blogs.map((post, index) => (
                 <Card
-                  key={index}
+                  key={post.id}
                   className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="relative overflow-hidden">
                     <img 
-                      src={post.image}
-                      alt={post.title}
+                      src={post.image_url || '/placeholder.svg'}
+                      alt={isRTL ? post.title_ar : post.title_en}
                       className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        {post.category}
+                        {isRTL ? 'مدونة' : 'Blog'}
                       </span>
                     </div>
                   </div>
@@ -79,26 +84,22 @@ const Blog = () => {
                   <CardHeader>
                     <div className="flex items-center text-xs text-muted-foreground mb-2 gap-4">
                       <div className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        <span>{post.author}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        <span>{post.date}</span>
+                        <span>{new Date(post.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        <span>{post.readTime}</span>
+                        <span>{isRTL ? '5 دقائق' : '5 min read'}</span>
                       </div>
                     </div>
                     <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
+                      {isRTL ? post.title_ar : post.title_en}
                     </CardTitle>
                   </CardHeader>
                   
                   <CardContent>
                     <CardDescription className="text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
+                      {isRTL ? post.excerpt_ar : post.excerpt_en}
                     </CardDescription>
                     <Button 
                       variant="ghost" 
