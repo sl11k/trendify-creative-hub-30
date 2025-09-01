@@ -28,8 +28,17 @@ import {
   Calendar,
   Shield,
   LogOut,
-  Save
+  Save,
+  Share2,
+  Search
 } from 'lucide-react';
+
+// Import components
+import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
+import SeoManager from '@/components/admin/SeoManager';
+import ServicesManager from '@/components/admin/ServicesManager';
+import SocialLinksManager from '@/components/admin/SocialLinksManager';
+import SiteSettingsManager from '@/components/admin/SiteSettingsManager';
 
 // Types
 interface Blog {
@@ -165,6 +174,14 @@ const AdminPage = () => {
   const analyticsPlatforms = [
     'Google Analytics', 'Google Tag Manager', 'Meta Pixel', 'TikTok Pixel', 'Snapchat Pixel'
   ];
+
+  useEffect(() => {
+    // Check for stored auth
+    const storedAuth = localStorage.getItem('admin_authenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -709,10 +726,14 @@ const AdminPage = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-7 lg:w-fit">
+          <TabsList className="grid grid-cols-4 lg:grid-cols-8 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart className="h-4 w-4" />
               نظرة عامة
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              التحليلات
             </TabsTrigger>
             <TabsTrigger value="blogs" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -727,12 +748,12 @@ const AdminPage = () => {
               الخدمات
             </TabsTrigger>
             <TabsTrigger value="social" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
+              <Share2 className="h-4 w-4" />
               السوشيال
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              التحليلات
+            <TabsTrigger value="seo" className="flex items-center gap-2">
+              <Search className="h-4 w-4" />
+              السيو
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -826,6 +847,212 @@ const AdminPage = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <AnalyticsDashboard />
+          </TabsContent>
+
+          {/* SEO Tab */}
+          <TabsContent value="seo" className="space-y-6">
+            <SeoManager />
+          </TabsContent>
+
+          {/* Services Tab */}
+          <TabsContent value="services" className="space-y-6">
+            <ServicesManager />
+          </TabsContent>
+
+          {/* Social Tab */}
+          <TabsContent value="social" className="space-y-6">
+            <SocialLinksManager />
+          </TabsContent>
+
+          {/* Portfolio Tab */}
+          <TabsContent value="portfolio" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">إدارة المشاريع</h2>
+              <Dialog open={portfolioDialogOpen} onOpenChange={setPortfolioDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingPortfolio({
+                        title_ar: '',
+                        title_en: '',
+                        published: false
+                      });
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    إضافة مشروع جديد
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingPortfolio?.id ? 'تعديل المشروع' : 'إضافة مشروع جديد'}
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  {editingPortfolio && (
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="portfolio_title_ar">العنوان بالعربية</Label>
+                          <Input
+                            id="portfolio_title_ar"
+                            value={editingPortfolio.title_ar || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, title_ar: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="portfolio_title_en">العنوان بالإنجليزية</Label>
+                          <Input
+                            id="portfolio_title_en"
+                            value={editingPortfolio.title_en || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, title_en: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="portfolio_desc_ar">الوصف بالعربية</Label>
+                          <Textarea
+                            id="portfolio_desc_ar"
+                            value={editingPortfolio.description_ar || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, description_ar: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="portfolio_desc_en">الوصف بالإنجليزية</Label>
+                          <Textarea
+                            id="portfolio_desc_en"
+                            value={editingPortfolio.description_en || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, description_en: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="portfolio_image">رابط الصورة</Label>
+                          <Input
+                            id="portfolio_image"
+                            value={editingPortfolio.image_url || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, image_url: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="portfolio_url">رابط المشروع</Label>
+                          <Input
+                            id="portfolio_url"
+                            value={editingPortfolio.project_url || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, project_url: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="portfolio_category">الفئة</Label>
+                          <Input
+                            id="portfolio_category"
+                            value={editingPortfolio.category || ''}
+                            onChange={(e) => setEditingPortfolio({ ...editingPortfolio, category: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="portfolio_technologies">التقنيات المستخدمة (مفصولة بفاصلة)</Label>
+                          <Input
+                            id="portfolio_technologies"
+                            value={editingPortfolio.technologies?.join(', ') || ''}
+                            onChange={(e) => setEditingPortfolio({ 
+                              ...editingPortfolio, 
+                              technologies: e.target.value.split(',').map(t => t.trim()).filter(t => t) 
+                            })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="portfolio_published"
+                          checked={editingPortfolio.published || false}
+                          onCheckedChange={(checked) => setEditingPortfolio({ ...editingPortfolio, published: checked })}
+                        />
+                        <Label htmlFor="portfolio_published">نشر المشروع</Label>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setPortfolioDialogOpen(false)}>
+                      إلغاء
+                    </Button>
+                    <Button onClick={savePortfolio}>
+                      حفظ
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <div className="grid gap-4">
+              {portfolio.map((project) => (
+                <Card key={project.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="flex items-center gap-2">
+                          {project.title_ar}
+                          {project.published ? (
+                            <Badge variant="default">منشور</Badge>
+                          ) : (
+                            <Badge variant="secondary">مسودة</Badge>
+                          )}
+                        </CardTitle>
+                        <CardDescription>{project.title_en}</CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditingPortfolio(project);
+                            setPortfolioDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => deletePortfolio(project.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {project.description_ar || project.description_en}
+                    </p>
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {new Date(project.created_at).toLocaleDateString('ar-SA')}
+                      </div>
+                      {project.category && (
+                        <Badge variant="outline">{project.category}</Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
 
           {/* Blogs Tab */}
@@ -1059,91 +1286,7 @@ const AdminPage = () => {
 
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>إعدادات الموقع العامة</CardTitle>
-                <CardDescription>إدارة إعدادات الموقع الأساسية</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="consultation_text_ar">نص زر الاستشارة (عربي)</Label>
-                    <Input
-                      id="consultation_text_ar"
-                      value={siteSettings.consultation_button_text_ar || ''}
-                      onChange={(e) => setSiteSettings({
-                        ...siteSettings,
-                        consultation_button_text_ar: e.target.value
-                      })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="consultation_text_en">نص زر الاستشارة (إنجليزي)</Label>
-                    <Input
-                      id="consultation_text_en"
-                      value={siteSettings.consultation_button_text_en || ''}
-                      onChange={(e) => setSiteSettings({
-                        ...siteSettings,
-                        consultation_button_text_en: e.target.value
-                      })}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="consultation_url">رابط زر الاستشارة</Label>
-                  <Input
-                    id="consultation_url"
-                    value={siteSettings.consultation_button_url || ''}
-                    onChange={(e) => setSiteSettings({
-                      ...siteSettings,
-                      consultation_button_url: e.target.value
-                    })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="contact_email">البريد الإلكتروني</Label>
-                    <Input
-                      id="contact_email"
-                      value={siteSettings.contact_email || ''}
-                      onChange={(e) => setSiteSettings({
-                        ...siteSettings,
-                        contact_email: e.target.value
-                      })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="contact_phone">رقم الهاتف</Label>
-                    <Input
-                      id="contact_phone"
-                      value={siteSettings.contact_phone || ''}
-                      onChange={(e) => setSiteSettings({
-                        ...siteSettings,
-                        contact_phone: e.target.value
-                      })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="contact_address_ar">العنوان</Label>
-                    <Input
-                      id="contact_address_ar"
-                      value={siteSettings.contact_address_ar || ''}
-                      onChange={(e) => setSiteSettings({
-                        ...siteSettings,
-                        contact_address_ar: e.target.value
-                      })}
-                    />
-                  </div>
-                </div>
-
-                <Button onClick={saveSiteSettings}>
-                  <Save className="h-4 w-4 mr-2" />
-                  حفظ الإعدادات
-                </Button>
-              </CardContent>
-            </Card>
+            <SiteSettingsManager />
           </TabsContent>
         </Tabs>
       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
@@ -9,10 +9,59 @@ import ServicesPreviewSection from '@/components/sections/ServicesPreviewSection
 import PortfolioPreviewSection from '@/components/sections/PortfolioPreviewSection';
 import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import ContactSection from '@/components/sections/ContactSection';
+import SeoHead from '@/components/SeoHead';
+import Analytics from '@/components/Analytics';
+import { usePageTracking } from '@/hooks/usePageTracking';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
+  usePageTracking(); // Track page views
+  const [consultationButton, setConsultationButton] = useState({
+    text_ar: 'احصل على استشارة مجانية',
+    text_en: 'Get Free Consultation',
+    url: '/contact'
+  });
+
+  useEffect(() => {
+    const loadConsultationSettings = async () => {
+      try {
+        const { data } = await supabase
+          .from('site_settings')
+          .select('*')
+          .in('setting_key', ['consultation_button_text_ar', 'consultation_button_text_en', 'consultation_button_url']);
+        
+        if (data) {
+          const settings = data.reduce((acc, item) => {
+            acc[item.setting_key] = item.setting_value;
+            return acc;
+          }, {} as Record<string, string>);
+
+          setConsultationButton({
+            text_ar: settings.consultation_button_text_ar || 'احصل على استشارة مجانية',
+            text_en: settings.consultation_button_text_en || 'Get Free Consultation',
+            url: settings.consultation_button_url || '/contact'
+          });
+        }
+      } catch (error) {
+        console.error('Error loading consultation settings:', error);
+      }
+    };
+
+    loadConsultationSettings();
+  }, []);
+
+  const handleConsultationClick = () => {
+    if (consultationButton.url.startsWith('http')) {
+      window.open(consultationButton.url, '_blank');
+    } else {
+      window.location.href = consultationButton.url;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead lang="ar" />
+      <Analytics />
       <Header />
       <main>
         <HeroSection />
@@ -28,14 +77,13 @@ const Index = () => {
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
               نحن هنا لمساعدتك في تحقيق أهدافك الرقمية
             </p>
-            <Link to="/contact">
-              <Button
-                size="xl"
-                className="bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold px-8 py-4"
-              >
-                تواصل معنا الآن
-              </Button>
-            </Link>
+            <Button
+              size="xl"
+              onClick={handleConsultationClick}
+              className="bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold px-8 py-4"
+            >
+              {consultationButton.text_ar}
+            </Button>
           </div>
         </div>
       </main>

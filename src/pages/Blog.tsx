@@ -6,15 +6,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Calendar, Clock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBlogs } from '@/hooks/useBlogs';
+import SeoHead from '@/components/SeoHead';
+import Analytics from '@/components/Analytics';
+import { usePageTracking } from '@/hooks/usePageTracking';
 
 const Blog = () => {
+  usePageTracking(); // Track page views
   const { t, isRTL } = useLanguage();
   const { blogs, loading, error } = useBlogs();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
+  return (
+    <div className="min-h-screen bg-background">
+      <SeoHead lang="ar" />
+      <Analytics />
+      <Header />
         <main className="pt-16">
           <div className="container mx-auto px-4 py-20">
             <div className="flex items-center justify-center">
@@ -46,6 +52,8 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead lang="ar" />
+      <Analytics />
       <Header />
       <main className="pt-16">
         <section className="py-20 bg-background">
