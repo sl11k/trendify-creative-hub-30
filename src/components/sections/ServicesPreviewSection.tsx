@@ -2,32 +2,31 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowRight, Search, Code, Palette } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useServices } from '@/hooks/useServices';
+import { 
+  Search, Code, Palette, Monitor, Smartphone, Globe, 
+  ShoppingCart, BarChart, Camera, Megaphone, Brush, 
+  Lightbulb, Target, Zap, Star, Heart, Rocket
+} from 'lucide-react';
 
 const ServicesPreviewSection = () => {
   const { t, isRTL } = useLanguage();
+  const { services, loading, error } = useServices();
 
-  const previewServices = [
-    {
-      icon: Search,
-      titleKey: 'services.digital-marketing.title',
-      descKey: 'services.digital-marketing.desc',
-      gradient: 'from-primary to-secondary'
-    },
-    {
-      icon: Code,
-      titleKey: 'services.web-dev.title',
-      descKey: 'services.web-dev.desc',
-      gradient: 'from-secondary to-accent'
-    },
-    {
-      icon: Palette,
-      titleKey: 'services.graphic-design.title',
-      descKey: 'services.graphic-design.desc',
-      gradient: 'from-accent to-primary'
-    }
-  ];
+  // Icon mapping function
+  const getIconComponent = (iconName: string | null) => {
+    const iconMap: Record<string, any> = {
+      Search, Code, Palette, Monitor, Smartphone, Globe,
+      ShoppingCart, BarChart, Camera, Megaphone, Brush,
+      Lightbulb, Target, Zap, Star, Heart, Rocket
+    };
+    return iconMap[iconName || 'Star'] || Star;
+  };
+
+  // Get first 3 services for preview
+  const previewServices = services.slice(0, 3);
 
   return (
     <section id="services" className="py-20 bg-background">
@@ -42,35 +41,59 @@ const ServicesPreviewSection = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span className="mr-2 text-muted-foreground">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-destructive">{error}</p>
+          </div>
+        )}
+
         {/* Services Preview Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {previewServices.map((service, index) => {
-            const IconComponent = service.icon;
-            return (
-              <Card
-                key={index}
-                className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className="h-8 w-8 text-white" />
-                  </div>
+        {!loading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {previewServices.map((service, index) => {
+              const IconComponent = getIconComponent(service.icon_name);
+              return (
+                <Card
+                  key={service.id}
+                  className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CardHeader className="text-center pb-4">
+                    <div 
+                      className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300"
+                      style={{
+                        background: service.gradient_from && service.gradient_to
+                          ? `linear-gradient(135deg, ${service.gradient_from}, ${service.gradient_to})`
+                          : 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))'
+                      }}
+                    >
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                      {isRTL ? service.title_ar : service.title_en}
+                    </CardTitle>
+                  </CardHeader>
                   
-                  <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-                    {t(service.titleKey)}
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent className="text-center">
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    {t(service.descKey)}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                  <CardContent className="text-center">
+                    <CardDescription className="text-muted-foreground leading-relaxed">
+                      {isRTL ? service.description_ar : service.description_en}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
 
         {/* CTA Section */}
         <div className="text-center">
