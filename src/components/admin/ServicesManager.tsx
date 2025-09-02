@@ -230,12 +230,18 @@ const ServicesManager = () => {
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      {iconOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
+                    <SelectContent className="bg-background border z-50">
+                      {iconOptions.map(option => {
+                        const IconComponent = require('lucide-react')[option.value.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')] || require('lucide-react').Zap;
+                        return (
+                          <SelectItem key={option.value} value={option.value}>
+                            <div className="flex items-center gap-2">
+                              <IconComponent className="h-4 w-4" />
+                              {option.label}
+                            </div>
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </div>

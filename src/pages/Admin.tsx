@@ -39,6 +39,9 @@ import SeoManager from '@/components/admin/SeoManager';
 import ServicesManager from '@/components/admin/ServicesManager';
 import SocialLinksManager from '@/components/admin/SocialLinksManager';
 import SiteSettingsManager from '@/components/admin/SiteSettingsManager';
+import AnalyticsCodesManager from '@/components/admin/AnalyticsCodesManager';
+import UsersManager from '@/components/admin/UsersManager';
+import MaintenanceManager from '@/components/admin/MaintenanceManager';
 
 // Types
 interface Blog {
@@ -726,7 +729,7 @@ const AdminPage = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 lg:w-fit">
+          <TabsList className="grid grid-cols-5 lg:grid-cols-11 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart className="h-4 w-4" />
               نظرة عامة
@@ -734,6 +737,10 @@ const AdminPage = () => {
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               التحليلات
+            </TabsTrigger>
+            <TabsTrigger value="tracking" className="flex items-center gap-2">
+              <BarChart className="h-4 w-4" />
+              أكواد التتبع
             </TabsTrigger>
             <TabsTrigger value="blogs" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -754,6 +761,14 @@ const AdminPage = () => {
             <TabsTrigger value="seo" className="flex items-center gap-2">
               <Search className="h-4 w-4" />
               السيو
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              المستخدمين
+            </TabsTrigger>
+            <TabsTrigger value="maintenance" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              الصيانة
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -1282,6 +1297,21 @@ const AdminPage = () => {
                 </Card>
               ))}
             </div>
+          </TabsContent>
+
+          {/* Tracking Codes Tab */}
+          <TabsContent value="tracking" className="space-y-6">
+            <AnalyticsCodesManager />
+          </TabsContent>
+
+          {/* Users Management Tab */}
+          <TabsContent value="users" className="space-y-6">
+            <UsersManager />
+          </TabsContent>
+
+          {/* Maintenance Tab */}
+          <TabsContent value="maintenance" className="space-y-6">
+            <MaintenanceManager />
           </TabsContent>
 
           {/* Settings Tab */}

@@ -88,11 +88,18 @@ const SiteSettingsManager = () => {
         setting_value: value
       }));
 
+      console.log('Saving settings:', settingsArray);
       const { error } = await supabase
         .from('site_settings')
-        .upsert(settingsArray, { onConflict: 'setting_key' });
+        .upsert(settingsArray, { 
+          onConflict: 'setting_key',
+          ignoreDuplicates: false 
+        });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       toast({
         title: isRTL ? 'تم الحفظ بنجاح' : 'Saved Successfully',

@@ -35,11 +35,18 @@ const SocialLinksManager = () => {
 
   const handleSave = async (platform: string, url: string, active: boolean) => {
     try {
+      console.log('Saving social link:', { platform, url, active });
       const { error } = await supabase
         .from('social_links')
-        .upsert([{ platform, url, active }], { onConflict: 'platform' });
+        .upsert([{ platform, url, active }], { 
+          onConflict: 'platform',
+          ignoreDuplicates: false 
+        });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
       
       toast({
         title: isRTL ? 'تم الحفظ بنجاح' : 'Saved Successfully',
