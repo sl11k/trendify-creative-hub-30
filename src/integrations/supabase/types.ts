@@ -16,55 +16,58 @@ export type Database = {
     Tables: {
       admin_users: {
         Row: {
-          created_at: string | null
+          active: boolean
+          created_at: string
           email: string
           id: string
           password_hash: string
-          role: string | null
-          updated_at: string | null
+          role: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          active?: boolean
+          created_at?: string
           email: string
           id?: string
           password_hash: string
-          role?: string | null
-          updated_at?: string | null
+          role?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          active?: boolean
+          created_at?: string
           email?: string
           id?: string
           password_hash?: string
-          role?: string | null
-          updated_at?: string | null
+          role?: string
+          updated_at?: string
         }
         Relationships: []
       }
       analytics_codes: {
         Row: {
-          active: boolean | null
+          active: boolean
           code: string
-          created_at: string | null
+          created_at: string
           id: string
           platform: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          active?: boolean | null
-          code: string
-          created_at?: string | null
+          active?: boolean
+          code?: string
+          created_at?: string
           id?: string
           platform: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          active?: boolean | null
+          active?: boolean
           code?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           platform?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -334,49 +337,52 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          created_at: string
           id: string
           setting_key: string
-          setting_value: string | null
-          updated_at: string | null
+          setting_value: string
+          updated_at: string
         }
         Insert: {
+          created_at?: string
           id?: string
           setting_key: string
-          setting_value?: string | null
-          updated_at?: string | null
+          setting_value?: string
+          updated_at?: string
         }
         Update: {
+          created_at?: string
           id?: string
           setting_key?: string
-          setting_value?: string | null
-          updated_at?: string | null
+          setting_value?: string
+          updated_at?: string
         }
         Relationships: []
       }
       social_links: {
         Row: {
-          active: boolean | null
-          created_at: string | null
+          active: boolean
+          created_at: string
           id: string
           platform: string
-          updated_at: string | null
-          url: string | null
+          updated_at: string
+          url: string
         }
         Insert: {
-          active?: boolean | null
-          created_at?: string | null
+          active?: boolean
+          created_at?: string
           id?: string
           platform: string
-          updated_at?: string | null
-          url?: string | null
+          updated_at?: string
+          url?: string
         }
         Update: {
-          active?: boolean | null
-          created_at?: string | null
+          active?: boolean
+          created_at?: string
           id?: string
           platform?: string
-          updated_at?: string | null
-          url?: string | null
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }

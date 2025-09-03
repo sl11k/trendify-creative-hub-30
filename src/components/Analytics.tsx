@@ -40,19 +40,19 @@ const Analytics: React.FC<AnalyticsProps> = ({ pageSlug = 'home' }) => {
 
   const injectAnalyticsCode = (platform: string, code: string) => {
     switch (platform) {
-      case 'Google Analytics':
+      case 'google_analytics':
         injectGoogleAnalytics(code);
         break;
-      case 'Google Tag Manager':
+      case 'google_tag_manager':
         injectGoogleTagManager(code);
         break;
-      case 'Meta Pixel':
+      case 'meta_pixel':
         injectMetaPixel(code);
         break;
-      case 'TikTok Pixel':
+      case 'tiktok_pixel':
         injectTikTokPixel(code);
         break;
-      case 'Snapchat Pixel':
+      case 'snapchat_pixel':
         injectSnapchatPixel(code);
         break;
       default:
