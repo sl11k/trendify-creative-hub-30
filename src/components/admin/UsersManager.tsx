@@ -80,20 +80,37 @@ const UsersManager = () => {
           description: isRTL ? 'تم تحديث المستخدم بنجاح' : 'User updated successfully'
         });
       } else {
-        // In a real app, you'd hash the password
-        const { error } = await supabase
-          .from('admin_users')
-          .insert([{
-            email: formData.email,
-            password_hash: formData.password, // This should be hashed in production
-            role: formData.role
-          }]);
-        
-        if (error) throw error;
+        // Create user in Supabase Auth
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              role: formData.role
+            }
+          }
+        });
+
+        if (authError) throw authError;
+
+        // Also add to admin_users table for local management
+        if (authData.user) {
+          const { error: dbError } = await supabase
+            .from('admin_users')
+            .insert([{
+              id: authData.user.id,
+              email: formData.email,
+              password_hash: 'managed_by_supabase_auth',
+              role: formData.role,
+              active: formData.active
+            }]);
+          
+          if (dbError) console.warn('Warning: User created in auth but not in admin_users table:', dbError);
+        }
         
         toast({
           title: isRTL ? 'تم الإضافة بنجاح' : 'Added Successfully',
-          description: isRTL ? 'تم إضافة المستخدم بنجاح' : 'User added successfully'
+          description: isRTL ? 'تم إضافة المستخدم بنجاح. تم إرسال بريد إلكتروني للتفعيل.' : 'User added successfully. Verification email sent.'
         });
       }
       

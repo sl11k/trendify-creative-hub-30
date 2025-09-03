@@ -26,6 +26,7 @@ const Analytics = () => {
       if (analyticsCodes) {
         analyticsCodes.forEach((analytics) => {
           if (analytics.code && analytics.code.trim()) {
+            console.log(`Injecting ${analytics.platform} analytics code:`, analytics.code);
             injectAnalyticsCode(analytics.platform, analytics.code);
           }
         });

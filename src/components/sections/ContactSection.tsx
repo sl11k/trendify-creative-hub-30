@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,10 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactSection = () => {
   const { t, isRTL } = useLanguage();
   const { toast } = useToast();
+  const [contactInfo, setContactInfo] = useState({
+    email: 'hello@trendify.agency',
+    phone: '+966 50 123 4567',
+    address_ar: 'الرياض، المملكة العربية السعودية',
+    address_en: 'Riyadh, Saudi Arabia'
+  });
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,6 +25,35 @@ const ContactSection = () => {
     service: '',
     message: ''
   });
+
+  useEffect(() => {
+    loadContactInfo();
+  }, []);
+
+  const loadContactInfo = async () => {
+    try {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('*')
+        .in('setting_key', ['contact_email', 'contact_phone', 'contact_address_ar', 'contact_address_en']);
+      
+      if (data) {
+        const settings = data.reduce((acc, item) => {
+          acc[item.setting_key] = item.setting_value;
+          return acc;
+        }, {} as Record<string, string>);
+
+        setContactInfo({
+          email: settings.contact_email || 'hello@trendify.agency',
+          phone: settings.contact_phone || '+966 50 123 4567',
+          address_ar: settings.contact_address_ar || 'الرياض، المملكة العربية السعودية',
+          address_en: settings.contact_address_en || 'Riyadh, Saudi Arabia'
+        });
+      }
+    } catch (error) {
+      console.error('Error loading contact info:', error);
+    }
+  };
 
   const services = [
     'services.digital-marketing.title',
@@ -28,29 +64,29 @@ const ContactSection = () => {
     'services.content-writing.title'
   ];
 
-  const contactInfo = [
+  const contactInfoData = [
     {
       icon: Mail,
       title: isRTL ? 'البريد الإلكتروني' : 'Email',
-      value: 'hello@trendify.agency',
-      link: 'mailto:hello@trendify.agency'
+      value: contactInfo.email,
+      link: `mailto:${contactInfo.email}`
     },
     {
       icon: Phone,
       title: isRTL ? 'الهاتف' : 'Phone',
-      value: '+966 50 123 4567',
-      link: 'tel:+966501234567'
+      value: contactInfo.phone,
+      link: `tel:${contactInfo.phone.replace(/\s/g, '')}`
     },
     {
       icon: MessageSquare,
       title: isRTL ? 'واتساب' : 'WhatsApp',
-      value: '+966 50 123 4567',
-      link: 'https://wa.me/966501234567'
+      value: contactInfo.phone,
+      link: `https://wa.me/${contactInfo.phone.replace(/\s|\+/g, '')}`
     },
     {
       icon: MapPin,
       title: isRTL ? 'العنوان' : 'Address',
-      value: isRTL ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia',
+      value: isRTL ? contactInfo.address_ar : contactInfo.address_en,
       link: null
     }
   ];
@@ -108,7 +144,7 @@ const ContactSection = () => {
           {/* Contact Information */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
-              {contactInfo.map((info, index) => {
+              {contactInfoData.map((info, index) => {
                 const IconComponent = info.icon;
                 return (
                   <Card key={index} className="border-0 shadow-card bg-card-gradient">
