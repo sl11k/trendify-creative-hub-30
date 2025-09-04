@@ -30,7 +30,8 @@ import {
   LogOut,
   Save,
   Share2,
-  Search
+  Search,
+  MessageCircle
 } from 'lucide-react';
 
 // Import components
@@ -38,6 +39,8 @@ import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import SeoManager from '@/components/admin/SeoManager';
 import ServicesManager from '@/components/admin/ServicesManager';
 import SocialLinksManager from '@/components/admin/SocialLinksManager';
+import WhatsAppButtonManager from '@/components/admin/WhatsAppButtonManager';
+import BlogManager from '@/components/admin/BlogManager';
 import SiteSettingsManager from '@/components/admin/SiteSettingsManager';
 import AnalyticsCodesManager from '@/components/admin/AnalyticsCodesManager';
 import UsersManager from '@/components/admin/UsersManager';
@@ -729,7 +732,7 @@ const AdminPage = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 lg:grid-cols-11 lg:w-fit">
+          <TabsList className="grid grid-cols-6 lg:grid-cols-13 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart className="h-4 w-4" />
               نظرة عامة
@@ -757,6 +760,10 @@ const AdminPage = () => {
             <TabsTrigger value="social" className="flex items-center gap-2">
               <Share2 className="h-4 w-4" />
               السوشيال
+            </TabsTrigger>
+            <TabsTrigger value="whatsapp" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              الواتساب
             </TabsTrigger>
             <TabsTrigger value="seo" className="flex items-center gap-2">
               <Search className="h-4 w-4" />
@@ -882,6 +889,11 @@ const AdminPage = () => {
           {/* Social Tab */}
           <TabsContent value="social" className="space-y-6">
             <SocialLinksManager />
+          </TabsContent>
+
+          {/* WhatsApp Tab */}
+          <TabsContent value="whatsapp" className="space-y-6">
+            <WhatsAppButtonManager />
           </TabsContent>
 
           {/* Portfolio Tab */}
@@ -1072,6 +1084,11 @@ const AdminPage = () => {
 
           {/* Blogs Tab */}
           <TabsContent value="blogs" className="space-y-6">
+            <BlogManager />
+          </TabsContent>
+
+          {/* Legacy Blogs Tab (keeping for compatibility) */}
+          <TabsContent value="blogs-old" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">إدارة المدونات</h2>
               <Dialog open={blogDialogOpen} onOpenChange={setBlogDialogOpen}>

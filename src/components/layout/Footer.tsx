@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const Footer = () => {
@@ -72,6 +72,7 @@ const Footer = () => {
       case 'twitter': return Twitter;
       case 'whatsapp': return MessageCircle;
       case 'youtube': return Youtube;
+      case 'tiktok': return Music;
       default: return null;
     }
   };
@@ -112,7 +113,7 @@ const Footer = () => {
             </p>
             
             {/* Social Links */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-3">
               {socialLinksData.map((social, index) => {
                 const IconComponent = social!.icon;
                 return (
@@ -122,7 +123,7 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social!.label}
-                    className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 mx-1"
                   >
                     <IconComponent className="h-5 w-5" />
                   </a>
@@ -181,7 +182,7 @@ const Footer = () => {
               </p>
               <p className="text-white/80">
                 <strong>{isRTL ? 'الهاتف:' : 'Phone:'}</strong><br />
-                {contactInfo.phone}
+                <span dir="ltr" className="inline-block">{contactInfo.phone}</span>
               </p>
               <p className="text-white/80">
                 <strong>{isRTL ? 'العنوان:' : 'Address:'}</strong><br />

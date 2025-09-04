@@ -109,13 +109,15 @@ const Blog = () => {
                     <CardDescription className="text-muted-foreground mb-4 line-clamp-3">
                       {isRTL ? post.excerpt_ar : post.excerpt_en}
                     </CardDescription>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-between group-hover:text-primary transition-colors p-0"
-                    >
-                      <span>{isRTL ? 'اقرأ المزيد' : 'Read More'}</span>
-                      <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-1 ${isRTL ? 'rotate-180' : ''}`} />
-                    </Button>
+                    <a href={`/blog/${post.id}`} className="w-full">
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-between group-hover:text-primary transition-colors p-0"
+                      >
+                        <span>{isRTL ? 'اقرأ المزيد' : 'Read More'}</span>
+                        <ArrowRight className={`h-4 w-4 transition-transform group-hover:translate-x-1 ${isRTL ? 'rotate-180' : ''}`} />
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               ))}

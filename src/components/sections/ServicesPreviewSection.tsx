@@ -100,7 +100,7 @@ const ServicesPreviewSection = () => {
           <Link to="/services">
             <Button 
               size="xl" 
-              className="group bg-primary text-white border-2 border-primary hover:bg-primary-hover hover:text-white transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold"
+              className="group bg-gradient-primary text-primary-foreground border-0 hover:shadow-glow transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4"
             >
               {isRTL ? 'استكشف جميع خدماتنا' : 'Explore All Our Services'}
               <ArrowRight className={`ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 ml-0 mr-2 group-hover:-translate-x-1' : ''}`} />

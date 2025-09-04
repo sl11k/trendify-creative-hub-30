@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Mail, Phone, MapPin, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Youtube, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const ContactSection = () => {
   const { t, isRTL } = useLanguage();
-  const { toast } = useToast();
   const [contactInfo, setContactInfo] = useState({
     email: 'hello@trendify.agency',
     phone: '+966 50 123 4567',
     address_ar: 'الرياض، المملكة العربية السعودية',
     address_en: 'Riyadh, Saudi Arabia'
   });
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
-    message: ''
-  });
+  const [socialLinks, setSocialLinks] = useState<Array<{
+    platform: string;
+    url?: string;
+    active: boolean;
+  }>>([]);
 
   useEffect(() => {
     loadContactInfo();
+    loadSocialLinks();
   }, []);
 
   const loadContactInfo = async () => {
@@ -55,14 +48,44 @@ const ContactSection = () => {
     }
   };
 
-  const services = [
-    'services.digital-marketing.title',
-    'services.web-dev.title',
-    'services.graphic-design.title',
-    'services.photography.title',
-    'services.social-media.title',
-    'services.content-writing.title'
-  ];
+  const loadSocialLinks = async () => {
+    try {
+      const { data } = await supabase
+        .from('social_links')
+        .select('*')
+        .eq('active', true)
+        .not('url', 'is', null)
+        .neq('url', '');
+      
+      if (data) {
+        setSocialLinks(data);
+      }
+    } catch (error) {
+      console.error('Error loading social links:', error);
+    }
+  };
+
+  const getSocialIcon = (platform: string) => {
+    switch (platform.toLowerCase()) {
+      case 'facebook': return Facebook;
+      case 'instagram': return Instagram;
+      case 'linkedin': return Linkedin;
+      case 'twitter': return Twitter;
+      case 'whatsapp': return MessageSquare;
+      case 'youtube': return Youtube;
+      case 'tiktok': return Music;
+      default: return null;
+    }
+  };
+
+  const socialLinksData = socialLinks.map(link => {
+    const IconComponent = getSocialIcon(link.platform);
+    return IconComponent ? {
+      icon: IconComponent,
+      url: link.url!,
+      label: link.platform
+    } : null;
+  }).filter(Boolean);
 
   const contactInfoData = [
     {
@@ -90,42 +113,6 @@ const ContactSection = () => {
       link: null
     }
   ];
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: isRTL ? 'خطأ في النموذج' : 'Form Error',
-        description: isRTL ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill in all required fields',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    // Here you would typically send the data to your backend
-    toast({
-      title: isRTL ? 'تم إرسال الرسالة بنجاح!' : 'Message Sent Successfully!',
-      description: isRTL ? 'سنتواصل معك قريباً' : 'We will contact you soon',
-    });
-
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: '',
-      message: ''
-    });
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
 
   return (
     <section id="contact" className="py-20 bg-muted/30">
@@ -159,6 +146,7 @@ const ContactSection = () => {
                             <a 
                               href={info.link}
                               className="text-primary hover:text-secondary transition-colors duration-200 break-words"
+                              dir={info.title.includes('Phone') || info.title.includes('الهاتف') ? 'ltr' : 'auto'}
                             >
                               {info.value}
                             </a>
@@ -174,98 +162,38 @@ const ContactSection = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Social Media Links */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-hero bg-card-gradient">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gradient-primary">
-                  {isRTL ? 'أرسل لنا رسالة' : 'Send us a Message'}
+                  {isRTL ? 'تابعنا على وسائل التواصل' : 'Follow Us on Social Media'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        {t('contact.form.name')} *
-                      </label>
-                      <Input
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder={t('contact.form.name')}
-                        required
-                        className="transition-all duration-200 focus:shadow-glow"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        {t('contact.form.email')} *
-                      </label>
-                      <Input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder={t('contact.form.email')}
-                        required
-                        className="transition-all duration-200 focus:shadow-glow"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        {t('contact.form.phone')}
-                      </label>
-                      <Input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder={t('contact.form.phone')}
-                        className="transition-all duration-200 focus:shadow-glow"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        {t('contact.form.service')}
-                      </label>
-                      <Select onValueChange={(value) => handleInputChange('service', value)}>
-                        <SelectTrigger className="transition-all duration-200 focus:shadow-glow">
-                          <SelectValue placeholder={t('contact.form.service')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {services.map((service, index) => (
-                            <SelectItem key={index} value={service}>
-                              {t(service)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      {t('contact.form.message')} *
-                    </label>
-                    <Textarea
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      placeholder={t('contact.form.message')}
-                      rows={5}
-                      required
-                      className="transition-all duration-200 focus:shadow-glow"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold"
-                  >
-                    {t('contact.form.submit')}
-                  </Button>
-                </form>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {socialLinksData.length > 0 ? (
+                    socialLinksData.map((social, index) => {
+                      const IconComponent = social!.icon;
+                      return (
+                        <a
+                          key={index}
+                          href={social!.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex flex-col items-center gap-2 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors group"
+                        >
+                          <IconComponent className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
+                          <span className="text-sm font-medium capitalize">{social!.label}</span>
+                        </a>
+                      );
+                    })
+                  ) : (
+                    <p className="col-span-full text-center text-muted-foreground">
+                      {isRTL ? 'لا توجد روابط متاحة' : 'No social links available'}
+                    </p>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>

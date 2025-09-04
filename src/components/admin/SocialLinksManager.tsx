@@ -15,7 +15,7 @@ const SocialLinksManager = () => {
   const [loading, setLoading] = useState(true);
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
 
-  const platforms = ['facebook', 'instagram', 'twitter', 'linkedin', 'youtube', 'whatsapp'];
+  const platforms = ['facebook', 'instagram', 'twitter', 'linkedin', 'youtube', 'whatsapp', 'tiktok'];
 
   useEffect(() => {
     loadSocialLinks();

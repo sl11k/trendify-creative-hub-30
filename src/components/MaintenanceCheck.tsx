@@ -85,7 +85,10 @@ const MaintenanceCheck: React.FC<MaintenanceCheckProps> = ({ children }) => {
     );
   }
 
-  if (isMaintenanceMode) {
+  // تحقق من أن المستخدم ليس في صفحة الأدمن
+  const isAdminPage = typeof window !== 'undefined' && window.location.pathname.includes('/admin');
+  
+  if (isMaintenanceMode && !isAdminPage) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 p-4">
         <div className="max-w-2xl w-full text-center">
