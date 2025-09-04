@@ -7,7 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { 
+  Loader2, Plus, Edit, Trash2, Save, X, Zap, Megaphone, Code, Palette, 
+  Smartphone, BarChart, ShoppingCart, Target, TrendingUp, UserCheck,
+  Shield, Lightbulb, Settings, Globe, Camera, MessageSquare
+} from 'lucide-react';
 import { useServices } from '@/hooks/useServices';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -42,15 +46,43 @@ const ServicesManager = () => {
     sort_order: 0
   });
 
+  // Icon mapping for proper ES module imports
+  const iconMap = {
+    'megaphone': Megaphone,
+    'code': Code,
+    'palette': Palette,
+    'smartphone': Smartphone,
+    'bar-chart': BarChart,
+    'shopping-cart': ShoppingCart,
+    'target': Target,
+    'trending-up': TrendingUp,
+    'user-check': UserCheck,
+    'shield': Shield,
+    'lightbulb': Lightbulb,
+    'settings': Settings,
+    'globe': Globe,
+    'camera': Camera,
+    'message-square': MessageSquare,
+    'zap': Zap
+  };
+
   const iconOptions = [
     { value: 'megaphone', label: 'Megaphone' },
     { value: 'code', label: 'Code' },
     { value: 'palette', label: 'Palette' },
     { value: 'smartphone', label: 'Smartphone' },
     { value: 'bar-chart', label: 'Bar Chart' },
+    { value: 'shopping-cart', label: 'Shopping Cart' },
+    { value: 'target', label: 'Target' },
+    { value: 'trending-up', label: 'Trending Up' },
+    { value: 'user-check', label: 'User Check' },
+    { value: 'shield', label: 'Shield' },
+    { value: 'lightbulb', label: 'Lightbulb' },
+    { value: 'settings', label: 'Settings' },
     { value: 'globe', label: 'Globe' },
-    { value: 'zap', label: 'Zap' },
-    { value: 'target', label: 'Target' }
+    { value: 'camera', label: 'Camera' },
+    { value: 'message-square', label: 'Message Square' },
+    { value: 'zap', label: 'Zap' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -230,19 +262,19 @@ const ServicesManager = () => {
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-background border z-50">
-                      {iconOptions.map(option => {
-                        const IconComponent = require('lucide-react')[option.value.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')] || require('lucide-react').Zap;
-                        return (
-                          <SelectItem key={option.value} value={option.value}>
-                            <div className="flex items-center gap-2">
-                              <IconComponent className="h-4 w-4" />
-                              {option.label}
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
+                     <SelectContent className="bg-background border z-50">
+                       {iconOptions.map(option => {
+                         const IconComponent = iconMap[option.value as keyof typeof iconMap] || Zap;
+                         return (
+                           <SelectItem key={option.value} value={option.value}>
+                             <div className="flex items-center gap-2">
+                               <IconComponent className="h-4 w-4" />
+                               {option.label}
+                             </div>
+                           </SelectItem>
+                         );
+                       })}
+                     </SelectContent>
                   </Select>
                 </div>
                 <div>
