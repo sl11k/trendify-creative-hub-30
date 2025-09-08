@@ -14,18 +14,42 @@ const FloatingWhatsAppButton = () => {
 
   useEffect(() => {
     loadWhatsAppConfig();
+    
+    // Listen for changes to the whatsapp_button table
+    const subscription = supabase
+      .channel('whatsapp_button_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'whatsapp_button' 
+      }, () => {
+        loadWhatsAppConfig();
+      })
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const loadWhatsAppConfig = async () => {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('whatsapp_button')
         .select('*')
-        .single();
+        .maybeSingle();
+      
+      if (error) {
+        console.error('Error loading WhatsApp config:', error);
+        return;
+      }
       
       if (data) {
         setWhatsappConfig(data);
         setIsVisible(data.active);
+      } else {
+        // No configuration found, use defaults
+        setIsVisible(false);
       }
     } catch (error) {
       console.error('Error loading WhatsApp config:', error);
