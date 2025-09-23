@@ -386,6 +386,39 @@ export type Database = {
         }
         Relationships: []
       }
+      website_design: {
+        Row: {
+          created_at: string
+          custom_css: string | null
+          custom_js: string | null
+          id: string
+          is_active: boolean
+          layout_json: string
+          page_slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          custom_css?: string | null
+          custom_js?: string | null
+          id?: string
+          is_active?: boolean
+          layout_json?: string
+          page_slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          custom_css?: string | null
+          custom_js?: string | null
+          id?: string
+          is_active?: boolean
+          layout_json?: string
+          page_slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       whatsapp_button: {
         Row: {
           active: boolean

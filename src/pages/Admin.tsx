@@ -45,6 +45,7 @@ import SiteSettingsManager from '@/components/admin/SiteSettingsManager';
 import AnalyticsCodesManager from '@/components/admin/AnalyticsCodesManager';
 import UsersManager from '@/components/admin/UsersManager';
 import MaintenanceManager from '@/components/admin/MaintenanceManager';
+import { WebsiteBuilder } from '@/components/admin/WebsiteBuilder';
 
 // Types
 interface Blog {
@@ -732,7 +733,7 @@ const AdminPage = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-6 lg:grid-cols-13 lg:w-fit">
+          <TabsList className="grid grid-cols-6 lg:grid-cols-14 lg:w-fit">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart className="h-4 w-4" />
               نظرة عامة
@@ -764,6 +765,10 @@ const AdminPage = () => {
             <TabsTrigger value="whatsapp" className="flex items-center gap-2">
               <MessageCircle className="h-4 w-4" />
               الواتساب
+            </TabsTrigger>
+            <TabsTrigger value="builder" className="flex items-center gap-2">
+              <Globe className="h-4 w-4" />
+              منشئ المواقع
             </TabsTrigger>
             <TabsTrigger value="seo" className="flex items-center gap-2">
               <Search className="h-4 w-4" />
@@ -1319,6 +1324,11 @@ const AdminPage = () => {
           {/* Tracking Codes Tab */}
           <TabsContent value="tracking" className="space-y-6">
             <AnalyticsCodesManager />
+          </TabsContent>
+
+          {/* Website Builder Tab */}
+          <TabsContent value="builder" className="space-y-6">
+            <WebsiteBuilder />
           </TabsContent>
 
           {/* Users Management Tab */}
