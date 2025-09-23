@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Save, Code, Palette, Eye, Trash2, Plus } from "lucide-react";
+import { Save, Code, Palette, Eye, Trash2, Plus, MousePointer, Square, Circle, Type, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Canvas as FabricCanvas, Rect, Circle as FabricCircle, Textbox } from "fabric";
 
 interface WebsiteDesign {
   id: string;
@@ -37,6 +38,9 @@ export const WebsiteBuilder = () => {
   const [customCSS, setCustomCSS] = useState("");
   const [customJS, setCustomJS] = useState("");
   const [dragItems, setDragItems] = useState<DragItem[]>([]);
+  const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
+  const [activeTool, setActiveTool] = useState<"select" | "text" | "rectangle" | "circle" | "image">("select");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Available drag items
   const availableItems: Omit<DragItem, 'id'>[] = [
@@ -70,6 +74,29 @@ export const WebsiteBuilder = () => {
   useEffect(() => {
     loadDesigns();
   }, []);
+
+  useEffect(() => {
+    if (canvasRef.current && !fabricCanvas) {
+      const canvas = new FabricCanvas(canvasRef.current, {
+        width: 800,
+        height: 600,
+        backgroundColor: "#ffffff",
+      });
+
+      setFabricCanvas(canvas);
+
+      return () => {
+        canvas.dispose();
+      };
+    }
+  }, [canvasRef.current]);
+
+  useEffect(() => {
+    if (!fabricCanvas) return;
+
+    fabricCanvas.isDrawingMode = false;
+    fabricCanvas.selection = activeTool === "select";
+  }, [activeTool, fabricCanvas]);
 
   const loadDesigns = async () => {
     try {
@@ -206,6 +233,93 @@ export const WebsiteBuilder = () => {
     setDragItems(prev => [...prev, newItem]);
   };
 
+  const handleToolClick = (tool: typeof activeTool) => {
+    setActiveTool(tool);
+
+    if (!fabricCanvas) return;
+
+    if (tool === "rectangle") {
+      const rect = new Rect({
+        left: 100,
+        top: 100,
+        fill: "#007bff",
+        width: 100,
+        height: 100,
+        stroke: "#333",
+        strokeWidth: 2,
+      });
+      fabricCanvas.add(rect);
+    } else if (tool === "circle") {
+      const circle = new FabricCircle({
+        left: 100,
+        top: 100,
+        fill: "#28a745",
+        radius: 50,
+        stroke: "#333",
+        strokeWidth: 2,
+      });
+      fabricCanvas.add(circle);
+    } else if (tool === "text") {
+      const text = new Textbox("نص جديد", {
+        left: 100,
+        top: 100,
+        fontFamily: "Arial",
+        fontSize: 20,
+        fill: "#333",
+      });
+      fabricCanvas.add(text);
+    }
+  };
+
+  const handleClearCanvas = () => {
+    if (!fabricCanvas) return;
+    fabricCanvas.clear();
+    fabricCanvas.backgroundColor = "#ffffff";
+    fabricCanvas.renderAll();
+    toast.success("تم مسح اللوحة!");
+  };
+
+  const saveCanvasToItems = () => {
+    if (!fabricCanvas) return;
+
+    const objects = fabricCanvas.getObjects();
+    const newItems: DragItem[] = objects.map((obj, index) => {
+      let type: DragItem['type'] = 'text';
+      let content = '';
+
+      if (obj.type === 'rect') {
+        type = 'card';
+        content = 'مربع';
+      } else if (obj.type === 'circle') {
+        type = 'section';
+        content = 'دائرة';
+      } else if (obj.type === 'textbox') {
+        type = 'text';
+        content = (obj as any).text || 'نص';
+      } else if (obj.type === 'image') {
+        type = 'image';
+        content = (obj as any).src || '';
+      }
+
+      return {
+        id: `canvas_item_${index}_${Date.now()}`,
+        type,
+        content,
+        styles: {
+          left: `${obj.left}px`,
+          top: `${obj.top}px`,
+          width: `${obj.width}px`,
+          height: `${obj.height}px`,
+          backgroundColor: obj.fill as string || 'transparent',
+          border: obj.stroke ? `${obj.strokeWidth}px solid ${obj.stroke}` : 'none',
+        }
+      };
+    });
+
+    setDragItems(newItems);
+    toast.success("تم حفظ التصميم من اللوحة!");
+  };
+
   const updateDragItem = (id: string, updates: Partial<DragItem>) => {
     setDragItems(prev => prev.map(item => 
       item.id === id ? { ...item, ...updates } : item
@@ -324,6 +438,66 @@ export const WebsiteBuilder = () => {
                       placeholder="home, about, services..."
                       dir="ltr"
                     />
+                  </div>
+                </div>
+
+                {/* Visual Design Tools */}
+                <div>
+                  <h4 className="font-medium mb-2">أدوات التصميم المرئي</h4>
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    <Button
+                      variant={activeTool === "select" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleToolClick("select")}
+                    >
+                      <MousePointer className="h-4 w-4 mr-1" />
+                      اختيار
+                    </Button>
+                    <Button
+                      variant={activeTool === "text" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleToolClick("text")}
+                    >
+                      <Type className="h-4 w-4 mr-1" />
+                      نص
+                    </Button>
+                    <Button
+                      variant={activeTool === "rectangle" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleToolClick("rectangle")}
+                    >
+                      <Square className="h-4 w-4 mr-1" />
+                      مربع
+                    </Button>
+                    <Button
+                      variant={activeTool === "circle" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleToolClick("circle")}
+                    >
+                      <Circle className="h-4 w-4 mr-1" />
+                      دائرة
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleClearCanvas}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      مسح
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={saveCanvasToItems}
+                    >
+                      <Save className="h-4 w-4 mr-1" />
+                      حفظ التصميم
+                    </Button>
+                  </div>
+                  
+                  {/* Canvas */}
+                  <div className="border border-gray-200 rounded-lg shadow-lg overflow-hidden mb-4">
+                    <canvas ref={canvasRef} className="max-w-full" />
                   </div>
                 </div>
 
