@@ -289,13 +289,13 @@ export const WebsiteBuilder = () => {
 
       if (obj.type === 'rect') {
         type = 'card';
-        content = 'مربع';
+        content = 'مربع جديد';
       } else if (obj.type === 'circle') {
         type = 'section';
-        content = 'دائرة';
+        content = 'قسم دائري';
       } else if (obj.type === 'textbox') {
         type = 'text';
-        content = (obj as any).text || 'نص';
+        content = (obj as any).text || 'نص جديد';
       } else if (obj.type === 'image') {
         type = 'image';
         content = (obj as any).src || '';
@@ -306,18 +306,24 @@ export const WebsiteBuilder = () => {
         type,
         content,
         styles: {
-          left: `${obj.left}px`,
-          top: `${obj.top}px`,
-          width: `${obj.width}px`,
-          height: `${obj.height}px`,
+          position: 'absolute',
+          left: `${obj.left || 0}px`,
+          top: `${obj.top || 0}px`,
+          width: `${obj.width || 100}px`,
+          height: `${obj.height || 100}px`,
           backgroundColor: obj.fill as string || 'transparent',
-          border: obj.stroke ? `${obj.strokeWidth}px solid ${obj.stroke}` : 'none',
+          border: obj.stroke ? `${obj.strokeWidth || 1}px solid ${obj.stroke}` : 'none',
+          color: obj.type === 'textbox' ? obj.fill as string : '#000000',
+          fontSize: obj.type === 'textbox' ? `${(obj as any).fontSize || 16}px` : undefined,
+          fontFamily: obj.type === 'textbox' ? (obj as any).fontFamily || 'Arial' : undefined,
+          borderRadius: obj.type === 'circle' ? '50%' : undefined,
+          zIndex: '1'
         }
       };
     });
 
-    setDragItems(newItems);
-    toast.success("تم حفظ التصميم من اللوحة!");
+    setDragItems(prev => [...prev, ...newItems]);
+    toast.success("تم إضافة عناصر التصميم المرئي!");
   };
 
   const updateDragItem = (id: string, updates: Partial<DragItem>) => {
@@ -435,9 +441,12 @@ export const WebsiteBuilder = () => {
                       id="pageSlug"
                       value={pageSlug}
                       onChange={(e) => setPageSlug(e.target.value)}
-                      placeholder="home, about, services..."
+                      placeholder="home, about, services, portfolio, blog..."
                       dir="ltr"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      اكتب home للصفحة الرئيسية، services للخدمات، portfolio للأعمال، إلخ...
+                    </p>
                   </div>
                 </div>
 
@@ -553,6 +562,37 @@ export const WebsiteBuilder = () => {
                           placeholder="المحتوى"
                           className="mb-2"
                         />
+                        
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <Input
+                            value={item.styles.backgroundColor || ''}
+                            onChange={(e) => updateDragItem(item.id, { 
+                              styles: { ...item.styles, backgroundColor: e.target.value }
+                            })}
+                            placeholder="لون الخلفية"
+                          />
+                          <Input
+                            value={item.styles.color || ''}
+                            onChange={(e) => updateDragItem(item.id, { 
+                              styles: { ...item.styles, color: e.target.value }
+                            })}
+                            placeholder="لون النص"
+                          />
+                          <Input
+                            value={item.styles.fontSize || ''}
+                            onChange={(e) => updateDragItem(item.id, { 
+                              styles: { ...item.styles, fontSize: e.target.value }
+                            })}
+                            placeholder="حجم الخط"
+                          />
+                          <Input
+                            value={item.styles.padding || ''}
+                            onChange={(e) => updateDragItem(item.id, { 
+                              styles: { ...item.styles, padding: e.target.value }
+                            })}
+                            placeholder="المسافة الداخلية"
+                          />
+                        </div>
                       </div>
                     ))}
                     
