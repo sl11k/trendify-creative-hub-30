@@ -139,6 +139,8 @@ export const LayoutCustomizer = () => {
         .upsert({
           setting_key: 'layout_settings',
           setting_value: JSON.stringify(layoutSettings)
+        }, {
+          onConflict: 'setting_key'
         });
 
       if (error) throw error;

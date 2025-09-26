@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -479,7 +479,7 @@ const PortfolioManager = () => {
                                 });
                               }}
                             >
-                              <IconComponent className="h-6 w-6" />
+                              {React.createElement(IconComponent as any, { className: "h-6 w-6" })}
                             </Button>
                           );
                         })}

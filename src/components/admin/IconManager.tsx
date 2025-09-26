@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -381,7 +381,7 @@ export const IconManager = () => {
                     ? 'mb-2' 
                     : 'flex-shrink-0'
                 }`}>
-                  <IconComponent className="h-8 w-8 mx-auto text-primary" />
+                  {React.createElement(IconComponent as any, { className: "h-8 w-8 mx-auto text-primary" })}
                 </div>
                 <div className={viewMode === 'list' ? 'flex-1' : ''}>
                   <p className="text-sm font-medium">{icon.name}</p>
