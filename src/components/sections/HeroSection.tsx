@@ -102,7 +102,7 @@ const HeroSection = () => {
             <Button
               variant="outline"
               size="lg"
-              className="border-white text-white hover:bg-white hover:text-primary transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg glass-effect"
+              className="bg-primary/20 border-primary text-white hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg glass-effect"
             >
               <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
               {t('hero.cta.secondary')}
