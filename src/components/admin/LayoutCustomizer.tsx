@@ -134,21 +134,44 @@ export const LayoutCustomizer = () => {
 
   const saveLayoutSettings = async () => {
     try {
-      const { error } = await supabase
+      // First check if the record exists
+      const { data: existingData } = await supabase
         .from('site_settings')
-        .upsert({
-          setting_key: 'layout_settings',
-          setting_value: JSON.stringify(layoutSettings)
-        }, {
-          onConflict: 'setting_key'
-        });
+        .select('id')
+        .eq('setting_key', 'layout_settings')
+        .single();
 
-      if (error) throw error;
+      if (existingData) {
+        // Update existing record
+        const { error } = await supabase
+          .from('site_settings')
+          .update({
+            setting_value: JSON.stringify(layoutSettings),
+            updated_at: new Date().toISOString()
+          })
+          .eq('setting_key', 'layout_settings');
+
+        if (error) throw error;
+      } else {
+        // Insert new record
+        const { error } = await supabase
+          .from('site_settings')
+          .insert({
+            setting_key: 'layout_settings',
+            setting_value: JSON.stringify(layoutSettings)
+          });
+
+        if (error) throw error;
+      }
 
       toast({
         title: 'تم الحفظ',
         description: 'تم حفظ إعدادات التخطيط بنجاح'
       });
+
+      // Apply the layout changes to the admin interface immediately
+      applyLayoutChangesToUI();
+      
     } catch (error) {
       console.error('Error saving layout settings:', error);
       toast({
@@ -156,6 +179,34 @@ export const LayoutCustomizer = () => {
         description: 'حدث خطأ في حفظ الإعدادات',
         variant: 'destructive'
       });
+    }
+  };
+
+  const applyLayoutChangesToUI = () => {
+    // Apply theme changes
+    if (layoutSettings.theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (layoutSettings.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Apply primary color as CSS variable
+    document.documentElement.style.setProperty('--primary-color', layoutSettings.primary_color);
+    
+    // Apply layout changes through CSS variables
+    document.documentElement.style.setProperty('--sidebar-width', `${layoutSettings.sidebar_width}px`);
+    document.documentElement.style.setProperty('--header-height', `${layoutSettings.header_height}px`);
+    document.documentElement.style.setProperty('--content-max-width', `${layoutSettings.content_max_width}px`);
+    
+    // Add custom CSS if provided
+    if (layoutSettings.custom_css) {
+      let styleElement = document.getElementById('layout-custom-styles');
+      if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.id = 'layout-custom-styles';
+        document.head.appendChild(styleElement);
+      }
+      styleElement.textContent = layoutSettings.custom_css;
     }
   };
 
