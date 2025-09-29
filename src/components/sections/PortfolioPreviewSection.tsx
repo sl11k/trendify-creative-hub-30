@@ -38,7 +38,7 @@ const PortfolioPreviewSection = () => {
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false })
-        .limit(2);
+        .limit(3);
       
       if (data) {
         const portfolioData = data.map(item => ({
@@ -92,7 +92,7 @@ const PortfolioPreviewSection = () => {
         </div>
 
         {/* Featured Projects */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {displayProjects.map((project, index) => {
             const projectFiles = (project.files as PortfolioFile[]) || [];
             const mainImage = projectFiles.find(f => f.type === 'image')?.url || project.image_url;

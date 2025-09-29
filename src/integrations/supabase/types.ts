@@ -291,6 +291,7 @@ export type Database = {
           github_url: string | null
           id: string
           image_url: string | null
+          logo_url: string | null
           project_type: string | null
           project_url: string | null
           published: boolean | null
@@ -308,6 +309,7 @@ export type Database = {
           github_url?: string | null
           id?: string
           image_url?: string | null
+          logo_url?: string | null
           project_type?: string | null
           project_url?: string | null
           published?: boolean | null
@@ -325,6 +327,7 @@ export type Database = {
           github_url?: string | null
           id?: string
           image_url?: string | null
+          logo_url?: string | null
           project_type?: string | null
           project_url?: string | null
           published?: boolean | null

@@ -45,6 +45,7 @@ interface PortfolioItem {
   description_ar?: string;
   description_en?: string;
   image_url?: string;
+  logo_url?: string;
   project_url?: string;
   github_url?: string;
   category?: string;
@@ -71,6 +72,7 @@ const PortfolioManager = () => {
     description_ar: '',
     description_en: '',
     image_url: '',
+    logo_url: '',
     project_url: '',
     github_url: '',
     category: '',
@@ -121,6 +123,7 @@ const PortfolioManager = () => {
       description_ar: '',
       description_en: '',
       image_url: '',
+      logo_url: '',
       project_url: '',
       github_url: '',
       category: '',
@@ -269,6 +272,7 @@ const PortfolioManager = () => {
       description_ar: item.description_ar || '',
       description_en: item.description_en || '',
       image_url: item.image_url || '',
+      logo_url: item.logo_url || '',
       project_url: item.project_url || '',
       github_url: item.github_url || '',
       category: item.category || '',
@@ -525,6 +529,75 @@ const PortfolioManager = () => {
                   onChange={(e) => handleTechnologiesChange(e.target.value)}
                   placeholder={isRTL ? 'فصل بالفواصل: React, Node.js, MongoDB' : 'Comma separated: React, Node.js, MongoDB'}
                 />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="logo_url">{isRTL ? 'لوغو المشروع (رابط أو صورة)' : 'Project Logo (URL or Image)'}</Label>
+              <div className="space-y-2">
+                <Input
+                  id="logo_url"
+                  value={formData.logo_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, logo_url: e.target.value }))}
+                  placeholder={isRTL ? 'رابط اللوغو' : 'Logo URL'}
+                />
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{isRTL ? 'أو' : 'or'}</span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => document.getElementById('logo-upload')?.click()}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {isRTL ? 'رفع لوغو' : 'Upload Logo'}
+                  </Button>
+                </div>
+                <input
+                  id="logo-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    
+                    try {
+                      const fileExt = file.name.split('.').pop();
+                      const fileName = `logo-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                      
+                      const { error: uploadError } = await supabase.storage
+                        .from('portfolio')
+                        .upload(fileName, file);
+                      
+                      if (uploadError) throw uploadError;
+                      
+                      const { data: { publicUrl } } = supabase.storage
+                        .from('portfolio')
+                        .getPublicUrl(fileName);
+                      
+                      setFormData(prev => ({ ...prev, logo_url: publicUrl }));
+                      
+                      toast({
+                        title: isRTL ? 'تم الرفع' : 'Uploaded',
+                        description: isRTL ? 'تم رفع اللوغو بنجاح' : 'Logo uploaded successfully'
+                      });
+                    } catch (error) {
+                      console.error('Error uploading logo:', error);
+                      toast({
+                        title: isRTL ? 'خطأ' : 'Error',
+                        description: isRTL ? 'حدث خطأ في رفع اللوغو' : 'Error uploading logo',
+                        variant: 'destructive'
+                      });
+                    }
+                  }}
+                  className="hidden"
+                />
+                {formData.logo_url && (
+                  <div className="mt-2">
+                    <img src={formData.logo_url} alt="Logo preview" className="h-16 w-16 object-contain border rounded" />
+                  </div>
+                )}
               </div>
             </div>
 
