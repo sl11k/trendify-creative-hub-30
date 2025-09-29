@@ -200,7 +200,7 @@ const Portfolio = () => {
 
       {/* Project Details Dialog */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto">
           {selectedProject && (
             <>
               <DialogHeader>
@@ -251,13 +251,23 @@ const Portfolio = () => {
                         <div key={index} className="space-y-2">
                           {file.type === 'image' && (
                             <div className="space-y-2">
-                              <img 
-                                src={file.url} 
-                                alt={file.name}
-                                className="w-full max-h-96 object-contain rounded-lg border bg-muted/10 cursor-pointer hover:scale-105 transition-transform"
+                              <div 
+                                className="relative cursor-pointer group overflow-hidden rounded-lg border bg-muted/10"
                                 onClick={() => window.open(file.url, '_blank')}
-                              />
-                              <p className="text-sm text-muted-foreground text-center">{file.name}</p>
+                              >
+                                <img 
+                                  src={file.url} 
+                                  alt={file.name}
+                                  className="w-full h-auto object-contain max-h-[70vh] transition-transform duration-300 group-hover:scale-105"
+                                  style={{ aspectRatio: 'auto' }}
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                                    {isRTL ? 'اضغط للعرض بالحجم الكامل' : 'Click to view full size'}
+                                  </div>
+                                </div>
+                              </div>
+                              <p className="text-sm text-muted-foreground text-center font-medium">{file.name}</p>
                             </div>
                           )}
                           {file.type === 'video' && (
@@ -265,30 +275,31 @@ const Portfolio = () => {
                               <video 
                                 src={file.url} 
                                 controls
-                                className="w-full max-h-96 rounded-lg"
+                                className="w-full h-auto max-h-[70vh] rounded-lg object-contain"
                               />
-                              <p className="text-sm text-muted-foreground text-center">{file.name}</p>
+                              <p className="text-sm text-muted-foreground text-center font-medium">{file.name}</p>
                             </div>
                           )}
                           {file.type === 'pdf' && (
                             <div className="space-y-2">
-                              <div className="border rounded-lg overflow-hidden">
+                              <div className="border rounded-lg overflow-hidden bg-white">
                                 <iframe
-                                  src={file.url}
-                                  className="w-full h-96"
+                                  src={`${file.url}#view=FitH`}
+                                  className="w-full h-[80vh]"
                                   title={file.name}
+                                  frameBorder="0"
                                 />
                               </div>
                               <div className="flex items-center justify-between">
-                                <p className="text-sm text-muted-foreground">{file.name}</p>
+                                <p className="text-sm text-muted-foreground font-medium">{file.name}</p>
                                 <a
                                   href={file.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-primary hover:underline"
+                                  className="flex items-center gap-2 text-primary hover:underline text-sm font-medium"
                                 >
                                   <FileText className="h-4 w-4" />
-                                  {isRTL ? 'فتح PDF' : 'Open PDF'}
+                                  {isRTL ? 'فتح في صفحة جديدة' : 'Open in new tab'}
                                 </a>
                               </div>
                             </div>
