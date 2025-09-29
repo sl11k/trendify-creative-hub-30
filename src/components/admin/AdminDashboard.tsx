@@ -140,6 +140,8 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         blogsData,
         portfolioData, 
         servicesData,
+        partnersData,
+        toolsData,
         socialLinksData,
         analyticsData,
         seoData,
@@ -149,6 +151,8 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         supabase.from('blogs').select('*').order('created_at', { ascending: false }),
         supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
         supabase.from('services').select('*').order('sort_order', { ascending: true }),
+        supabase.from('partners').select('*').order('sort_order', { ascending: true }),
+        supabase.from('tools').select('*').order('sort_order', { ascending: true }),
         supabase.from('social_links').select('*').order('created_at', { ascending: false }),
         supabase.from('analytics_codes').select('*').order('created_at', { ascending: false }),
         supabase.from('page_seo').select('*').order('page_slug', { ascending: true }),
@@ -159,6 +163,8 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
       if (blogsData.data) setBlogs(blogsData.data);
       if (portfolioData.data) setPortfolio(portfolioData.data);
       if (servicesData.data) setServices(servicesData.data);
+      if (partnersData.data) setPartners(partnersData.data);
+      if (toolsData.data) setTools(toolsData.data);
       if (socialLinksData.data) setSocialLinks(socialLinksData.data);
       if (analyticsData.data) setAnalyticsCodes(analyticsData.data);
       if (seoData.data) setPageSEO(seoData.data);
@@ -189,7 +195,7 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         <p className="text-muted-foreground">مرحباً بك في لوحة التحكم</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-gradient-primary p-6 rounded-lg text-white">
           <h3 className="text-lg font-semibold">المقالات</h3>
           <p className="text-3xl font-bold">{blogs.length}</p>
@@ -206,6 +212,18 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
           <h3 className="text-lg font-semibold text-foreground">الخدمات</h3>
           <p className="text-3xl font-bold text-primary">{services.length}</p>
           <p className="text-sm text-muted-foreground">إجمالي الخدمات</p>
+        </div>
+        
+        <div className="bg-gradient-card p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold text-foreground">الشركاء</h3>
+          <p className="text-3xl font-bold text-primary">{partners.length}</p>
+          <p className="text-sm text-muted-foreground">شركاء النجاح</p>
+        </div>
+        
+        <div className="bg-gradient-card p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold text-foreground">الأدوات</h3>
+          <p className="text-3xl font-bold text-primary">{tools.length}</p>
+          <p className="text-sm text-muted-foreground">أدوات مفيدة</p>
         </div>
         
         <div className="bg-gradient-card p-6 rounded-lg border">
@@ -235,6 +253,10 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         return <PortfolioManager />;
       case 'services':
         return <ServicesManager />;
+      case 'partners':
+        return <PartnersManager partners={partners} onRefresh={loadAllData} />;
+      case 'tools':
+        return <ToolsManager tools={tools} onRefresh={loadAllData} />;
       case 'social-links':
         return <SocialLinksManager />;
       case 'whatsapp':
