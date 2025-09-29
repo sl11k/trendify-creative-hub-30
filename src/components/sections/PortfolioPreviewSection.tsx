@@ -102,6 +102,13 @@ const PortfolioPreviewSection = () => {
                 key={project.id}
                 className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => {
+                  if (project.project_type === 'website' && project.project_url && project.project_url !== '#') {
+                    window.open(project.project_url, '_blank');
+                  } else {
+                    window.location.href = `/portfolio?project=${project.id}`;
+                  }
+                }}
               >
                 <div className="relative overflow-hidden">
                   {mainImage ? (

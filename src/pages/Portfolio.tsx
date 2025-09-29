@@ -27,6 +27,21 @@ const Portfolio = () => {
   const { t, isRTL } = useLanguage();
   const { portfolio, loading, error } = usePortfolio();
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [imageModalUrl, setImageModalUrl] = useState<string | null>(null);
+
+  // Check URL for project parameter
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('project');
+    if (projectId && portfolio.length > 0) {
+      const project = portfolio.find(p => p.id === projectId);
+      if (project) {
+        setSelectedProject(project);
+        // Remove the parameter from URL
+        window.history.replaceState({}, '', '/portfolio');
+      }
+    }
+  }, [portfolio]);
 
   const getProjectTypeIcon = (type: string) => {
     switch (type) {
@@ -122,7 +137,13 @@ const Portfolio = () => {
                   key={project.id}
                   className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
                   style={{ animationDelay: `${index * 0.1}s` }}
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => {
+                    if (project.project_type === 'website' && project.project_url && project.project_url !== '#') {
+                      window.open(project.project_url, '_blank');
+                    } else {
+                      setSelectedProject(project);
+                    }
+                  }}
                 >
                   <div className="relative overflow-hidden">
                     <img 
@@ -253,7 +274,7 @@ const Portfolio = () => {
                             <div className="space-y-2">
                               <div 
                                 className="relative cursor-pointer group overflow-hidden rounded-lg border bg-muted/10"
-                                onClick={() => window.open(file.url, '_blank')}
+                                onClick={() => setImageModalUrl(file.url)}
                               >
                                 <img 
                                   src={file.url} 
@@ -359,6 +380,28 @@ const Portfolio = () => {
               </div>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Modal */}
+      <Dialog open={!!imageModalUrl} onOpenChange={() => setImageModalUrl(null)}>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0 bg-transparent shadow-none">
+          <div className="relative flex items-center justify-center min-h-[95vh]">
+            <img 
+              src={imageModalUrl || ''}
+              alt="Full size image"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <Button
+              variant="secondary"
+              size="icon"
+              className="absolute top-4 right-4 rounded-full"
+              onClick={() => setImageModalUrl(null)}
+            >
+              ×
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </WebsiteDesignRenderer>
