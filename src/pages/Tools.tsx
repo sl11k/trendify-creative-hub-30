@@ -21,7 +21,10 @@ const Tools = () => {
     
     try {
       const IconComponent = (Icons as any)[iconName];
-      return IconComponent ? <IconComponent className="w-6 h-6" /> : <ExternalLink className="w-6 h-6" />;
+      if (IconComponent && typeof IconComponent === 'function') {
+        return React.createElement(IconComponent, { className: "w-6 h-6" });
+      }
+      return <ExternalLink className="w-6 h-6" />;
     } catch {
       return <ExternalLink className="w-6 h-6" />;
     }

@@ -161,7 +161,10 @@ const ToolsManager = ({ tools, onRefresh }: ToolsManagerProps) => {
     
     try {
       const IconComponent = (Icons as any)[iconName];
-      return IconComponent ? <IconComponent className="w-5 h-5" /> : <ExternalLink className="w-5 h-5" />;
+      if (IconComponent && typeof IconComponent === 'function') {
+        return React.createElement(IconComponent, { className: "w-5 h-5" });
+      }
+      return <ExternalLink className="w-5 h-5" />;
     } catch {
       return <ExternalLink className="w-5 h-5" />;
     }
