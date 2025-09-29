@@ -140,6 +140,21 @@ const PortfolioManager = () => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
+    // Check file sizes before upload
+    const maxSizeInMB = 5; // 5MB limit
+    const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+    
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > maxSizeInBytes) {
+        toast({
+          title: isRTL ? 'ملف كبير جداً' : 'File too large',
+          description: isRTL ? `حجم الملف "${files[i].name}" يجب أن يكون أقل من ${maxSizeInMB}MB` : `File "${files[i].name}" must be less than ${maxSizeInMB}MB`,
+          variant: 'destructive'
+        });
+        return;
+      }
+    }
+
     setUploadingFiles(true);
     try {
       const uploadedFiles: PortfolioFile[] = [];
@@ -150,39 +165,54 @@ const PortfolioManager = () => {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `files/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('portfolio')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false
+        try {
+          const { error: uploadError } = await supabase.storage
+            .from('portfolio')
+            .upload(filePath, file, {
+              cacheControl: '3600',
+              upsert: false
+            });
+
+          if (uploadError) {
+            console.error('Upload error for file:', file.name, uploadError);
+            throw new Error(`فشل في رفع الملف "${file.name}": ${uploadError.message}`);
+          }
+
+          const { data: { publicUrl } } = supabase.storage
+            .from('portfolio')
+            .getPublicUrl(filePath);
+
+          let fileType: 'image' | 'video' | 'pdf' | 'link' = 'image';
+          if (file.type.startsWith('video/')) fileType = 'video';
+          else if (file.type === 'application/pdf') fileType = 'pdf';
+
+          uploadedFiles.push({
+            type: fileType,
+            url: publicUrl,
+            name: file.name
           });
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('portfolio')
-          .getPublicUrl(filePath);
-
-        let fileType: 'image' | 'video' | 'pdf' | 'link' = 'image';
-        if (file.type.startsWith('video/')) fileType = 'video';
-        else if (file.type === 'application/pdf') fileType = 'pdf';
-
-        uploadedFiles.push({
-          type: fileType,
-          url: publicUrl,
-          name: file.name
-        });
+        } catch (fileError) {
+          console.error('Error uploading individual file:', fileError);
+          // Continue with other files but show error for this one
+          toast({
+            title: isRTL ? 'خطأ في رفع ملف' : 'File upload error',
+            description: isRTL ? `فشل في رفع "${file.name}"` : `Failed to upload "${file.name}"`,
+            variant: 'destructive'
+          });
+        }
       }
 
-      setFormData(prev => ({
-        ...prev,
-        files: [...prev.files, ...uploadedFiles]
-      }));
+      if (uploadedFiles.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          files: [...prev.files, ...uploadedFiles]
+        }));
 
-      toast({
-        title: isRTL ? 'تم الرفع' : 'Uploaded',
-        description: isRTL ? `تم رفع ${uploadedFiles.length} ملف بنجاح` : `${uploadedFiles.length} file(s) uploaded successfully`
-      });
+        toast({
+          title: isRTL ? 'تم الرفع' : 'Uploaded',
+          description: isRTL ? `تم رفع ${uploadedFiles.length} ملف بنجاح` : `${uploadedFiles.length} file(s) uploaded successfully`
+        });
+      }
     } catch (error) {
       console.error('Error uploading files:', error);
       toast({
@@ -192,6 +222,10 @@ const PortfolioManager = () => {
       });
     } finally {
       setUploadingFiles(false);
+      // Reset file input
+      if (event.target) {
+        event.target.value = '';
+      }
     }
   };
 
@@ -657,6 +691,9 @@ const PortfolioManager = () => {
                   onChange={handleFileUpload}
                   className="hidden"
                 />
+                <p className="text-xs text-muted-foreground">
+                  {isRTL ? 'الحد الأقصى لحجم الملف: 5MB' : 'Maximum file size: 5MB'}
+                </p>
                 
                 {formData.files.length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
