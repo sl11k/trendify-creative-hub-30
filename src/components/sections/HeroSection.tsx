@@ -89,15 +89,20 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{animationDelay: '0.4s'}}>
-            <Link to={consultationButton.url}>
-              <Button
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
-              >
-                {isRTL ? consultationButton.text_ar : consultationButton.text_en}
-                <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
+              onClick={() => {
+                if (consultationButton.url.startsWith('http')) {
+                  window.open(consultationButton.url, '_blank');
+                } else {
+                  window.location.href = consultationButton.url;
+                }
+              }}
+            >
+              {isRTL ? consultationButton.text_ar : consultationButton.text_en}
+              <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
+            </Button>
             
             <Button
               variant="outline"
