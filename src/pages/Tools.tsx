@@ -14,7 +14,7 @@ import * as Icons from 'lucide-react';
 const Tools = () => {
   usePageTracking();
   const { language } = useLanguage();
-  const { tools, loading } = useTools();
+  const { tools, loading, error } = useTools();
 
   const renderIcon = (iconName: string | null) => {
     if (!iconName) return <ExternalLink className="w-6 h-6" />;
@@ -27,7 +27,12 @@ const Tools = () => {
     }
   };
 
-  const groupedTools = tools.reduce((acc, tool) => {
+  // Handle error state
+  if (error) {
+    console.error('Tools loading error:', error);
+  }
+
+  const groupedTools = (tools || []).reduce((acc, tool) => {
     const category = language === 'ar' ? (tool.category_ar || 'أدوات عامة') : (tool.category_en || 'General Tools');
     if (!acc[category]) {
       acc[category] = [];
@@ -68,7 +73,7 @@ const Tools = () => {
                   {language === 'ar' ? 'جاري تحميل الأدوات...' : 'Loading tools...'}
                 </p>
               </div>
-            ) : tools.length === 0 ? (
+            ) : !tools || tools.length === 0 ? (
               <div className="text-center py-20">
                 <h3 className="text-2xl font-bold text-muted-foreground mb-4">
                   {language === 'ar' ? 'لا توجد أدوات متاحة حالياً' : 'No tools available at the moment'}
