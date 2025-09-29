@@ -118,32 +118,42 @@ const Portfolio = () => {
                   const mainImage = projectFiles.find(f => f.type === 'image')?.url || project.image_url || '/placeholder.svg';
                   
                   return (
-                    <Card
-                      key={project.id}
-                      className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                      onClick={() => setSelectedProject(project)}
-                    >
-                      <div className="relative overflow-hidden">
+                <Card
+                  key={project.id}
+                  className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={mainImage}
+                      alt={isRTL ? project.title_ar : project.title_en}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {/* Project Logo */}
+                    {project.logo_url && (
+                      <div className="absolute top-2 left-2">
                         <img 
-                          src={mainImage}
-                          alt={isRTL ? project.title_ar : project.title_en}
-                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                          src={project.logo_url} 
+                          alt="Logo"
+                          className="h-10 w-10 object-contain bg-white/90 rounded-full p-1"
                         />
-                        <div className="absolute top-2 right-2">
-                          <Badge variant="secondary" className="gap-1">
-                            <TypeIcon className="h-3 w-3" />
-                            {getProjectTypeName(project.project_type || 'website')}
-                          </Badge>
-                        </div>
-                        {projectFiles.length > 1 && (
-                          <div className="absolute bottom-2 right-2">
-                            <Badge variant="secondary">
-                              {projectFiles.length} {isRTL ? 'ملف' : 'files'}
-                            </Badge>
-                          </div>
-                        )}
                       </div>
+                    )}
+                    <div className="absolute top-2 right-2">
+                      <Badge variant="secondary" className="gap-1">
+                        <TypeIcon className="h-3 w-3" />
+                        {getProjectTypeName(project.project_type || 'website')}
+                      </Badge>
+                    </div>
+                    {projectFiles.length > 1 && (
+                      <div className="absolute bottom-2 right-2">
+                        <Badge variant="secondary">
+                          {projectFiles.length} {isRTL ? 'ملف' : 'files'}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
                       
                       <CardHeader>
                         <div className="flex justify-between items-start mb-2">
@@ -214,6 +224,17 @@ const Portfolio = () => {
                 </div>
 
                 {/* Description */}
+                {/* Project Logo */}
+                {selectedProject.logo_url && (
+                  <div className="flex justify-center">
+                    <img 
+                      src={selectedProject.logo_url} 
+                      alt="Project Logo"
+                      className="h-20 w-20 object-contain"
+                    />
+                  </div>
+                )}
+
                 <div>
                   <h3 className="font-semibold mb-2">{isRTL ? 'الوصف' : 'Description'}</h3>
                   <p className="text-muted-foreground">
@@ -225,43 +246,66 @@ const Portfolio = () => {
                 {selectedProject.files && (selectedProject.files as any as PortfolioFile[]).length > 0 && (
                   <div>
                     <h3 className="font-semibold mb-3">{isRTL ? 'الملفات والمرفقات' : 'Files and Attachments'}</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-4">
                       {(selectedProject.files as any as PortfolioFile[]).map((file, index) => (
                         <div key={index} className="space-y-2">
                           {file.type === 'image' && (
-                            <img 
-                              src={file.url} 
-                              alt={file.name}
-                              className="w-full h-48 object-cover rounded-lg"
-                            />
+                            <div className="space-y-2">
+                              <img 
+                                src={file.url} 
+                                alt={file.name}
+                                className="w-full max-h-96 object-contain rounded-lg border bg-muted/10 cursor-pointer hover:scale-105 transition-transform"
+                                onClick={() => window.open(file.url, '_blank')}
+                              />
+                              <p className="text-sm text-muted-foreground text-center">{file.name}</p>
+                            </div>
                           )}
                           {file.type === 'video' && (
-                            <video 
-                              src={file.url} 
-                              controls
-                              className="w-full h-48 rounded-lg"
-                            />
+                            <div className="space-y-2">
+                              <video 
+                                src={file.url} 
+                                controls
+                                className="w-full max-h-96 rounded-lg"
+                              />
+                              <p className="text-sm text-muted-foreground text-center">{file.name}</p>
+                            </div>
                           )}
                           {file.type === 'pdf' && (
-                            <a
-                              href={file.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2 p-4 border rounded-lg hover:bg-muted"
-                            >
-                              <FileText className="h-8 w-8" />
-                              <span className="text-sm">{file.name}</span>
-                            </a>
+                            <div className="space-y-2">
+                              <div className="border rounded-lg overflow-hidden">
+                                <iframe
+                                  src={file.url}
+                                  className="w-full h-96"
+                                  title={file.name}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm text-muted-foreground">{file.name}</p>
+                                <a
+                                  href={file.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 text-primary hover:underline"
+                                >
+                                  <FileText className="h-4 w-4" />
+                                  {isRTL ? 'فتح PDF' : 'Open PDF'}
+                                </a>
+                              </div>
+                            </div>
                           )}
                           {file.type === 'link' && (
                             <a
                               href={file.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-2 p-4 border rounded-lg hover:bg-muted"
+                              className="flex items-center gap-2 p-4 border rounded-lg hover:bg-muted transition-colors"
                             >
-                              <LinkIcon className="h-8 w-8" />
-                              <span className="text-sm">{file.name}</span>
+                              <LinkIcon className="h-4 w-4" />
+                              <div className="flex-1">
+                                <p className="font-medium">{file.name}</p>
+                                <p className="text-xs text-muted-foreground">{file.url}</p>
+                              </div>
+                              <ExternalLink className="h-4 w-4" />
                             </a>
                           )}
                         </div>

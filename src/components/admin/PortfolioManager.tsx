@@ -147,12 +147,23 @@ const PortfolioManager = () => {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${fileName}`;
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `files/${fileName}`;
+
+        // Check if user is authenticated
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          // Create anonymous session for upload
+          const { error: signInError } = await supabase.auth.signInAnonymously();
+          if (signInError) throw signInError;
+        }
 
         const { error: uploadError } = await supabase.storage
           .from('portfolio')
-          .upload(filePath, file);
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
 
         if (uploadError) throw uploadError;
 
@@ -184,7 +195,7 @@ const PortfolioManager = () => {
       console.error('Error uploading files:', error);
       toast({
         title: isRTL ? 'خطأ' : 'Error',
-        description: isRTL ? 'حدث خطأ في رفع الملفات' : 'Error uploading files',
+        description: isRTL ? 'حدث خطأ في رفع الملفات. تأكد من تسجيل الدخول.' : 'Error uploading files. Please make sure you are logged in.',
         variant: 'destructive'
       });
     } finally {
