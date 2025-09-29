@@ -1,19 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Github, Loader2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { 
+  ExternalLink, Github, Loader2, Globe, Palette, Camera, 
+  FileText, Brush, Smartphone, Film, Link as LinkIcon, Image as ImageIcon
+} from 'lucide-react';
 import { usePortfolio } from '@/hooks/usePortfolio';
 import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
 
+interface PortfolioFile {
+  type: 'image' | 'video' | 'pdf' | 'link';
+  url: string;
+  name: string;
+}
+
 const Portfolio = () => {
   usePageTracking(); // Track page views
   const { t, isRTL } = useLanguage();
   const { portfolio, loading, error } = usePortfolio();
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  const getProjectTypeIcon = (type: string) => {
+    switch (type) {
+      case 'website': return Globe;
+      case 'branding': return Palette;
+      case 'photography': return Camera;
+      case 'content': return FileText;
+      case 'graphic_design': return Brush;
+      case 'mobile_app': return Smartphone;
+      case 'video': return Film;
+      default: return Globe;
+    }
+  };
+
+  const getProjectTypeName = (type: string) => {
+    const types: Record<string, { ar: string; en: string }> = {
+      website: { ar: 'موقع إلكتروني', en: 'Website' },
+      branding: { ar: 'هوية بصرية', en: 'Branding' },
+      photography: { ar: 'تصوير', en: 'Photography' },
+      content: { ar: 'كتابة محتوى', en: 'Content Writing' },
+      graphic_design: { ar: 'تصميم جرافيك', en: 'Graphic Design' },
+      mobile_app: { ar: 'تطبيق موبايل', en: 'Mobile App' },
+      video: { ar: 'فيديو', en: 'Video' },
+      other: { ar: 'أخرى', en: 'Other' }
+    };
+    const typeInfo = types[type] || types.other;
+    return isRTL ? typeInfo.ar : typeInfo.en;
+  };
 
   if (loading) {
     return (
@@ -71,71 +112,200 @@ const Portfolio = () => {
 
               {/* Portfolio Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {portfolio.map((project, index) => (
-                  <Card
-                    key={project.id}
-                    className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="relative overflow-hidden">
-                      <img 
-                        src={project.image_url || '/placeholder.svg'}
-                        alt={isRTL ? project.title_ar : project.title_en}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="flex space-x-4">
-                          {project.project_url && (
-                            <a
-                              href={project.project_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="bg-white text-primary p-2 rounded-full hover:scale-110 transition-transform"
-                            >
-                              <ExternalLink className="h-5 w-5" />
-                            </a>
-                          )}
-                          <button className="bg-white text-primary p-2 rounded-full hover:scale-110 transition-transform">
-                            <Github className="h-5 w-5" />
-                          </button>
+                {portfolio.map((project, index) => {
+                  const TypeIcon = getProjectTypeIcon(project.project_type || 'website');
+                  const projectFiles = (project.files as any as PortfolioFile[]) || [];
+                  const mainImage = projectFiles.find(f => f.type === 'image')?.url || project.image_url || '/placeholder.svg';
+                  
+                  return (
+                    <Card
+                      key={project.id}
+                      className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                      onClick={() => setSelectedProject(project)}
+                    >
+                      <div className="relative overflow-hidden">
+                        <img 
+                          src={mainImage}
+                          alt={isRTL ? project.title_ar : project.title_en}
+                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                        <div className="absolute top-2 right-2">
+                          <Badge variant="secondary" className="gap-1">
+                            <TypeIcon className="h-3 w-3" />
+                            {getProjectTypeName(project.project_type || 'website')}
+                          </Badge>
                         </div>
+                        {projectFiles.length > 1 && (
+                          <div className="absolute bottom-2 right-2">
+                            <Badge variant="secondary">
+                              {projectFiles.length} {isRTL ? 'ملف' : 'files'}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    
-                    <CardHeader>
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
-                          {project.category || (isRTL ? 'مشروع' : 'Project')}
-                        </span>
-                      </div>
-                      <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                        {isRTL ? project.title_ar : project.title_en}
-                      </CardTitle>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <CardDescription className="text-muted-foreground mb-4">
-                        {isRTL ? project.description_ar : project.description_en}
-                      </CardDescription>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies?.map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded"
-                          >
-                            {tag}
+                      
+                      <CardHeader>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
+                            {project.category || (isRTL ? 'مشروع' : 'Project')}
                           </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        </div>
+                        <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                          {isRTL ? project.title_ar : project.title_en}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <CardDescription className="text-muted-foreground mb-4 line-clamp-2">
+                          {isRTL ? project.description_ar : project.description_en}
+                        </CardDescription>
+                        {project.technologies && project.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {project.technologies.slice(0, 3).map((tag, tagIndex) => (
+                              <span
+                                key={tagIndex}
+                                className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                            {project.technologies.length > 3 && (
+                              <span className="text-xs text-muted-foreground">
+                                +{project.technologies.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           </section>
         </main>
         <Footer />
       </div>
+
+      {/* Project Details Dialog */}
+      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedProject && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-2xl">
+                  {isRTL ? selectedProject.title_ar : selectedProject.title_en}
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Project Type and Category */}
+                <div className="flex gap-2 flex-wrap">
+                  {React.createElement(getProjectTypeIcon(selectedProject.project_type || 'website'), { 
+                    className: "h-5 w-5 inline" 
+                  })}
+                  <Badge variant="secondary">
+                    {getProjectTypeName(selectedProject.project_type || 'website')}
+                  </Badge>
+                  {selectedProject.category && (
+                    <Badge variant="outline">{selectedProject.category}</Badge>
+                  )}
+                </div>
+
+                {/* Description */}
+                <div>
+                  <h3 className="font-semibold mb-2">{isRTL ? 'الوصف' : 'Description'}</h3>
+                  <p className="text-muted-foreground">
+                    {isRTL ? selectedProject.description_ar : selectedProject.description_en}
+                  </p>
+                </div>
+
+                {/* Files Gallery */}
+                {selectedProject.files && (selectedProject.files as any as PortfolioFile[]).length > 0 && (
+                  <div>
+                    <h3 className="font-semibold mb-3">{isRTL ? 'الملفات والمرفقات' : 'Files and Attachments'}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {(selectedProject.files as any as PortfolioFile[]).map((file, index) => (
+                        <div key={index} className="space-y-2">
+                          {file.type === 'image' && (
+                            <img 
+                              src={file.url} 
+                              alt={file.name}
+                              className="w-full h-48 object-cover rounded-lg"
+                            />
+                          )}
+                          {file.type === 'video' && (
+                            <video 
+                              src={file.url} 
+                              controls
+                              className="w-full h-48 rounded-lg"
+                            />
+                          )}
+                          {file.type === 'pdf' && (
+                            <a
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 p-4 border rounded-lg hover:bg-muted"
+                            >
+                              <FileText className="h-8 w-8" />
+                              <span className="text-sm">{file.name}</span>
+                            </a>
+                          )}
+                          {file.type === 'link' && (
+                            <a
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 p-4 border rounded-lg hover:bg-muted"
+                            >
+                              <LinkIcon className="h-8 w-8" />
+                              <span className="text-sm">{file.name}</span>
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Technologies */}
+                {selectedProject.technologies && selectedProject.technologies.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold mb-2">{isRTL ? 'التقنيات المستخدمة' : 'Technologies Used'}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.technologies.map((tech: string, index: number) => (
+                        <Badge key={index} variant="outline">{tech}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Links */}
+                <div className="flex gap-3">
+                  {selectedProject.project_url && (
+                    <Button asChild variant="default">
+                      <a href={selectedProject.project_url} target="_blank" rel="noopener noreferrer" className="gap-2">
+                        <ExternalLink className="h-4 w-4" />
+                        {isRTL ? 'زيارة المشروع' : 'Visit Project'}
+                      </a>
+                    </Button>
+                  )}
+                  {selectedProject.github_url && (
+                    <Button asChild variant="outline">
+                      <a href={selectedProject.github_url} target="_blank" rel="noopener noreferrer" className="gap-2">
+                        <Github className="h-4 w-4" />
+                        {isRTL ? 'مشاهدة الكود' : 'View Code'}
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </WebsiteDesignRenderer>
   );
 };

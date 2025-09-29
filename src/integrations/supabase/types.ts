@@ -287,8 +287,11 @@ export type Database = {
           created_at: string | null
           description_ar: string | null
           description_en: string | null
+          files: Json | null
+          github_url: string | null
           id: string
           image_url: string | null
+          project_type: string | null
           project_url: string | null
           published: boolean | null
           technologies: string[] | null
@@ -301,8 +304,11 @@ export type Database = {
           created_at?: string | null
           description_ar?: string | null
           description_en?: string | null
+          files?: Json | null
+          github_url?: string | null
           id?: string
           image_url?: string | null
+          project_type?: string | null
           project_url?: string | null
           published?: boolean | null
           technologies?: string[] | null
@@ -315,8 +321,11 @@ export type Database = {
           created_at?: string | null
           description_ar?: string | null
           description_en?: string | null
+          files?: Json | null
+          github_url?: string | null
           id?: string
           image_url?: string | null
+          project_type?: string | null
           project_url?: string | null
           published?: boolean | null
           technologies?: string[] | null

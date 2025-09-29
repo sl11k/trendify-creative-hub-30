@@ -6,8 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
-  Plus, Edit, Trash2, Save, X, Image, 
+  Plus, Edit, Trash2, Save, X, Image, Upload, FileText, Film, Github,
   // Portfolio Icons - Extended Collection
   Briefcase, FolderOpen, Code, Palette, Database, Server,
   Globe, Smartphone, Monitor, Tablet, Laptop, Camera,
@@ -23,13 +24,19 @@ import {
   Cpu, HardDrive, Wifi, Bluetooth, Battery, Power,
   Settings, Wrench, Bug, Shield,
   // More icons for variety
-  CloudIcon, Download, Upload, Share, Link,
+  CloudIcon, Download, Share, Link,
   Calendar, Clock, Timer, Bell, CheckCircle,
   Mail, MessageCircle, Phone, Send, Inbox, AtSign
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+interface PortfolioFile {
+  type: 'image' | 'video' | 'pdf' | 'link';
+  url: string;
+  name: string;
+}
 
 interface PortfolioItem {
   id: string;
@@ -39,8 +46,11 @@ interface PortfolioItem {
   description_en?: string;
   image_url?: string;
   project_url?: string;
+  github_url?: string;
   category?: string;
   technologies?: string[];
+  project_type?: string;
+  files?: PortfolioFile[];
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -62,10 +72,15 @@ const PortfolioManager = () => {
     description_en: '',
     image_url: '',
     project_url: '',
+    github_url: '',
     category: '',
+    project_type: 'website',
     technologies: [] as string[],
+    files: [] as PortfolioFile[],
     published: false
   });
+
+  const [uploadingFiles, setUploadingFiles] = useState(false);
 
   useEffect(() => {
     loadPortfolio();
@@ -80,7 +95,13 @@ const PortfolioManager = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPortfolio(data || []);
+      
+      const portfolioData = (data || []).map(item => ({
+        ...item,
+        files: (item.files as any) ? JSON.parse(JSON.stringify(item.files)) : []
+      })) as PortfolioItem[];
+      
+      setPortfolio(portfolioData);
     } catch (error) {
       console.error('Error loading portfolio:', error);
       toast({
@@ -101,12 +122,90 @@ const PortfolioManager = () => {
       description_en: '',
       image_url: '',
       project_url: '',
+      github_url: '',
       category: '',
+      project_type: 'website',
       technologies: [],
+      files: [],
       published: false
     });
     setEditingId(null);
     setIsCreating(false);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingFiles(true);
+    try {
+      const uploadedFiles: PortfolioFile[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('portfolio')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('portfolio')
+          .getPublicUrl(filePath);
+
+        let fileType: 'image' | 'video' | 'pdf' | 'link' = 'image';
+        if (file.type.startsWith('video/')) fileType = 'video';
+        else if (file.type === 'application/pdf') fileType = 'pdf';
+
+        uploadedFiles.push({
+          type: fileType,
+          url: publicUrl,
+          name: file.name
+        });
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        files: [...prev.files, ...uploadedFiles]
+      }));
+
+      toast({
+        title: isRTL ? 'تم الرفع' : 'Uploaded',
+        description: isRTL ? `تم رفع ${uploadedFiles.length} ملف بنجاح` : `${uploadedFiles.length} file(s) uploaded successfully`
+      });
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: isRTL ? 'حدث خطأ في رفع الملفات' : 'Error uploading files',
+        variant: 'destructive'
+      });
+    } finally {
+      setUploadingFiles(false);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addLink = () => {
+    const url = prompt(isRTL ? 'أدخل رابط الملف أو المنشور' : 'Enter file or post URL');
+    const name = prompt(isRTL ? 'أدخل اسم الرابط' : 'Enter link name');
+    
+    if (url && name) {
+      setFormData(prev => ({
+        ...prev,
+        files: [...prev.files, { type: 'link', url, name }]
+      }));
+    }
   };
 
   const handleSave = async () => {
@@ -122,13 +221,14 @@ const PortfolioManager = () => {
     try {
       const portfolioData = {
         ...formData,
-        technologies: formData.technologies.length > 0 ? formData.technologies : null
+        technologies: formData.technologies.length > 0 ? formData.technologies : null,
+        files: JSON.parse(JSON.stringify(formData.files.length > 0 ? formData.files : []))
       };
 
       if (editingId) {
         const { error } = await supabase
           .from('portfolio')
-          .update(portfolioData)
+          .update(portfolioData as any)
           .eq('id', editingId);
 
         if (error) throw error;
@@ -140,7 +240,7 @@ const PortfolioManager = () => {
       } else {
         const { error } = await supabase
           .from('portfolio')
-          .insert([portfolioData]);
+          .insert([portfolioData as any]);
 
         if (error) throw error;
         
@@ -170,8 +270,11 @@ const PortfolioManager = () => {
       description_en: item.description_en || '',
       image_url: item.image_url || '',
       project_url: item.project_url || '',
+      github_url: item.github_url || '',
       category: item.category || '',
+      project_type: item.project_type || 'website',
       technologies: item.technologies || [],
+      files: item.files || [],
       published: item.published
     });
     setEditingId(item.id);
@@ -385,25 +488,23 @@ const PortfolioManager = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="image_url">{isRTL ? 'رابط الصورة' : 'Image URL'}</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  placeholder={isRTL ? 'رابط صورة المشروع' : 'Project image URL'}
-                />
-              </div>
-              <div>
-                <Label htmlFor="project_url">{isRTL ? 'رابط المشروع' : 'Project URL'}</Label>
-                <Input
-                  id="project_url"
-                  value={formData.project_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, project_url: e.target.value }))}
-                  placeholder={isRTL ? 'رابط المشروع المباشر' : 'Direct project URL'}
-                />
-              </div>
+            <div>
+              <Label htmlFor="project_type">{isRTL ? 'نوع المشروع' : 'Project Type'}</Label>
+              <Select value={formData.project_type} onValueChange={(value) => setFormData(prev => ({ ...prev, project_type: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="website">{isRTL ? 'موقع إلكتروني' : 'Website'}</SelectItem>
+                  <SelectItem value="branding">{isRTL ? 'هوية بصرية' : 'Branding'}</SelectItem>
+                  <SelectItem value="photography">{isRTL ? 'تصوير' : 'Photography'}</SelectItem>
+                  <SelectItem value="content">{isRTL ? 'كتابة محتوى' : 'Content Writing'}</SelectItem>
+                  <SelectItem value="graphic_design">{isRTL ? 'تصميم جرافيك' : 'Graphic Design'}</SelectItem>
+                  <SelectItem value="mobile_app">{isRTL ? 'تطبيق موبايل' : 'Mobile App'}</SelectItem>
+                  <SelectItem value="video">{isRTL ? 'فيديو' : 'Video'}</SelectItem>
+                  <SelectItem value="other">{isRTL ? 'أخرى' : 'Other'}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -424,6 +525,92 @@ const PortfolioManager = () => {
                   onChange={(e) => handleTechnologiesChange(e.target.value)}
                   placeholder={isRTL ? 'فصل بالفواصل: React, Node.js, MongoDB' : 'Comma separated: React, Node.js, MongoDB'}
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="project_url">{isRTL ? 'رابط المشروع (اختياري)' : 'Project URL (Optional)'}</Label>
+                <Input
+                  id="project_url"
+                  value={formData.project_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, project_url: e.target.value }))}
+                  placeholder={isRTL ? 'رابط المشروع المباشر' : 'Direct project URL'}
+                />
+              </div>
+              <div>
+                <Label htmlFor="github_url">{isRTL ? 'رابط GitHub (اختياري)' : 'GitHub URL (Optional)'}</Label>
+                <Input
+                  id="github_url"
+                  value={formData.github_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, github_url: e.target.value }))}
+                  placeholder="https://github.com/..."
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>{isRTL ? 'الملفات والصور' : 'Files and Images'}</Label>
+              <div className="mt-2 space-y-3">
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('file-upload')?.click()}
+                    disabled={uploadingFiles}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    {uploadingFiles ? (isRTL ? 'جاري الرفع...' : 'Uploading...') : (isRTL ? 'رفع ملفات' : 'Upload Files')}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addLink}
+                    className="gap-2"
+                  >
+                    <Link className="h-4 w-4" />
+                    {isRTL ? 'إضافة رابط' : 'Add Link'}
+                  </Button>
+                </div>
+                <input
+                  id="file-upload"
+                  type="file"
+                  multiple
+                  accept="image/*,video/*,application/pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                
+                {formData.files.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {formData.files.map((file, index) => (
+                      <Card key={index} className="p-2">
+                        <div className="flex items-center gap-2">
+                          {file.type === 'image' && <Image className="h-4 w-4 text-muted-foreground" />}
+                          {file.type === 'video' && <Film className="h-4 w-4 text-muted-foreground" />}
+                          {file.type === 'pdf' && <FileText className="h-4 w-4 text-muted-foreground" />}
+                          {file.type === 'link' && <Link className="h-4 w-4 text-muted-foreground" />}
+                          <span className="text-xs flex-1 truncate">{file.name}</span>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeFile(index)}
+                            className="h-6 w-6 p-0"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {isRTL 
+                    ? 'يمكنك رفع صور، فيديوهات، ملفات PDF، أو إضافة روابط خارجية' 
+                    : 'You can upload images, videos, PDFs, or add external links'}
+                </p>
               </div>
             </div>
 

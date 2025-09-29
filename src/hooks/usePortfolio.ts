@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
 
-type Portfolio = Tables<'portfolio'>;
+type Portfolio = Tables<'portfolio'> & {
+  files?: any[];
+};
 
 export const usePortfolio = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
@@ -19,7 +21,13 @@ export const usePortfolio = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPortfolio(data || []);
+      
+      const portfolioData = (data || []).map(item => ({
+        ...item,
+        files: item.files ? JSON.parse(JSON.stringify(item.files)) : []
+      })) as Portfolio[];
+      
+      setPortfolio(portfolioData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل المشاريع');
     } finally {
