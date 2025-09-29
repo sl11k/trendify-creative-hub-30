@@ -19,6 +19,7 @@ const translations = {
     'nav.about': 'من نحن',
     'nav.services': 'خدماتنا',
     'nav.portfolio': 'أعمالنا',
+    'nav.tools': 'أدواتنا',
     'nav.blog': 'المدونة',
     'nav.contact': 'اتصل بنا',
     
@@ -69,6 +70,7 @@ const translations = {
     'nav.about': 'About Us',
     'nav.services': 'Services',
     'nav.portfolio': 'Portfolio',
+    'nav.tools': 'Tools',
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
     

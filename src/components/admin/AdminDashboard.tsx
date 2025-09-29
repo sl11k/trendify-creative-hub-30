@@ -19,6 +19,9 @@ import { AdvancedWebsiteBuilder } from './AdvancedWebsiteBuilder';
 import { IconManager } from './IconManager';
 import { LayoutCustomizer } from './LayoutCustomizer';
 import PortfolioManager from './PortfolioManager';
+import PartnersManager from './PartnersManager';
+import ToolsManager from './ToolsManager';
+import { Tables } from '@/integrations/supabase/types';
 
 // Types
 interface Blog {
@@ -118,6 +121,8 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [partners, setPartners] = useState<Tables<'partners'>[]>([]);
+  const [tools, setTools] = useState<Tables<'tools'>[]>([]);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [analyticsCodes, setAnalyticsCodes] = useState<AnalyticsCode[]>([]);
   const [pageSEO, setPageSEO] = useState<PageSEO[]>([]);

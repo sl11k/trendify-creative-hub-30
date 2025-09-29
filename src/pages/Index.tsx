@@ -9,6 +9,7 @@ import ServicesPreviewSection from '@/components/sections/ServicesPreviewSection
 import PortfolioPreviewSection from '@/components/sections/PortfolioPreviewSection';
 import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import ContactSection from '@/components/sections/ContactSection';
+import PartnersSection from '@/components/sections/PartnersSection';
 import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
@@ -70,6 +71,7 @@ const Index = () => {
           <AboutPreviewSection />
           <ServicesPreviewSection />
           <PortfolioPreviewSection />
+          <PartnersSection />
           <BlogPreviewSection />
           <div className="py-20 bg-muted/30 text-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -21,7 +21,9 @@ import {
   Code,
   Layout,
   Wand,
-  Shapes
+  Shapes,
+  Handshake,
+  Wrench
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -76,6 +78,18 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
       title: "الخدمات",
       icon: Settings,
       description: "إدارة الخدمات"
+    },
+    {
+      id: "partners",
+      title: "الشركاء",
+      icon: Handshake,
+      description: "إدارة الشركاء"
+    },
+    {
+      id: "tools",
+      title: "الأدوات",
+      icon: Wrench,
+      description: "إدارة الأدوات"
     },
     {
       id: "social-links",

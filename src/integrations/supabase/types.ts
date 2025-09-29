@@ -245,6 +245,42 @@ export type Database = {
         }
         Relationships: []
       }
+      partners: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          logo_url: string
+          name_ar: string
+          name_en: string
+          sort_order: number | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          logo_url: string
+          name_ar: string
+          name_en: string
+          sort_order?: number | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          logo_url?: string
+          name_ar?: string
+          name_en?: string
+          sort_order?: number | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       portfolio: {
         Row: {
           category: string | null
@@ -381,6 +417,54 @@ export type Database = {
           created_at?: string
           id?: string
           platform?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          active: boolean
+          category_ar: string | null
+          category_en: string | null
+          created_at: string
+          description_ar: string
+          description_en: string
+          icon_name: string | null
+          id: string
+          name_ar: string
+          name_en: string
+          sort_order: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          category_ar?: string | null
+          category_en?: string | null
+          created_at?: string
+          description_ar: string
+          description_en: string
+          icon_name?: string | null
+          id?: string
+          name_ar: string
+          name_en: string
+          sort_order?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          category_ar?: string | null
+          category_en?: string | null
+          created_at?: string
+          description_ar?: string
+          description_en?: string
+          icon_name?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          sort_order?: number | null
           updated_at?: string
           url?: string
         }
