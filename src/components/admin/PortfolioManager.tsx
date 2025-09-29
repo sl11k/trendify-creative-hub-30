@@ -141,7 +141,7 @@ const PortfolioManager = () => {
     if (!files || files.length === 0) return;
 
     // Check file sizes before upload
-    const maxSizeInMB = 5; // 5MB limit
+    const maxSizeInMB = 30; // 30MB limit
     const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
     
     for (let i = 0; i < files.length; i++) {
@@ -692,7 +692,7 @@ const PortfolioManager = () => {
                   className="hidden"
                 />
                 <p className="text-xs text-muted-foreground">
-                  {isRTL ? 'الحد الأقصى لحجم الملف: 5MB' : 'Maximum file size: 5MB'}
+                  {isRTL ? 'الحد الأقصى لحجم الملف: 30MB' : 'Maximum file size: 30MB'}
                 </p>
                 
                 {formData.files.length > 0 && (
