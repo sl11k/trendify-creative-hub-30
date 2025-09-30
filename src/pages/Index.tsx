@@ -7,6 +7,7 @@ import HeroSection from '@/components/sections/HeroSection';
 import AboutPreviewSection from '@/components/sections/AboutPreviewSection';
 import ServicesPreviewSection from '@/components/sections/ServicesPreviewSection';
 import PortfolioPreviewSection from '@/components/sections/PortfolioPreviewSection';
+import ToolsPreviewSection from '@/components/sections/ToolsPreviewSection';
 import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
 import ContactSection from '@/components/sections/ContactSection';
 import PartnersSection from '@/components/sections/PartnersSection';
@@ -71,6 +72,7 @@ const Index = () => {
           <AboutPreviewSection />
           <ServicesPreviewSection />
           <PortfolioPreviewSection />
+          <ToolsPreviewSection />
           <PartnersSection />
           <BlogPreviewSection />
           <div className="py-20 bg-muted/30 text-center">
