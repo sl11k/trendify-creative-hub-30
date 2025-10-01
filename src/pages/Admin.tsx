@@ -5,62 +5,96 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminPage = () => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
 
   useEffect(() => {
-    // Check for stored auth
-    const storedAuth = localStorage.getItem('admin_authenticated');
-    if (storedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
+    // Check if user is authenticated and is an admin
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // Check if user is an admin using the RPC function
+        const { data, error } = await supabase.rpc('is_admin');
+        
+        if (error) {
+          console.error('Error checking admin status:', error);
+          setIsAuthenticated(false);
+        } else {
+          setIsAuthenticated(data === true);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const normalizedEmail = loginData.email.trim().toLowerCase();
-    if (normalizedEmail !== 'm7md4r3al@gmail.com') {
-      toast({
-        title: 'خطأ في تسجيل الدخول',
-        description: 'البريد الإلكتروني غير صحيح',
-        variant: 'destructive'
-      });
-      return;
-    }
+    setIsLoading(true);
 
     try {
-      if (loginData.password === 'Nsm123123_') {
-        setIsAuthenticated(true);
-        localStorage.setItem('admin_authenticated', 'true');
-        toast({
-          title: 'تم تسجيل الدخول بنجاح',
-          description: 'مرحباً بك في لوحة التحكم'
-        });
-      } else {
-        throw new Error('كلمة المرور غير صحيحة');
+      // Sign in with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginData.email.trim(),
+        password: loginData.password,
+      });
+
+      if (error) throw error;
+
+      // Check if user is an admin
+      const { data: isAdminData, error: adminError } = await supabase.rpc('is_admin');
+      
+      if (adminError) throw adminError;
+
+      if (!isAdminData) {
+        await supabase.auth.signOut();
+        throw new Error('ليس لديك صلاحيات الوصول لهذه الصفحة');
       }
 
+      setIsAuthenticated(true);
+      toast({
+        title: 'تم تسجيل الدخول بنجاح',
+        description: 'مرحباً بك في لوحة التحكم'
+      });
     } catch (error: any) {
       toast({
         title: 'خطأ في تسجيل الدخول',
-        description: error.message || 'كلمة المرور غير صحيحة',
+        description: error.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
         variant: 'destructive'
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_authenticated');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setIsAuthenticated(false);
     toast({
       title: 'تم تسجيل الخروج',
       description: 'تم تسجيل خروجك بنجاح'
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -81,6 +115,7 @@ const AdminPage = () => {
                   onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="البريد الإلكتروني"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -92,10 +127,11 @@ const AdminPage = () => {
                   onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
                   placeholder="كلمة المرور"
                   required
+                  disabled={isLoading}
                 />
               </div>
-              <Button type="submit" className="w-full">
-                تسجيل الدخول
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
               </Button>
             </form>
           </CardContent>
