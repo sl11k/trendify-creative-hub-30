@@ -79,8 +79,8 @@ const MaintenanceCheck: React.FC<MaintenanceCheckProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(175, 109, 213, 0.1), rgba(80, 129, 236, 0.1))' }}>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{ borderColor: 'hsl(270, 75%, 60%)' }}></div>
       </div>
     );
   }
@@ -90,53 +90,53 @@ const MaintenanceCheck: React.FC<MaintenanceCheckProps> = ({ children }) => {
   
   if (isMaintenanceMode && !isAdminPage) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 p-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, rgba(175, 109, 213, 0.2), rgba(80, 129, 236, 0.2))' }}>
         <div className="max-w-2xl w-full text-center">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-12">
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', WebkitBackdropFilter: 'blur(10px)', backdropFilter: 'blur(10px)', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', padding: '2rem' }}>
             {/* Logo/Brand */}
             <div className="mb-8">
-              <h1 className="text-4xl font-bold text-primary mb-2">Trendify</h1>
-              <div className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+              <h1 className="text-4xl font-bold mb-2" style={{ color: 'hsl(270, 75%, 60%)' }}>Trendify</h1>
+              <div className="w-20 h-1 mx-auto rounded-full" style={{ background: 'linear-gradient(to right, hsl(270, 75%, 60%), hsl(220, 90%, 60%))' }}></div>
             </div>
 
             {/* Maintenance Icon */}
             <div className="mb-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg" style={{ background: 'linear-gradient(135deg, rgb(251, 146, 60), rgb(239, 68, 68))' }}>
                 <AlertTriangle className="h-12 w-12 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              <h2 className="text-3xl font-bold mb-4" style={{ color: 'rgb(31, 41, 55)' }}>
                 {isRTL ? 'موقع تحت الصيانة' : 'Site Under Maintenance'}
               </h2>
             </div>
 
             {/* Maintenance Message */}
             <div className="mb-8">
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg leading-relaxed" style={{ color: 'rgb(75, 85, 99)' }}>
                 {isRTL ? maintenanceMessage.ar : maintenanceMessage.en}
               </p>
             </div>
 
             {/* Contact Information */}
-            <div className="bg-gray-50 rounded-xl p-6 mb-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            <div className="rounded-xl p-6 mb-6" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+              <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgb(31, 41, 55)' }}>
                 {isRTL ? 'تواصل معنا' : 'Contact Us'}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center justify-center gap-2">
-                  <Mail className="h-4 w-4 text-primary" />
-                  <a href={`mailto:${contactInfo.email}`} className="text-primary hover:underline">
+                  <Mail className="h-4 w-4" style={{ color: 'hsl(270, 75%, 60%)' }} />
+                  <a href={`mailto:${contactInfo.email}`} className="hover:underline" style={{ color: 'hsl(270, 75%, 60%)' }}>
                     {contactInfo.email}
                   </a>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <Phone className="h-4 w-4 text-primary" />
-                  <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="text-primary hover:underline">
+                  <Phone className="h-4 w-4" style={{ color: 'hsl(270, 75%, 60%)' }} />
+                  <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="hover:underline" style={{ color: 'hsl(270, 75%, 60%)' }}>
                     {contactInfo.phone}
                   </a>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-gray-600">
+                  <MapPin className="h-4 w-4" style={{ color: 'hsl(270, 75%, 60%)' }} />
+                  <span style={{ color: 'rgb(75, 85, 99)' }}>
                     {isRTL ? contactInfo.address_ar : contactInfo.address_en}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ const MaintenanceCheck: React.FC<MaintenanceCheckProps> = ({ children }) => {
             </div>
 
             {/* Footer */}
-            <div className="text-sm text-gray-500">
+            <div className="text-sm" style={{ color: 'rgb(107, 114, 128)' }}>
               © 2024 Trendify. {isRTL ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
             </div>
           </div>

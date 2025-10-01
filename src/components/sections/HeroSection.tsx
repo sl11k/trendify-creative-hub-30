@@ -54,14 +54,14 @@ const HeroSection = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Parallax Background */}
+      {/* Background Image - Fixed for iOS */}
       <div 
-        className="absolute inset-0 z-0 parallax-bg"
+        className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url(${heroBackground})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
@@ -107,7 +107,7 @@ const HeroSection = () => {
             <Button
               variant="outline"
               size="lg"
-              className="bg-primary/20 border-primary text-white hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg glass-effect"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg backdrop-blur-sm"
             >
               <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
               {t('hero.cta.secondary')}

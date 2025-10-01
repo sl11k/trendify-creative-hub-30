@@ -174,27 +174,40 @@
     @apply animate-pulse;
   }
   
-  /* Modern Blur Effect */
+  /* Modern Blur Effect - iOS Compatible */
   .glass-effect {
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.1);
+    /* Fallback for browsers that don't support backdrop-filter */
+    @supports not (backdrop-filter: blur(10px)) {
+      background: rgba(255, 255, 255, 0.3);
+    }
   }
 }
 
 @layer utilities {
-  /* Text Gradients */
+  /* Text Gradients - iOS Compatible */
   .text-gradient-primary {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* Fallback for unsupported browsers */
+    @supports not (-webkit-background-clip: text) {
+      color: hsl(var(--primary));
+    }
   }
   
   .text-gradient-secondary {
     background: var(--gradient-secondary);
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* Fallback for unsupported browsers */
+    @supports not (-webkit-background-clip: text) {
+      color: hsl(var(--secondary));
+    }
   }
 
 /* Custom Animations */
@@ -217,8 +230,9 @@
   }
 
   .parallax-bg {
-    transform: translateZ(0);
-    will-change: transform;
+    /* Simplified for iOS compatibility */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 
   /* Advanced Hover Effects */
@@ -248,19 +262,27 @@
   }
 }
 
-/* Custom Keyframes */
+/* Custom Keyframes - iOS Compatible */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { 
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px); 
+  }
+  50% { 
+    -webkit-transform: translateY(-20px);
+    transform: translateY(-20px); 
+  }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
+    -webkit-transform: translateY(30px);
     transform: translateY(30px);
   }
   to {
     opacity: 1;
+    -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 }
@@ -272,8 +294,16 @@
 }
 
 @keyframes counterUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    -webkit-transform: translateY(0);
+    transform: translateY(0); 
+  }
 }
 
 /* Counter Animation Script */
