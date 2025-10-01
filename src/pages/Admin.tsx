@@ -34,6 +34,31 @@ const AdminPage = () => {
       setIsLoading(false);
     };
 
+    // Create admin user automatically on first load
+    const createAdminUser = async () => {
+      try {
+        const response = await fetch('https://sfgwaukvjwcwdvnxklod.supabase.co/functions/v1/create-admin-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        if (response.ok) {
+          console.log('Admin user created successfully');
+        }
+      } catch (error) {
+        console.log('Admin user might already exist:', error);
+      }
+    };
+
+    // Only create admin user once
+    const hasCreatedAdmin = localStorage.getItem('admin_user_created');
+    if (!hasCreatedAdmin) {
+      createAdminUser();
+      localStorage.setItem('admin_user_created', 'true');
+    }
+
     checkAuth();
   }, []);
 
