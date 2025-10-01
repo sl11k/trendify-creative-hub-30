@@ -37,22 +37,25 @@ const FloatingWhatsAppButton = () => {
       const { data, error } = await supabase
         .from('whatsapp_button')
         .select('*')
-        .maybeSingle();
+        .order('created_at', { ascending: false })
+        .limit(1);
       
       if (error) {
         console.error('Error loading WhatsApp config:', error);
+        setIsVisible(false);
         return;
       }
       
-      if (data) {
-        setWhatsappConfig(data);
-        setIsVisible(data.active);
+      if (data && data.length > 0) {
+        setWhatsappConfig(data[0]);
+        setIsVisible(data[0].active);
       } else {
         // No configuration found, use defaults
         setIsVisible(false);
       }
     } catch (error) {
       console.error('Error loading WhatsApp config:', error);
+      setIsVisible(false);
     }
   };
 
