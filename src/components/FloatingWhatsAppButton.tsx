@@ -13,6 +13,7 @@ const FloatingWhatsAppButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    console.log('FloatingWhatsAppButton mounting');
     loadWhatsAppConfig();
     
     // Listen for changes to the whatsapp_button table
@@ -23,6 +24,7 @@ const FloatingWhatsAppButton = () => {
         schema: 'public', 
         table: 'whatsapp_button' 
       }, () => {
+        console.log('WhatsApp config changed, reloading...');
         loadWhatsAppConfig();
       })
       .subscribe();
@@ -34,6 +36,7 @@ const FloatingWhatsAppButton = () => {
 
   const loadWhatsAppConfig = async () => {
     try {
+      console.log('Loading WhatsApp config...');
       const { data, error } = await supabase
         .from('whatsapp_button')
         .select('*')
@@ -46,11 +49,15 @@ const FloatingWhatsAppButton = () => {
         return;
       }
       
+      console.log('WhatsApp config loaded:', data);
+      
       if (data && data.length > 0) {
         setWhatsappConfig(data[0]);
         setIsVisible(data[0].active);
+        console.log('WhatsApp button visible:', data[0].active);
       } else {
         // No configuration found, use defaults
+        console.log('No WhatsApp config found');
         setIsVisible(false);
       }
     } catch (error) {

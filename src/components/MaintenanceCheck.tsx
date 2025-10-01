@@ -23,16 +23,20 @@ const MaintenanceCheck: React.FC<MaintenanceCheckProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('MaintenanceCheck mounting');
     checkMaintenanceMode();
   }, []);
 
   const checkMaintenanceMode = async () => {
     try {
+      console.log('Checking maintenance mode...');
       // Check maintenance mode
       const { data: maintenanceSettings } = await supabase
         .from('site_settings')
         .select('*')
         .in('setting_key', ['maintenance_mode', 'maintenance_message_ar', 'maintenance_message_en']);
+      
+      console.log('Maintenance settings:', maintenanceSettings);
 
       if (maintenanceSettings) {
         const settings = maintenanceSettings.reduce((acc, item) => {

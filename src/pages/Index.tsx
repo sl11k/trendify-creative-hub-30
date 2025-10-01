@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
 
 const Index = () => {
+  console.log('Index page rendering');
   usePageTracking(); // Track page views
   const [consultationButton, setConsultationButton] = useState({
     text_ar: 'احصل على استشارة مجانية',
