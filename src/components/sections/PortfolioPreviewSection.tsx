@@ -97,7 +97,7 @@ const PortfolioPreviewSection = () => {
                 ) : (
                   <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
                     <div className="text-white text-6xl font-bold opacity-20">
-                      {isRTL ? 'مش' : 'P'}
+                      {isRTL ? 'مشروع' : 'PROJECT'}
                     </div>
                   </div>
                 )}

@@ -13,6 +13,7 @@ import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { supabase } from '@/integrations/supabase/client';
+import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
 
 const Index = () => {
   usePageTracking(); // Track page views
@@ -59,36 +60,38 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SeoHead lang="ar" />
-      <Analytics />
-      <Header />
-      <main>
-        <HeroSection />
-        <AboutPreviewSection />
-        <ServicesPreviewSection />
-        <PortfolioPreviewSection />
-        <BlogPreviewSection />
-        <div className="py-20 bg-muted/30 text-center">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
-              تواصل معنا
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
-              نحن هنا لمساعدتك في تحقيق أهدافك الرقمية
-            </p>
-            <Button
-              size="xl"
-              onClick={handleConsultationClick}
-              className="bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold px-8 py-4"
-            >
-              {consultationButton.text_ar}
-            </Button>
+    <WebsiteDesignRenderer pageSlug="home">
+      <div className="min-h-screen bg-background">
+        <SeoHead lang="ar" />
+        <Analytics />
+        <Header />
+        <main>
+          <HeroSection />
+          <AboutPreviewSection />
+          <ServicesPreviewSection />
+          <PortfolioPreviewSection />
+          <BlogPreviewSection />
+          <div className="py-20 bg-muted/30 text-center">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
+                تواصل معنا
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
+                نحن هنا لمساعدتك في تحقيق أهدافك الرقمية
+              </p>
+              <Button
+                size="xl"
+                onClick={handleConsultationClick}
+                className="bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300 transform hover:scale-105 shadow-glow font-semibold px-8 py-4"
+              >
+                {consultationButton.text_ar}
+              </Button>
+            </div>
           </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+        </main>
+        <Footer />
+      </div>
+    </WebsiteDesignRenderer>
   );
 };
 
