@@ -101,6 +101,7 @@ const PortfolioPreviewSection = () => {
                     src={project.image_url}
                     alt={isRTL ? project.title_ar : project.title_en}
                     className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">

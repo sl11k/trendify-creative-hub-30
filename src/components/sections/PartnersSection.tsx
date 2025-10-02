@@ -41,14 +41,16 @@ const PartnersSection = () => {
                   <img
                     src={partner.logo_url}
                     alt={isRTL ? partner.name_ar : partner.name_en}
-                    className="max-w-full max-h-24 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                    className="max-w-full max-h-24 object-contain filter group-hover:brightness-110 transition-all duration-300"
+                    loading="lazy"
                   />
                 </a>
               ) : (
                 <img
                   src={partner.logo_url}
                   alt={isRTL ? partner.name_ar : partner.name_en}
-                  className="max-w-full max-h-24 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                  className="max-w-full max-h-24 object-contain filter group-hover:brightness-110 transition-all duration-300"
+                  loading="lazy"
                 />
               )}
             </div>

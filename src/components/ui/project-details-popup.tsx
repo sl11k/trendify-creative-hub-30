@@ -73,6 +73,7 @@ export const ProjectDetailsPopup = ({ project, onClose }: ProjectDetailsPopupPro
                     src={project.logo_url}
                     alt="Logo"
                     className="w-16 h-16 object-contain rounded-lg border border-border"
+                    loading="lazy"
                   />
                 )}
                 <div className="flex-1">
@@ -145,6 +146,7 @@ export const ProjectDetailsPopup = ({ project, onClose }: ProjectDetailsPopupPro
                         src={imageUrl}
                         alt={`Image ${index + 1}`}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">

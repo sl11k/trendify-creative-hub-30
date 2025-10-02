@@ -86,6 +86,7 @@ const Portfolio = () => {
                         src={project.image_url || '/placeholder.svg'}
                         alt={isRTL ? project.title_ar : project.title_en}
                         className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        loading="lazy"
                         onClick={() => {
                           if (project.project_type === 'website' && project.project_url) {
                             window.open(project.project_url, '_blank');
