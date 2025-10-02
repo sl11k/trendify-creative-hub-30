@@ -19,4 +19,17 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    target: ['es2015', 'safari11'],
+    cssTarget: ['safari11'],
+    minify: 'terser',
+    terserOptions: {
+      safari10: true,
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2015',
+    },
+  },
 }));
