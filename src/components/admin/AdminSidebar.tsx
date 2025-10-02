@@ -69,6 +69,18 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
       description: "إدارة المشاريع"
     },
     {
+      id: "partners",
+      title: "الشركاء",
+      icon: Users,
+      description: "شركاء النجاح"
+    },
+    {
+      id: "tools",
+      title: "الأدوات",
+      icon: Settings,
+      description: "الأدوات المجانية"
+    },
+    {
       id: "services",
       title: "الخدمات",
       icon: Settings,

@@ -16,6 +16,8 @@ import UsersManager from './UsersManager';
 import MaintenanceManager from './MaintenanceManager';
 import { WebsiteBuilder } from './WebsiteBuilder';
 import PortfolioManager from './PortfolioManager';
+import PartnersManager from './PartnersManager';
+import ToolsManager from './ToolsManager';
 
 // Types
 interface Blog {
@@ -225,6 +227,10 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         return <BlogManager />;
       case 'portfolio':
         return <PortfolioManager />;
+      case 'partners':
+        return <PartnersManager />;
+      case 'tools':
+        return <ToolsManager />;
       case 'services':
         return <ServicesManager />;
       case 'social-links':
