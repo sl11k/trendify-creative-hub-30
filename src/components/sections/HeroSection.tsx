@@ -99,7 +99,7 @@ const HeroSection = () => {
               </Button>
             </Link>
             
-            <Link to="/portfolio">
+            <Link to="/services">
               <Button
                 size="lg"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
