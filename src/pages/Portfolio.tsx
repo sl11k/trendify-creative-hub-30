@@ -10,12 +10,14 @@ import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
 import { ImagePopup } from '@/components/ui/image-popup';
+import { ProjectDetailsPopup } from '@/components/ui/project-details-popup';
 
 const Portfolio = () => {
   usePageTracking();
   const { t, isRTL } = useLanguage();
   const { portfolio, loading, error } = usePortfolio();
   const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
 
   if (loading) {
     return (
@@ -88,14 +90,20 @@ const Portfolio = () => {
                           if (project.project_type === 'website' && project.project_url) {
                             window.open(project.project_url, '_blank');
                           } else {
-                            setSelectedImage({
-                              url: project.image_url || '/placeholder.svg',
-                              alt: isRTL ? project.title_ar : project.title_en
-                            });
+                            setSelectedProject(project);
                           }
                         }}
                       />
-                      <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
+                      <div 
+                        className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
+                        onClick={() => {
+                          if (project.project_type === 'website' && project.project_url) {
+                            window.open(project.project_url, '_blank');
+                          } else {
+                            setSelectedProject(project);
+                          }
+                        }}
+                      >
                         <div className="flex space-x-4">
                           {project.project_url && (
                             <a
@@ -162,6 +170,13 @@ const Portfolio = () => {
             imageUrl={selectedImage.url}
             alt={selectedImage.alt}
             onClose={() => setSelectedImage(null)}
+          />
+        )}
+
+        {selectedProject && (
+          <ProjectDetailsPopup
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
           />
         )}
       </div>

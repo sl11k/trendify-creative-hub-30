@@ -74,10 +74,10 @@ const Tools = () => {
               {/* Page Header */}
               <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-primary mb-6">
-                  {isRTL ? 'أدواتنا المجانية' : 'Our Free Tools'}
+                  {isRTL ? 'أدواتنا المميزة' : 'Our Premium Tools'}
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  {isRTL ? 'مجموعة من الأدوات المجانية لمساعدة المتاجر والتجار على تطوير أعمالهم' : 'A collection of free tools to help stores and merchants grow their business'}
+                  {isRTL ? 'مجموعة من الأدوات المميزة لمساعدة المتاجر والتجار على تطوير أعمالهم' : 'A collection of premium tools to help stores and merchants grow their business'}
                 </p>
               </div>
 
