@@ -1,8 +1,24 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Tables } from '@/integrations/supabase/types';
 
-type Portfolio = Tables<'portfolio'>;
+interface Portfolio {
+  id: string;
+  title_ar: string;
+  title_en: string;
+  description_ar?: string;
+  description_en?: string;
+  image_url?: string;
+  project_url?: string;
+  category?: string;
+  technologies?: string[];
+  published: boolean;
+  project_type?: string;
+  github_url?: string;
+  logo_url?: string;
+  files?: any;
+  created_at: string;
+  updated_at: string;
+}
 
 export const usePortfolio = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
@@ -19,7 +35,9 @@ export const usePortfolio = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPortfolio(data || []);
+      
+      console.log('Portfolio data from DB:', data);
+      setPortfolio((data as any) || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل المشاريع');
     } finally {

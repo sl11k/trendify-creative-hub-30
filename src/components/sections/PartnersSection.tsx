@@ -5,7 +5,9 @@ const PartnersSection = () => {
   const { isRTL } = useLanguage();
   const { partners, loading } = usePartners();
 
-  // لا تعرض القسم إذا لم يكن هناك شركاء
+  console.log('Partners data:', partners, 'Loading:', loading);
+
+  // لا تعرض القسم إذا لم يكن هناك شركاء نشطين
   if (loading || partners.length === 0) {
     return null;
   }
