@@ -99,14 +99,15 @@ const HeroSection = () => {
               </Button>
             </Link>
             
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-white text-white hover:bg-white hover:text-primary transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg glass-effect"
-            >
-              <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
-              {t('hero.cta.secondary')}
-            </Button>
+            <Link to="/portfolio">
+              <Button
+                size="lg"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
+              >
+                <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
+                {t('hero.cta.secondary')}
+              </Button>
+            </Link>
           </div>
 
           {/* Stats or Features */}
