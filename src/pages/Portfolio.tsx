@@ -81,20 +81,34 @@ const Portfolio = () => {
                     className="group border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="relative overflow-hidden">
-                      <img 
-                        src={project.image_url || '/placeholder.svg'}
-                        alt={isRTL ? project.title_ar : project.title_en}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                        loading="lazy"
-                        onClick={() => {
-                          if (project.project_type === 'website' && project.project_url) {
-                            window.open(project.project_url, '_blank');
-                          } else {
-                            setSelectedProject(project);
-                          }
-                        }}
-                      />
+                    <div className="relative overflow-hidden h-64">
+                      {(() => {
+                        const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                          ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
+                          : project.image_url;
+                        
+                        return firstImage ? (
+                          <img
+                            src={firstImage}
+                            alt={isRTL ? project.title_ar : project.title_en}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                            loading="lazy"
+                            onClick={() => {
+                              if (project.project_type === 'website' && project.project_url) {
+                                window.open(project.project_url, '_blank');
+                              } else {
+                                setSelectedProject(project);
+                              }
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
+                            <div className="text-white text-6xl font-bold opacity-20">
+                              {isRTL ? 'مشروع' : 'PROJECT'}
+                            </div>
+                          </div>
+                        );
+                      })()}
                       <div 
                         className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
                         onClick={() => {
@@ -129,6 +143,21 @@ const Portfolio = () => {
                             </a>
                           )}
                         </div>
+                      </div>
+                      {project.logo_url && (
+                        <div className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'}`}>
+                          <img 
+                            src={project.logo_url}
+                            alt="Logo"
+                            className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg bg-white"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <div className={`absolute top-4 ${isRTL ? 'right-4' : 'left-4'}`}>
+                        <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
+                          {project.category || (isRTL ? 'مشروع' : 'Project')}
+                        </span>
                       </div>
                     </div>
                     
