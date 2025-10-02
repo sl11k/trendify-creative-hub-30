@@ -20,16 +20,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    target: ['es2015', 'safari11'],
-    cssTarget: ['safari11'],
-    minify: 'terser',
-    terserOptions: {
-      safari10: true,
-    },
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      target: 'es2015',
-    },
+    target: 'esnext',
+    minify: 'esbuild',
+    sourcemap: true,
   },
 }));
