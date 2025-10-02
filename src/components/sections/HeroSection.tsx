@@ -14,44 +14,29 @@ const HeroSection = () => {
     text_en: 'Get Free Consultation',
     url: '/contact'
   });
-  const [isLoaded, setIsLoaded] = useState(false);
   
   useCounterAnimation();
 
   useEffect(() => {
-    // Mark component as loaded
-    setIsLoaded(true);
-    
     // Stagger animation for statistics
     const staggerElements = document.querySelectorAll('.stagger-animation');
     staggerElements.forEach((element, index) => {
       element.setAttribute('data-delay', (index * 150).toString());
     });
 
-    // Delay Supabase call to ensure page renders first (iOS Safari fix)
-    const timer = setTimeout(() => {
-      loadConsultationButton();
-    }, 300);
-
-    return () => clearTimeout(timer);
+    // Load consultation button settings
+    loadConsultationButton();
   }, []);
 
   const loadConsultationButton = async () => {
     try {
-      // Add timeout to prevent hanging on iOS Safari
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timeout')), 5000);
-      });
-
-      const fetchPromise = supabase
+      const { data } = await supabase
         .from('site_settings')
         .select('*')
         .in('setting_key', ['consultation_button_text_ar', 'consultation_button_text_en', 'consultation_button_url']);
-
-      const { data } = await Promise.race([fetchPromise, timeoutPromise]) as any;
       
-      if (data && data.length > 0) {
-        const settings = data.reduce((acc: Record<string, string>, item: any) => {
+      if (data) {
+        const settings = data.reduce((acc, item) => {
           acc[item.setting_key] = item.setting_value;
           return acc;
         }, {} as Record<string, string>);
@@ -64,27 +49,21 @@ const HeroSection = () => {
       }
     } catch (error) {
       console.error('Error loading consultation button:', error);
-      // Fallback to default values already set in state
     }
   };
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image - iOS Optimized */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src={heroBackground}
-          alt="Hero Background"
-          className="w-full h-full object-cover"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
+      {/* Parallax Background */}
+      <div 
+        className="absolute inset-0 z-0 parallax-bg"
+        style={{
+          backgroundImage: `url(${heroBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
       </div>
 
@@ -110,25 +89,20 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{animationDelay: '0.4s'}}>
-            <Button
-              size="lg"
-              className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
-              onClick={() => {
-                if (consultationButton.url.startsWith('http')) {
-                  window.open(consultationButton.url, '_blank');
-                } else {
-                  window.location.href = consultationButton.url;
-                }
-              }}
-            >
-              {isRTL ? consultationButton.text_ar : consultationButton.text_en}
-              <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
-            </Button>
+            <Link to={consultationButton.url}>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
+              >
+                {isRTL ? consultationButton.text_ar : consultationButton.text_en}
+                <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
+              </Button>
+            </Link>
             
             <Button
               variant="outline"
               size="lg"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg backdrop-blur-sm"
+              className="border-white text-white hover:bg-white hover:text-primary transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg glass-effect"
             >
               <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
               {t('hero.cta.secondary')}

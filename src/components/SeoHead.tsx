@@ -45,9 +45,6 @@ const SeoHead: React.FC<SeoHeadProps> = ({ lang = 'ar' }) => {
           case '/contact':
             pageSlug = 'contact';
             break;
-          case '/tools':
-            pageSlug = 'tools';
-            break;
           default:
             pageSlug = 'home';
         }

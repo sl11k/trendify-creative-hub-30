@@ -59,16 +59,6 @@
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --radius: 1rem;
-    
-    /* Sidebar Variables */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -103,16 +93,6 @@
     --border: 230 20% 20%;
     --input: 230 20% 20%;
     --ring: 270 75% 65%;
-    
-    /* Dark Sidebar Variables */
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 94.1%;
-    --sidebar-primary-foreground: 240 5.9% 10%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -176,34 +156,25 @@
   
   /* Modern Blur Effect */
   .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
 @layer utilities {
-  /* Text Gradients - iOS Compatible */
+  /* Text Gradients */
   .text-gradient-primary {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
-    /* Fallback for unsupported browsers */
-    @supports not (-webkit-background-clip: text) {
-      color: hsl(var(--primary));
-    }
+    -webkit-text-fill-color: transparent;
   }
   
   .text-gradient-secondary {
     background: var(--gradient-secondary);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
-    /* Fallback for unsupported browsers */
-    @supports not (-webkit-background-clip: text) {
-      color: hsl(var(--secondary));
-    }
+    -webkit-text-fill-color: transparent;
   }
 
 /* Custom Animations */
@@ -227,6 +198,7 @@
 
   .parallax-bg {
     transform: translateZ(0);
+    will-change: transform;
   }
 
   /* Advanced Hover Effects */
@@ -256,27 +228,19 @@
   }
 }
 
-/* Custom Keyframes - iOS Compatible */
+/* Custom Keyframes */
 @keyframes float {
-  0%, 100% { 
-    -webkit-transform: translateY(0px);
-    transform: translateY(0px); 
-  }
-  50% { 
-    -webkit-transform: translateY(-20px);
-    transform: translateY(-20px); 
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    -webkit-transform: translateY(30px);
     transform: translateY(30px);
   }
   to {
     opacity: 1;
-    -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 }
@@ -288,16 +252,8 @@
 }
 
 @keyframes counterUp {
-  from { 
-    opacity: 0; 
-    -webkit-transform: translateY(20px);
-    transform: translateY(20px); 
-  }
-  to { 
-    opacity: 1; 
-    -webkit-transform: translateY(0);
-    transform: translateY(0); 
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Counter Animation Script */

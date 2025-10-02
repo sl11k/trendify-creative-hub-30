@@ -19,7 +19,6 @@ const translations = {
     'nav.about': 'من نحن',
     'nav.services': 'خدماتنا',
     'nav.portfolio': 'أعمالنا',
-    'nav.tools': 'أدواتنا',
     'nav.blog': 'المدونة',
     'nav.contact': 'اتصل بنا',
     
@@ -70,7 +69,6 @@ const translations = {
     'nav.about': 'About Us',
     'nav.services': 'Services',
     'nav.portfolio': 'Portfolio',
-    'nav.tools': 'Tools',
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
     
@@ -118,59 +116,20 @@ const translations = {
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    try {
-      const savedLang = localStorage.getItem('language');
-      return (savedLang === 'ar' || savedLang === 'en') ? savedLang : 'ar';
-    } catch {
-      return 'ar';
-    }
-  });
-  const [isReady, setIsReady] = useState(false);
+  const [language, setLanguage] = useState<Language>('ar');
 
   useEffect(() => {
-    // iOS 26 Safari fix: Delay DOM manipulation
-    const timer = setTimeout(() => {
-      try {
-        const dir = language === 'ar' ? 'rtl' : 'ltr';
-        const className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
-        
-        if (document.documentElement) {
-          document.documentElement.dir = dir;
-          document.documentElement.lang = language;
-        }
-        
-        if (document.body) {
-          document.body.className = className;
-        }
-        
-        localStorage.setItem('language', language);
-        setIsReady(true);
-      } catch (error) {
-        console.error('Error setting language:', error);
-        setIsReady(true);
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
+    // Set document direction and font family based on language
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+    document.body.className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
   }, [language]);
 
   const t = (key: string): string => {
-    try {
-      const translation = translations[language]?.[key as keyof typeof translations['ar']];
-      return translation || key;
-    } catch (error) {
-      console.error('Translation error:', error);
-      return key;
-    }
+    return translations[language][key as keyof typeof translations['ar']] || key;
   };
 
   const isRTL = language === 'ar';
-
-  // Wait for initial setup before rendering children (iOS Safari fix)
-  if (!isReady) {
-    return null;
-  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, isRTL }}>

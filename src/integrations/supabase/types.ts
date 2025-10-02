@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          password_hash: string
           role: string
           updated_at: string
         }
@@ -28,6 +29,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          password_hash: string
           role?: string
           updated_at?: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          password_hash?: string
           role?: string
           updated_at?: string
         }
@@ -242,54 +245,14 @@ export type Database = {
         }
         Relationships: []
       }
-      partners: {
-        Row: {
-          active: boolean
-          created_at: string
-          id: string
-          logo_url: string
-          name_ar: string
-          name_en: string
-          sort_order: number | null
-          updated_at: string
-          website_url: string | null
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          logo_url: string
-          name_ar: string
-          name_en: string
-          sort_order?: number | null
-          updated_at?: string
-          website_url?: string | null
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          logo_url?: string
-          name_ar?: string
-          name_en?: string
-          sort_order?: number | null
-          updated_at?: string
-          website_url?: string | null
-        }
-        Relationships: []
-      }
       portfolio: {
         Row: {
           category: string | null
           created_at: string | null
           description_ar: string | null
           description_en: string | null
-          files: Json | null
-          github_url: string | null
           id: string
           image_url: string | null
-          logo_url: string | null
-          project_type: string | null
           project_url: string | null
           published: boolean | null
           technologies: string[] | null
@@ -302,12 +265,8 @@ export type Database = {
           created_at?: string | null
           description_ar?: string | null
           description_en?: string | null
-          files?: Json | null
-          github_url?: string | null
           id?: string
           image_url?: string | null
-          logo_url?: string | null
-          project_type?: string | null
           project_url?: string | null
           published?: boolean | null
           technologies?: string[] | null
@@ -320,12 +279,8 @@ export type Database = {
           created_at?: string | null
           description_ar?: string | null
           description_en?: string | null
-          files?: Json | null
-          github_url?: string | null
           id?: string
           image_url?: string | null
-          logo_url?: string | null
-          project_type?: string | null
           project_url?: string | null
           published?: boolean | null
           technologies?: string[] | null
@@ -431,87 +386,6 @@ export type Database = {
         }
         Relationships: []
       }
-      tools: {
-        Row: {
-          active: boolean
-          category_ar: string | null
-          category_en: string | null
-          created_at: string
-          description_ar: string
-          description_en: string
-          icon_name: string | null
-          id: string
-          name_ar: string
-          name_en: string
-          sort_order: number | null
-          updated_at: string
-          url: string
-        }
-        Insert: {
-          active?: boolean
-          category_ar?: string | null
-          category_en?: string | null
-          created_at?: string
-          description_ar: string
-          description_en: string
-          icon_name?: string | null
-          id?: string
-          name_ar: string
-          name_en: string
-          sort_order?: number | null
-          updated_at?: string
-          url: string
-        }
-        Update: {
-          active?: boolean
-          category_ar?: string | null
-          category_en?: string | null
-          created_at?: string
-          description_ar?: string
-          description_en?: string
-          icon_name?: string | null
-          id?: string
-          name_ar?: string
-          name_en?: string
-          sort_order?: number | null
-          updated_at?: string
-          url?: string
-        }
-        Relationships: []
-      }
-      website_design: {
-        Row: {
-          created_at: string
-          custom_css: string | null
-          custom_js: string | null
-          id: string
-          is_active: boolean
-          layout_json: string
-          page_slug: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          custom_css?: string | null
-          custom_js?: string | null
-          id?: string
-          is_active?: boolean
-          layout_json?: string
-          page_slug: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          custom_css?: string | null
-          custom_js?: string | null
-          id?: string
-          is_active?: boolean
-          layout_json?: string
-          page_slug?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       whatsapp_button: {
         Row: {
           active: boolean
@@ -544,10 +418,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

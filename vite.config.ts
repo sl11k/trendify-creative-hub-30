@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import legacy from "@vitejs/plugin-legacy";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
@@ -12,35 +11,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    legacy({
-      targets: ['defaults', 'safari >= 11', 'ios >= 11', 'not IE 11'],
-      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
-      renderLegacyChunks: true,
-      modernPolyfills: true,
-      polyfills: [
-        'es.promise',
-        'es.promise.finally',
-        'es.array.iterator',
-        'es.object.assign',
-        'es.object.entries',
-        'es.object.values',
-        'es.array.flat',
-        'es.array.flat-map',
-        'es.array.from',
-        'es.array.find',
-        'es.array.find-index',
-        'es.string.includes',
-        'es.string.starts-with',
-        'es.string.ends-with',
-        'es.array.includes',
-        'es.symbol',
-        'es.symbol.iterator',
-        'es.map',
-        'es.set',
-        'es.weak-map',
-        'es.weak-set',
-      ]
-    }),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
@@ -48,47 +18,5 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  build: {
-    target: 'es2015', // iOS 26 Safari compatibility - use es2015 for maximum compatibility
-    minify: 'terser',
-    sourcemap: false,
-    cssTarget: 'safari11',
-    cssMinify: true,
-    terserOptions: {
-      safari10: true,
-      compress: {
-        drop_console: false, // Keep console for debugging iOS 26
-        passes: 2,
-        dead_code: true,
-        drop_debugger: true,
-        unsafe_arrows: false,
-        unsafe_methods: false,
-        pure_funcs: [],
-      },
-      format: {
-        safari10: true,
-        comments: false,
-        ecma: 2015,
-      },
-      mangle: {
-        safari10: true,
-      }
-    },
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-        format: 'es',
-        inlineDynamicImports: true,
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]',
-        generatedCode: {
-          constBindings: false, // iOS 26 fix
-          arrowFunctions: false, // iOS 26 fix
-        }
-      }
-    },
-    chunkSizeWarningLimit: 2000,
   },
 }));

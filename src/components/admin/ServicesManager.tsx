@@ -10,20 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Loader2, Plus, Edit, Trash2, Save, X, Zap, Megaphone, Code, Palette, 
   Smartphone, BarChart, ShoppingCart, Target, TrendingUp, UserCheck,
-  Shield, Lightbulb, Settings, Globe, Camera, MessageSquare, Heart,
-  Star, Award, Trophy, Crown, Diamond, Gem, Sparkles, Rocket,
-  Home, Building, Store, Coffee, Car, Plane, Ship, Train,
-  Users, User, UserPlus, UserMinus, UserX, Eye, EyeOff,
-  Mail, Phone, MapPin, Clock, Calendar, Bell, AlertCircle,
-  CheckCircle, XCircle, Info, HelpCircle, Search, Filter,
-  Download, Upload, Share, Link, Copy, Clipboard, File,
-  Image, Video, Music, Headphones, Monitor, Laptop, Tablet,
-  Wifi, Battery, Power, Cpu, HardDrive, Database, Server,
-  Lock, Unlock, Key, Shield as ShieldIcon, Eye as EyeIcon,
-  Sun, Moon, Cloud, CloudRain, Snowflake, Wind, Thermometer,
-  Activity, BarChart3, PieChart, LineChart, TrendingDown,
-  DollarSign, CreditCard, Wallet, Banknote, Calculator,
-  Wrench, Hammer, Scissors, Paintbrush, Brush, Pen, Pencil
+  Shield, Lightbulb, Settings, Globe, Camera, MessageSquare
 } from 'lucide-react';
 import { useServices } from '@/hooks/useServices';
 import { supabase } from '@/integrations/supabase/client';
@@ -61,297 +48,41 @@ const ServicesManager = () => {
 
   // Icon mapping for proper ES module imports
   const iconMap = {
-    // Business & Marketing
     'megaphone': Megaphone,
+    'code': Code,
+    'palette': Palette,
+    'smartphone': Smartphone,
+    'bar-chart': BarChart,
+    'shopping-cart': ShoppingCart,
     'target': Target,
     'trending-up': TrendingUp,
-    'trending-down': TrendingDown,
-    'bar-chart': BarChart,
-    'bar-chart-3': BarChart3,
-    'pie-chart': PieChart,
-    'line-chart': LineChart,
-    'activity': Activity,
-    'award': Award,
-    'trophy': Trophy,
-    'crown': Crown,
-    'star': Star,
-    'heart': Heart,
-    
-    // Technology & Development
-    'code': Code,
-    'smartphone': Smartphone,
-    'monitor': Monitor,
-    'laptop': Laptop,
-    'tablet': Tablet,
-    'server': Server,
-    'database': Database,
-    'cpu': Cpu,
-    'hard-drive': HardDrive,
-    'wifi': Wifi,
-    'battery': Battery,
-    'power': Power,
-    'globe': Globe,
-    
-    // Design & Creative
-    'palette': Palette,
-    'camera': Camera,
-    'image': Image,
-    'video': Video,
-    'music': Music,
-    'headphones': Headphones,
-    'paintbrush': Paintbrush,
-    'brush': Brush,
-    'pen': Pen,
-    'pencil': Pencil,
-    'sparkles': Sparkles,
-    'diamond': Diamond,
-    'gem': Gem,
-    
-    // Business & Finance
-    'shopping-cart': ShoppingCart,
-    'store': Store,
-    'building': Building,
-    'dollar-sign': DollarSign,
-    'credit-card': CreditCard,
-    'wallet': Wallet,
-    'banknote': Banknote,
-    'calculator': Calculator,
-    
-    // Communication & Contact
-    'message-square': MessageSquare,
-    'mail': Mail,
-    'phone': Phone,
-    'users': Users,
-    'user': User,
-    'user-plus': UserPlus,
     'user-check': UserCheck,
-    
-    // Tools & Utilities
-    'settings': Settings,
-    'wrench': Wrench,
-    'hammer': Hammer,
-    'scissors': Scissors,
-    'search': Search,
-    'filter': Filter,
-    'download': Download,
-    'upload': Upload,
-    'share': Share,
-    'link': Link,
-    'copy': Copy,
-    'clipboard': Clipboard,
-    
-    // Security & Protection
     'shield': Shield,
-    'lock': Lock,
-    'unlock': Unlock,
-    'key': Key,
-    'eye': Eye,
-    'eye-off': EyeOff,
-    
-    // Energy & Innovation
-    'zap': Zap,
     'lightbulb': Lightbulb,
-    'rocket': Rocket,
-    
-    // Location & Travel
-    'map-pin': MapPin,
-    'home': Home,
-    'car': Car,
-    'plane': Plane,
-    'ship': Ship,
-    'train': Train,
-    
-    // Time & Scheduling
-    'clock': Clock,
-    'calendar': Calendar,
-    'bell': Bell,
-    
-    // Status & Alerts
-    'check-circle': CheckCircle,
-    'x-circle': XCircle,
-    'alert-circle': AlertCircle,
-    'info': Info,
-    'help-circle': HelpCircle,
-    
-    // Weather & Environment
-    'sun': Sun,
-    'moon': Moon,
-    'cloud': Cloud,
-    'cloud-rain': CloudRain,
-    'snowflake': Snowflake,
-    'wind': Wind,
-    'thermometer': Thermometer,
-    
-    // Files & Documents
-    'file': File,
-    'coffee': Coffee
+    'settings': Settings,
+    'globe': Globe,
+    'camera': Camera,
+    'message-square': MessageSquare,
+    'zap': Zap
   };
 
-  const iconCategories = [
-    {
-      name: 'الأعمال والتسويق',
-      icons: [
-        { value: 'megaphone', label: 'مكبر الصوت' },
-        { value: 'target', label: 'هدف' },
-        { value: 'trending-up', label: 'ارتفاع' },
-        { value: 'trending-down', label: 'انخفاض' },
-        { value: 'bar-chart', label: 'رسم بياني' },
-        { value: 'bar-chart-3', label: 'رسم بياني 3' },
-        { value: 'pie-chart', label: 'مخطط دائري' },
-        { value: 'line-chart', label: 'مخطط خطي' },
-        { value: 'activity', label: 'نشاط' },
-        { value: 'award', label: 'جائزة' },
-        { value: 'trophy', label: 'كأس' },
-        { value: 'crown', label: 'تاج' },
-        { value: 'star', label: 'نجمة' },
-        { value: 'heart', label: 'قلب' }
-      ]
-    },
-    {
-      name: 'التكنولوجيا والتطوير',
-      icons: [
-        { value: 'code', label: 'كود' },
-        { value: 'smartphone', label: 'هاتف ذكي' },
-        { value: 'monitor', label: 'شاشة' },
-        { value: 'laptop', label: 'حاسوب محمول' },
-        { value: 'tablet', label: 'جهاز لوحي' },
-        { value: 'server', label: 'خادم' },
-        { value: 'database', label: 'قاعدة بيانات' },
-        { value: 'cpu', label: 'معالج' },
-        { value: 'hard-drive', label: 'قرص صلب' },
-        { value: 'wifi', label: 'واي فاي' },
-        { value: 'battery', label: 'بطارية' },
-        { value: 'power', label: 'طاقة' },
-        { value: 'globe', label: 'كرة أرضية' }
-      ]
-    },
-    {
-      name: 'التصميم والإبداع',
-      icons: [
-        { value: 'palette', label: 'لوحة ألوان' },
-        { value: 'camera', label: 'كاميرا' },
-        { value: 'image', label: 'صورة' },
-        { value: 'video', label: 'فيديو' },
-        { value: 'music', label: 'موسيقى' },
-        { value: 'headphones', label: 'سماعات' },
-        { value: 'paintbrush', label: 'فرشاة رسم' },
-        { value: 'brush', label: 'فرشاة' },
-        { value: 'pen', label: 'قلم' },
-        { value: 'pencil', label: 'قلم رصاص' },
-        { value: 'sparkles', label: 'بريق' },
-        { value: 'diamond', label: 'ماس' },
-        { value: 'gem', label: 'جوهرة' }
-      ]
-    },
-    {
-      name: 'الأعمال والمالية',
-      icons: [
-        { value: 'shopping-cart', label: 'عربة التسوق' },
-        { value: 'store', label: 'متجر' },
-        { value: 'building', label: 'مبنى' },
-        { value: 'dollar-sign', label: 'دولار' },
-        { value: 'credit-card', label: 'بطاقة ائتمان' },
-        { value: 'wallet', label: 'محفظة' },
-        { value: 'banknote', label: 'ورقة نقدية' },
-        { value: 'calculator', label: 'آلة حاسبة' }
-      ]
-    },
-    {
-      name: 'التواصل والاتصال',
-      icons: [
-        { value: 'message-square', label: 'رسالة' },
-        { value: 'mail', label: 'بريد إلكتروني' },
-        { value: 'phone', label: 'هاتف' },
-        { value: 'users', label: 'مستخدمون' },
-        { value: 'user', label: 'مستخدم' },
-        { value: 'user-plus', label: 'إضافة مستخدم' },
-        { value: 'user-check', label: 'مستخدم مؤكد' }
-      ]
-    },
-    {
-      name: 'الأدوات والمرافق',
-      icons: [
-        { value: 'settings', label: 'إعدادات' },
-        { value: 'wrench', label: 'مفتاح ربط' },
-        { value: 'hammer', label: 'مطرقة' },
-        { value: 'scissors', label: 'مقص' },
-        { value: 'search', label: 'بحث' },
-        { value: 'filter', label: 'مرشح' },
-        { value: 'download', label: 'تنزيل' },
-        { value: 'upload', label: 'رفع' },
-        { value: 'share', label: 'مشاركة' },
-        { value: 'link', label: 'رابط' },
-        { value: 'copy', label: 'نسخ' },
-        { value: 'clipboard', label: 'حافظة' }
-      ]
-    },
-    {
-      name: 'الأمان والحماية',
-      icons: [
-        { value: 'shield', label: 'درع' },
-        { value: 'lock', label: 'قفل' },
-        { value: 'unlock', label: 'فتح القفل' },
-        { value: 'key', label: 'مفتاح' },
-        { value: 'eye', label: 'عين' },
-        { value: 'eye-off', label: 'عين مغلقة' }
-      ]
-    },
-    {
-      name: 'الطاقة والابتكار',
-      icons: [
-        { value: 'zap', label: 'صاعقة' },
-        { value: 'lightbulb', label: 'لمبة' },
-        { value: 'rocket', label: 'صاروخ' }
-      ]
-    },
-    {
-      name: 'الموقع والسفر',
-      icons: [
-        { value: 'map-pin', label: 'دبوس خريطة' },
-        { value: 'home', label: 'منزل' },
-        { value: 'car', label: 'سيارة' },
-        { value: 'plane', label: 'طائرة' },
-        { value: 'ship', label: 'سفينة' },
-        { value: 'train', label: 'قطار' }
-      ]
-    },
-    {
-      name: 'الوقت والجدولة',
-      icons: [
-        { value: 'clock', label: 'ساعة' },
-        { value: 'calendar', label: 'تقويم' },
-        { value: 'bell', label: 'جرس' }
-      ]
-    },
-    {
-      name: 'الحالة والتنبيهات',
-      icons: [
-        { value: 'check-circle', label: 'دائرة صح' },
-        { value: 'x-circle', label: 'دائرة خطأ' },
-        { value: 'alert-circle', label: 'دائرة تنبيه' },
-        { value: 'info', label: 'معلومات' },
-        { value: 'help-circle', label: 'دائرة مساعدة' }
-      ]
-    },
-    {
-      name: 'الطقس والبيئة',
-      icons: [
-        { value: 'sun', label: 'شمس' },
-        { value: 'moon', label: 'قمر' },
-        { value: 'cloud', label: 'غيمة' },
-        { value: 'cloud-rain', label: 'مطر' },
-        { value: 'snowflake', label: 'ثلج' },
-        { value: 'wind', label: 'رياح' },
-        { value: 'thermometer', label: 'ترمومتر' }
-      ]
-    },
-    {
-      name: 'الملفات والمستندات',
-      icons: [
-        { value: 'file', label: 'ملف' },
-        { value: 'coffee', label: 'قهوة' }
-      ]
-    }
+  const iconOptions = [
+    { value: 'megaphone', label: 'Megaphone' },
+    { value: 'code', label: 'Code' },
+    { value: 'palette', label: 'Palette' },
+    { value: 'smartphone', label: 'Smartphone' },
+    { value: 'bar-chart', label: 'Bar Chart' },
+    { value: 'shopping-cart', label: 'Shopping Cart' },
+    { value: 'target', label: 'Target' },
+    { value: 'trending-up', label: 'Trending Up' },
+    { value: 'user-check', label: 'User Check' },
+    { value: 'shield', label: 'Shield' },
+    { value: 'lightbulb', label: 'Lightbulb' },
+    { value: 'settings', label: 'Settings' },
+    { value: 'globe', label: 'Globe' },
+    { value: 'camera', label: 'Camera' },
+    { value: 'message-square', label: 'Message Square' },
+    { value: 'zap', label: 'Zap' }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -529,36 +260,21 @@ const ServicesManager = () => {
                   <Label htmlFor="icon_name">{isRTL ? 'الأيقونة' : 'Icon'}</Label>
                   <Select value={formData.icon_name} onValueChange={(value) => setFormData({ ...formData, icon_name: value })}>
                     <SelectTrigger>
-                      <SelectValue>
-                        <div className="flex items-center gap-2">
-                          {(() => {
-                            const IconComponent = iconMap[formData.icon_name as keyof typeof iconMap] || Zap;
-                            return <IconComponent className="h-4 w-4" />;
-                          })()}
-                          {iconCategories.flatMap(cat => cat.icons).find(icon => icon.value === formData.icon_name)?.label || formData.icon_name}
-                        </div>
-                      </SelectValue>
+                      <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-background border z-50 max-h-80 overflow-y-auto">
-                      {iconCategories.map(category => (
-                        <div key={category.name}>
-                          <div className="px-2 py-1 text-sm font-medium text-muted-foreground bg-muted/50">
-                            {category.name}
-                          </div>
-                          {category.icons.map(option => {
-                            const IconComponent = iconMap[option.value as keyof typeof iconMap] || Zap;
-                            return (
-                              <SelectItem key={option.value} value={option.value}>
-                                <div className="flex items-center gap-2">
-                                  <IconComponent className="h-4 w-4" />
-                                  {option.label}
-                                </div>
-                              </SelectItem>
-                            );
-                          })}
-                        </div>
-                      ))}
-                    </SelectContent>
+                     <SelectContent className="bg-background border z-50">
+                       {iconOptions.map(option => {
+                         const IconComponent = iconMap[option.value as keyof typeof iconMap] || Zap;
+                         return (
+                           <SelectItem key={option.value} value={option.value}>
+                             <div className="flex items-center gap-2">
+                               <IconComponent className="h-4 w-4" />
+                               {option.label}
+                             </div>
+                           </SelectItem>
+                         );
+                       })}
+                     </SelectContent>
                   </Select>
                 </div>
                 <div>

@@ -6,12 +6,6 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
-interface PortfolioFile {
-  type: 'image' | 'video' | 'pdf' | 'link';
-  url: string;
-  name: string;
-}
-
 const PortfolioPreviewSection = () => {
   const { t, isRTL } = useLanguage();
   const [portfolio, setPortfolio] = useState<Array<{
@@ -23,8 +17,6 @@ const PortfolioPreviewSection = () => {
     image_url?: string;
     project_url?: string;
     category?: string;
-    project_type?: string;
-    files?: any;
   }>>([]);
 
   useEffect(() => {
@@ -38,14 +30,10 @@ const PortfolioPreviewSection = () => {
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false })
-        .limit(3);
+        .limit(2);
       
       if (data) {
-        const portfolioData = data.map(item => ({
-          ...item,
-          files: item.files ? JSON.parse(JSON.stringify(item.files)) : []
-        }));
-        setPortfolio(portfolioData);
+        setPortfolio(data);
       }
     } catch (error) {
       console.error('Error loading portfolio:', error);
@@ -92,64 +80,52 @@ const PortfolioPreviewSection = () => {
         </div>
 
         {/* Featured Projects */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {displayProjects.map((project, index) => {
-            const projectFiles = (project.files as PortfolioFile[]) || [];
-            const mainImage = projectFiles.find(f => f.type === 'image')?.url || project.image_url;
-            
-            return (
-              <Card
-                key={project.id}
-                className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => {
-                  if (project.project_type === 'website' && project.project_url && project.project_url !== '#') {
-                    window.open(project.project_url, '_blank');
-                  } else {
-                    window.location.href = `/portfolio?project=${project.id}`;
-                  }
-                }}
-              >
-                <div className="relative overflow-hidden">
-                  {mainImage ? (
-                    <img 
-                      src={mainImage}
-                      alt={isRTL ? project.title_ar : project.title_en}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
-                      <div className="text-white text-6xl font-bold opacity-20">
-                        {isRTL ? 'مشروع' : 'PROJECT'}
-                      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          {displayProjects.map((project, index) => (
+            <Card
+              key={project.id}
+              className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="relative overflow-hidden">
+                {project.image_url ? (
+                  <img 
+                    src={project.image_url}
+                    alt={isRTL ? project.title_ar : project.title_en}
+                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
+                    <div className="text-white text-6xl font-bold opacity-20">
+                      {isRTL ? 'مش' : 'P'}
                     </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
-                    <button className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform">
-                      <ExternalLink className="h-6 w-6" />
-                    </button>
                   </div>
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      {project.category || (isRTL ? 'مشروع' : 'Project')}
-                    </span>
-                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
+                  <button className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform">
+                    <ExternalLink className="h-6 w-6" />
+                  </button>
                 </div>
-                
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                    {isRTL ? project.title_ar : project.title_en}
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent>
-                  <CardDescription className="text-muted-foreground">
-                    {isRTL ? (project.description_ar || project.title_ar) : (project.description_en || project.title_en)}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            );
-          })}
+                <div className="absolute top-4 left-4">
+                  <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    {project.category || (isRTL ? 'مشروع' : 'Project')}
+                  </span>
+                </div>
+              </div>
+              
+              <CardHeader>
+                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                  {isRTL ? project.title_ar : project.title_en}
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent>
+                <CardDescription className="text-muted-foreground">
+                  {isRTL ? (project.description_ar || project.title_ar) : (project.description_en || project.title_en)}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* CTA Section */}

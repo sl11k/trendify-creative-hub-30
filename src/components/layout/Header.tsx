@@ -18,7 +18,6 @@ const Header = () => {
     { key: 'nav.about', href: '/about' },
     { key: 'nav.services', href: '/services' },
     { key: 'nav.portfolio', href: '/portfolio' },
-    { key: 'nav.tools', href: '/tools' },
     { key: 'nav.blog', href: '/blog' },
     { key: 'nav.contact', href: '/contact' },
   ];

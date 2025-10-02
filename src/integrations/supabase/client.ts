@@ -8,45 +8,10 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-// iOS 26 Safari fix: Custom fetch with retry logic and timeout
-const customFetch = async (url: RequestInfo | URL, options?: RequestInit): Promise<Response> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
-  
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      credentials: 'same-origin',
-      mode: 'cors',
-      cache: 'no-cache'
-    });
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    console.log('Fetch failed, retrying...', error);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return fetch(url, {
-      ...options,
-      credentials: 'same-origin',
-      mode: 'cors',
-      cache: 'no-cache'
-    });
-  }
-};
-
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false, // iOS 26 Safari fix
-  },
-  global: {
-    fetch: customFetch,
-    headers: {
-      'X-Client-Info': 'supabase-js-web'
-    }
   }
 });
