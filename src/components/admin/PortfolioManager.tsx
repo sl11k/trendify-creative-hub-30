@@ -22,6 +22,10 @@ interface PortfolioItem {
   category?: string;
   technologies?: string[];
   published: boolean;
+  project_type?: string;
+  github_url?: string;
+  logo_url?: string;
+  files?: any[];
   created_at: string;
   updated_at: string;
 }
@@ -42,10 +46,16 @@ const PortfolioManager = () => {
     description_en: '',
     image_url: '',
     project_url: '',
+    github_url: '',
+    logo_url: '',
     category: '',
     technologies: [] as string[],
+    project_type: 'website',
+    files: [] as any[],
     published: false
   });
+  
+  const [uploadingFiles, setUploadingFiles] = useState(false);
 
   useEffect(() => {
     loadPortfolio();
@@ -60,7 +70,7 @@ const PortfolioManager = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPortfolio(data || []);
+      setPortfolio((data as any) || []);
     } catch (error) {
       console.error('Error loading portfolio:', error);
       toast({
@@ -81,12 +91,74 @@ const PortfolioManager = () => {
       description_en: '',
       image_url: '',
       project_url: '',
+      github_url: '',
+      logo_url: '',
       category: '',
       technologies: [],
+      project_type: 'website',
+      files: [],
       published: false
     });
     setEditingId(null);
     setIsCreating(false);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingFiles(true);
+    const uploadedUrls: string[] = [];
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { data, error } = await supabase.storage
+          .from('portfolio')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (error) throw error;
+
+        const { data: urlData } = supabase.storage
+          .from('portfolio')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(urlData.publicUrl);
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        files: [...prev.files, ...uploadedUrls.map(url => ({ url, type: 'image' }))]
+      }));
+
+      toast({
+        title: isRTL ? 'تم الرفع' : 'Uploaded',
+        description: isRTL ? 'تم رفع الملفات بنجاح' : 'Files uploaded successfully'
+      });
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: isRTL ? 'حدث خطأ في رفع الملفات' : 'Error uploading files',
+        variant: 'destructive'
+      });
+    } finally {
+      setUploadingFiles(false);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index)
+    }));
   };
 
   const handleSave = async () => {
@@ -150,8 +222,12 @@ const PortfolioManager = () => {
       description_en: item.description_en || '',
       image_url: item.image_url || '',
       project_url: item.project_url || '',
+      github_url: item.github_url || '',
+      logo_url: item.logo_url || '',
       category: item.category || '',
       technologies: item.technologies || [],
+      project_type: item.project_type || 'website',
+      files: item.files || [],
       published: item.published
     });
     setEditingId(item.id);
@@ -266,9 +342,25 @@ const PortfolioManager = () => {
               </div>
             </div>
 
+            <div>
+              <Label htmlFor="project_type">{isRTL ? 'نوع المشروع' : 'Project Type'}</Label>
+              <select
+                id="project_type"
+                value={formData.project_type}
+                onChange={(e) => setFormData(prev => ({ ...prev, project_type: e.target.value }))}
+                className="w-full px-3 py-2 border border-input bg-background rounded-md"
+              >
+                <option value="website">{isRTL ? 'موقع إلكتروني' : 'Website'}</option>
+                <option value="branding">{isRTL ? 'هوية بصرية' : 'Branding'}</option>
+                <option value="content">{isRTL ? 'كتابة محتوى' : 'Content Writing'}</option>
+                <option value="photography">{isRTL ? 'تصوير منتجات' : 'Product Photography'}</option>
+                <option value="design">{isRTL ? 'تصميم جرافيك' : 'Graphic Design'}</option>
+              </select>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="image_url">{isRTL ? 'رابط الصورة' : 'Image URL'}</Label>
+                <Label htmlFor="image_url">{isRTL ? 'رابط الصورة الرئيسية' : 'Main Image URL'}</Label>
                 <Input
                   id="image_url"
                   value={formData.image_url}
@@ -276,6 +368,18 @@ const PortfolioManager = () => {
                   placeholder={isRTL ? 'رابط صورة المشروع' : 'Project image URL'}
                 />
               </div>
+              <div>
+                <Label htmlFor="logo_url">{isRTL ? 'رابط الشعار' : 'Logo URL'}</Label>
+                <Input
+                  id="logo_url"
+                  value={formData.logo_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, logo_url: e.target.value }))}
+                  placeholder={isRTL ? 'رابط شعار المشروع' : 'Project logo URL'}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="project_url">{isRTL ? 'رابط المشروع' : 'Project URL'}</Label>
                 <Input
@@ -285,7 +389,55 @@ const PortfolioManager = () => {
                   placeholder={isRTL ? 'رابط المشروع المباشر' : 'Direct project URL'}
                 />
               </div>
+              <div>
+                <Label htmlFor="github_url">{isRTL ? 'رابط GitHub' : 'GitHub URL'}</Label>
+                <Input
+                  id="github_url"
+                  value={formData.github_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, github_url: e.target.value }))}
+                  placeholder={isRTL ? 'رابط GitHub (اختياري)' : 'GitHub URL (optional)'}
+                />
+              </div>
             </div>
+
+            <div>
+              <Label htmlFor="files">{isRTL ? 'رفع ملفات إضافية' : 'Upload Additional Files'}</Label>
+              <Input
+                id="files"
+                type="file"
+                multiple
+                accept="image/*,video/*,.pdf"
+                onChange={handleFileUpload}
+                disabled={uploadingFiles}
+                className="cursor-pointer"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {isRTL ? 'يمكنك رفع صور، فيديوهات، أو ملفات PDF' : 'You can upload images, videos, or PDF files'}
+              </p>
+            </div>
+
+            {formData.files.length > 0 && (
+              <div>
+                <Label>{isRTL ? 'الملفات المرفوعة' : 'Uploaded Files'}</Label>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  {formData.files.map((file, index) => (
+                    <div key={index} className="relative group">
+                      <img 
+                        src={file.url || file} 
+                        alt={`File ${index + 1}`}
+                        className="w-full h-20 object-cover rounded border"
+                      />
+                      <button
+                        onClick={() => removeFile(index)}
+                        className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

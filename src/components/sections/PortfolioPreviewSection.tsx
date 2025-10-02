@@ -16,6 +16,7 @@ const PortfolioPreviewSection = () => {
     description_en?: string;
     image_url?: string;
     project_url?: string;
+    project_type?: string;
     category?: string;
   }>>([]);
 
@@ -86,6 +87,13 @@ const PortfolioPreviewSection = () => {
               key={project.id}
               className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
               style={{ animationDelay: `${index * 0.1}s` }}
+              onClick={() => {
+                if (project.project_type === 'website' && project.project_url) {
+                  window.open(project.project_url, '_blank');
+                } else {
+                  window.location.href = '/portfolio';
+                }
+              }}
             >
               <div className="relative overflow-hidden">
                 {project.image_url ? (

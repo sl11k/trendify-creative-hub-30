@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -9,11 +9,13 @@ import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
+import { ImagePopup } from '@/components/ui/image-popup';
 
 const Portfolio = () => {
-  usePageTracking(); // Track page views
+  usePageTracking();
   const { t, isRTL } = useLanguage();
   const { portfolio, loading, error } = usePortfolio();
+  const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
 
   if (loading) {
     return (
@@ -74,14 +76,24 @@ const Portfolio = () => {
                 {portfolio.map((project, index) => (
                   <Card
                     key={project.id}
-                    className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
+                    className="group border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="relative overflow-hidden">
                       <img 
                         src={project.image_url || '/placeholder.svg'}
                         alt={isRTL ? project.title_ar : project.title_en}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        onClick={() => {
+                          if (project.project_type === 'website' && project.project_url) {
+                            window.open(project.project_url, '_blank');
+                          } else {
+                            setSelectedImage({
+                              url: project.image_url || '/placeholder.svg',
+                              alt: isRTL ? project.title_ar : project.title_en
+                            });
+                          }
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
                         <div className="flex space-x-4">
@@ -90,14 +102,23 @@ const Portfolio = () => {
                               href={project.project_url}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
                               className="bg-white text-primary p-2 rounded-full hover:scale-110 transition-transform"
                             >
                               <ExternalLink className="h-5 w-5" />
                             </a>
                           )}
-                          <button className="bg-white text-primary p-2 rounded-full hover:scale-110 transition-transform">
-                            <Github className="h-5 w-5" />
-                          </button>
+                          {project.github_url && (
+                            <a
+                              href={project.github_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="bg-white text-primary p-2 rounded-full hover:scale-110 transition-transform"
+                            >
+                              <Github className="h-5 w-5" />
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -135,6 +156,14 @@ const Portfolio = () => {
           </section>
         </main>
         <Footer />
+        
+        {selectedImage && (
+          <ImagePopup
+            imageUrl={selectedImage.url}
+            alt={selectedImage.alt}
+            onClose={() => setSelectedImage(null)}
+          />
+        )}
       </div>
     </WebsiteDesignRenderer>
   );
