@@ -50,30 +50,41 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    target: ['es2017', 'safari11', 'ios11'],
+    target: ['es2020', 'safari14', 'ios14'], // iOS 26 requires modern target
     minify: 'terser',
-    sourcemap: true,
-    cssTarget: 'safari11',
+    sourcemap: false, // Disable for iOS performance
+    cssTarget: 'safari14',
     cssMinify: true,
     terserOptions: {
       safari10: true,
       compress: {
-        drop_console: false,
-        passes: 2,
+        drop_console: true, // Remove console for iOS
+        passes: 3,
         dead_code: true,
         drop_debugger: true,
+        unsafe_arrows: false, // iOS 26 Safari fix
+        unsafe_methods: false,
       },
       format: {
         safari10: true,
+        comments: false,
       },
+      mangle: {
+        safari10: true,
+      }
     },
     rollupOptions: {
       output: {
         manualChunks: undefined,
         format: 'es',
         inlineDynamicImports: true,
+        // iOS 26 Safari compatibility
+        generatedCode: {
+          constBindings: true,
+          arrowFunctions: true,
+        }
       }
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1500,
   },
 }));

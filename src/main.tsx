@@ -1,6 +1,12 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import 'whatwg-fetch';
+
+// iOS 26 Safari fix: Ensure polyfills are loaded
+if (typeof Promise === 'undefined') {
+  throw new Error('Promise polyfill not loaded');
+}
+
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -24,19 +30,29 @@ window.addEventListener('unhandledrejection', (e) => {
   });
 });
 
-// Initialize app with comprehensive error handling
-try {
-  const rootElement = document.getElementById("root");
-  if (!rootElement) {
-    throw new Error('Root element not found');
+// iOS 26 Safari fix: Delay initialization to ensure DOM is ready
+const initApp = () => {
+  try {
+    const rootElement = document.getElementById("root");
+    if (!rootElement) {
+      throw new Error('Root element not found');
+    }
+    
+    const root = createRoot(rootElement);
+    root.render(<App />);
+    console.log('App initialized successfully on iOS 26');
+  } catch (error) {
+    console.error('Failed to initialize app:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
+    document.body.innerHTML = '<div style="padding:20px;text-align:center;direction:rtl;font-family:Arial,sans-serif"><h1>خطأ في التحميل</h1><p>' + errorMessage + '</p><pre style="text-align:left;overflow:auto;padding:10px;background:#f5f5f5">' + errorStack + '</pre></div>';
   }
-  
-  const root = createRoot(rootElement);
-  root.render(<App />);
-  console.log('App initialized successfully');
-} catch (error) {
-  console.error('Failed to initialize app:', error);
-  const errorMessage = error instanceof Error ? error.message : String(error);
-  const errorStack = error instanceof Error ? error.stack : '';
-  document.body.innerHTML = '<div style="padding:20px;text-align:center;direction:rtl;font-family:Arial,sans-serif"><h1>خطأ في التحميل</h1><p>' + errorMessage + '</p><pre style="text-align:left;overflow:auto;padding:10px;background:#f5f5f5">' + errorStack + '</pre></div>';
+};
+
+// iOS 26 Safari fix: Wait for DOM to be fully ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  // DOM is already ready, but still delay slightly for iOS 26
+  setTimeout(initApp, 100);
 }

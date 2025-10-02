@@ -118,29 +118,41 @@ const translations = {
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = useState<Language>(() => {
+    try {
+      const savedLang = localStorage.getItem('language');
+      return (savedLang === 'ar' || savedLang === 'en') ? savedLang : 'ar';
+    } catch {
+      return 'ar';
+    }
+  });
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    try {
-      // Set document direction and font family based on language
-      const dir = language === 'ar' ? 'rtl' : 'ltr';
-      const className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
-      
-      if (document.documentElement) {
-        document.documentElement.dir = dir;
-        document.documentElement.lang = language;
+    // iOS 26 Safari fix: Delay DOM manipulation
+    const timer = setTimeout(() => {
+      try {
+        const dir = language === 'ar' ? 'rtl' : 'ltr';
+        const className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
+        
+        if (document.documentElement) {
+          document.documentElement.dir = dir;
+          document.documentElement.lang = language;
+        }
+        
+        if (document.body) {
+          document.body.className = className;
+        }
+        
+        localStorage.setItem('language', language);
+        setIsReady(true);
+      } catch (error) {
+        console.error('Error setting language:', error);
+        setIsReady(true);
       }
-      
-      if (document.body) {
-        document.body.className = className;
-      }
-      
-      setIsReady(true);
-    } catch (error) {
-      console.error('Error setting language:', error);
-      setIsReady(true); // Continue anyway
-    }
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [language]);
 
   const t = (key: string): string => {
