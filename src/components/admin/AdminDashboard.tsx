@@ -15,6 +15,10 @@ import AnalyticsCodesManager from './AnalyticsCodesManager';
 import UsersManager from './UsersManager';
 import MaintenanceManager from './MaintenanceManager';
 import { WebsiteBuilder } from './WebsiteBuilder';
+import { AdvancedWebsiteBuilder } from './AdvancedWebsiteBuilder';
+import { IconManager } from './IconManager';
+import { LayoutCustomizer } from './LayoutCustomizer';
+import PortfolioManager from './PortfolioManager';
 
 // Types
 interface Blog {
@@ -223,7 +227,7 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
       case 'blogs':
         return <BlogManager />;
       case 'portfolio':
-        return <div className="p-6">إدارة المشاريع - قريباً</div>;
+        return <PortfolioManager />;
       case 'services':
         return <ServicesManager />;
       case 'social-links':
@@ -231,7 +235,11 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
       case 'whatsapp':
         return <WhatsAppButtonManager />;
       case 'website-builder':
-        return <WebsiteBuilder />;
+        return <AdvancedWebsiteBuilder />;
+      case 'icon-manager':
+        return <IconManager />;
+      case 'layout-customizer':
+        return <LayoutCustomizer />;
       case 'site-settings':
         return <SiteSettingsManager />;
       case 'users':
