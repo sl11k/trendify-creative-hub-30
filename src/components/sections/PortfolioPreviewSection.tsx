@@ -100,11 +100,11 @@ const PortfolioPreviewSection = () => {
               <div className="relative overflow-hidden">
                 {(() => {
                   const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
-                    ? project.files[0] 
+                    ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
                     : project.image_url;
                   
                   return firstImage ? (
-                    <img 
+                    <img
                       src={firstImage}
                       alt={isRTL ? project.title_ar : project.title_en}
                       className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
