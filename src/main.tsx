@@ -1,10 +1,27 @@
+// iOS 26 Safari CRITICAL fix: Load polyfills first
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import 'whatwg-fetch';
 
-// iOS 26 Safari fix: Ensure polyfills are loaded
+// iOS 26 Safari: Polyfill check
 if (typeof Promise === 'undefined') {
   throw new Error('Promise polyfill not loaded');
+}
+
+// iOS 26 Safari: VisualViewport API polyfill/workaround
+if (typeof window !== 'undefined') {
+  // Disable problematic VisualViewport listeners in iOS 26
+  if (window.visualViewport) {
+    const originalAddEventListener = window.visualViewport.addEventListener;
+    window.visualViewport.addEventListener = function(type: string, ...args: any[]) {
+      // Skip resize/scroll events that break iOS 26
+      if (type === 'resize' || type === 'scroll') {
+        console.log('iOS 26: Blocked visualViewport.' + type + ' event');
+        return;
+      }
+      return originalAddEventListener.call(this, type, ...args);
+    };
+  }
 }
 
 import { createRoot } from 'react-dom/client'
@@ -49,10 +66,12 @@ const initApp = () => {
   }
 };
 
-// iOS 26 Safari fix: Wait for DOM to be fully ready
+// iOS 26 Safari fix: Aggressive delay for initialization
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initApp, 300); // Increased delay for iOS 26
+  });
 } else {
-  // DOM is already ready, but still delay slightly for iOS 26
-  setTimeout(initApp, 100);
+  // DOM is already ready, but still delay for iOS 26
+  setTimeout(initApp, 300);
 }

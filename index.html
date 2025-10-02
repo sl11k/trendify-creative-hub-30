@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <!-- iOS 26 Safari viewport fix -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-visual" />
+    <!-- iOS 26 Safari critical viewport fix - remove interactive-widget that breaks iOS 26 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -31,36 +31,56 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-      /* iOS 26 Safari critical fixes */
-      html {
-        height: -webkit-fill-available;
-        height: fill-available;
+      /* iOS 26 Safari CRITICAL fixes - VisualViewport API bug workaround */
+      * {
+        box-sizing: border-box;
       }
+      
+      html {
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        overflow: hidden;
+      }
+      
       body {
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
-        min-height: fill-available;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        position: relative;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Tajawal', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /* iOS 26 Safari rendering fix */
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
       }
+      
       #root {
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
-        min-height: fill-available;
+        min-height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
       }
+      
       /* Prevent FOUT on iOS */
       .font-arabic {
         font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-display: swap;
       }
-      /* iOS 26 Safari viewport fix */
+      
+      /* iOS 26 Safari VisualViewport fix */
       @supports (-webkit-touch-callout: none) {
+        html {
+          position: fixed;
+          overflow: hidden;
+        }
         body {
           position: relative;
+          overflow-y: auto;
           overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
         }
       }
     </style>
@@ -68,6 +88,9 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://trendify.lovable.app" />
     <link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/gpt-engineer-file-uploads/xQl55EIDY6U5FPZIuIyVYXyHYIh2/uploads/1757568761223-DBSGSVzaSNCy2NtUPmpRbEjVW7kLaUu6mev3fkwu (1).png">
+    
+    <!-- iOS 26 Safari Critical Fix - MUST load before anything else -->
+    <script src="/ios26-fix.js"></script>
 </head>
 
   <body>

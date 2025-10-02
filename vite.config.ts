@@ -50,24 +50,26 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    target: ['es2020', 'safari14', 'ios14'], // iOS 26 requires modern target
+    target: 'es2015', // iOS 26 Safari compatibility - use es2015 for maximum compatibility
     minify: 'terser',
-    sourcemap: false, // Disable for iOS performance
-    cssTarget: 'safari14',
+    sourcemap: false,
+    cssTarget: 'safari11',
     cssMinify: true,
     terserOptions: {
       safari10: true,
       compress: {
-        drop_console: true, // Remove console for iOS
-        passes: 3,
+        drop_console: false, // Keep console for debugging iOS 26
+        passes: 2,
         dead_code: true,
         drop_debugger: true,
-        unsafe_arrows: false, // iOS 26 Safari fix
+        unsafe_arrows: false,
         unsafe_methods: false,
+        pure_funcs: [],
       },
       format: {
         safari10: true,
         comments: false,
+        ecma: 2015,
       },
       mangle: {
         safari10: true,
@@ -78,13 +80,15 @@ export default defineConfig(({ mode }) => ({
         manualChunks: undefined,
         format: 'es',
         inlineDynamicImports: true,
-        // iOS 26 Safari compatibility
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]',
         generatedCode: {
-          constBindings: true,
-          arrowFunctions: true,
+          constBindings: false, // iOS 26 fix
+          arrowFunctions: false, // iOS 26 fix
         }
       }
     },
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 2000,
   },
 }));
