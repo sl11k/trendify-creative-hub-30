@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/sections/HeroSection';
-import AboutPreviewSection from '@/components/sections/AboutPreviewSection';
-import ServicesPreviewSection from '@/components/sections/ServicesPreviewSection';
-import PortfolioPreviewSection from '@/components/sections/PortfolioPreviewSection';
-import PartnersSection from '@/components/sections/PartnersSection';
-import ToolsPreviewSection from '@/components/sections/ToolsPreviewSection';
-import BlogPreviewSection from '@/components/sections/BlogPreviewSection';
-import ContactSection from '@/components/sections/ContactSection';
 import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { supabase } from '@/integrations/supabase/client';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
+
+// Lazy load heavy sections
+const AboutPreviewSection = lazy(() => import('@/components/sections/AboutPreviewSection'));
+const ServicesPreviewSection = lazy(() => import('@/components/sections/ServicesPreviewSection'));
+const PortfolioPreviewSection = lazy(() => import('@/components/sections/PortfolioPreviewSection'));
+const PartnersSection = lazy(() => import('@/components/sections/PartnersSection'));
+const ToolsPreviewSection = lazy(() => import('@/components/sections/ToolsPreviewSection'));
+const BlogPreviewSection = lazy(() => import('@/components/sections/BlogPreviewSection'));
 
 const Index = () => {
   usePageTracking(); // Track page views
@@ -69,12 +69,14 @@ const Index = () => {
         <Header />
         <main>
           <HeroSection />
-          <AboutPreviewSection />
-          <ServicesPreviewSection />
-          <PortfolioPreviewSection />
-          <PartnersSection />
-          <ToolsPreviewSection />
-          <BlogPreviewSection />
+          <Suspense fallback={<div className="h-screen" />}>
+            <AboutPreviewSection />
+            <ServicesPreviewSection />
+            <PortfolioPreviewSection />
+            <PartnersSection />
+            <ToolsPreviewSection />
+            <BlogPreviewSection />
+          </Suspense>
           <div className="py-20 bg-muted/30 text-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
