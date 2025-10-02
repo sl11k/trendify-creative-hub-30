@@ -174,19 +174,11 @@
     @apply animate-pulse;
   }
   
-  /* Modern Blur Effect - iOS Safari Compatible */
+  /* Modern Blur Effect */
   .glass-effect {
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-  }
-  
-  /* Enhanced effect for supporting browsers */
-  @supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
-    .glass-effect {
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      background: rgba(255, 255, 255, 0.15);
-    }
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -234,11 +226,7 @@
   }
 
   .parallax-bg {
-    /* iOS Safari optimization */
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 
   /* Advanced Hover Effects */
