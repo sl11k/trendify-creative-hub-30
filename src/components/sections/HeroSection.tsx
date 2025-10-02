@@ -14,29 +14,44 @@ const HeroSection = () => {
     text_en: 'Get Free Consultation',
     url: '/contact'
   });
+  const [isLoaded, setIsLoaded] = useState(false);
   
   useCounterAnimation();
 
   useEffect(() => {
+    // Mark component as loaded
+    setIsLoaded(true);
+    
     // Stagger animation for statistics
     const staggerElements = document.querySelectorAll('.stagger-animation');
     staggerElements.forEach((element, index) => {
       element.setAttribute('data-delay', (index * 150).toString());
     });
 
-    // Load consultation button settings
-    loadConsultationButton();
+    // Delay Supabase call to ensure page renders first (iOS Safari fix)
+    const timer = setTimeout(() => {
+      loadConsultationButton();
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const loadConsultationButton = async () => {
     try {
-      const { data } = await supabase
+      // Add timeout to prevent hanging on iOS Safari
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 5000);
+      });
+
+      const fetchPromise = supabase
         .from('site_settings')
         .select('*')
         .in('setting_key', ['consultation_button_text_ar', 'consultation_button_text_en', 'consultation_button_url']);
+
+      const { data } = await Promise.race([fetchPromise, timeoutPromise]) as any;
       
-      if (data) {
-        const settings = data.reduce((acc, item) => {
+      if (data && data.length > 0) {
+        const settings = data.reduce((acc: Record<string, string>, item: any) => {
           acc[item.setting_key] = item.setting_value;
           return acc;
         }, {} as Record<string, string>);
@@ -49,6 +64,7 @@ const HeroSection = () => {
       }
     } catch (error) {
       console.error('Error loading consultation button:', error);
+      // Fallback to default values already set in state
     }
   };
 

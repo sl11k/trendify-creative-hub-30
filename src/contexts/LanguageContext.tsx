@@ -119,19 +119,46 @@ const translations = {
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('ar');
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Set document direction and font family based on language
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-    document.body.className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
+    try {
+      // Set document direction and font family based on language
+      const dir = language === 'ar' ? 'rtl' : 'ltr';
+      const className = language === 'ar' ? 'rtl font-arabic' : 'ltr font-sans';
+      
+      if (document.documentElement) {
+        document.documentElement.dir = dir;
+        document.documentElement.lang = language;
+      }
+      
+      if (document.body) {
+        document.body.className = className;
+      }
+      
+      setIsReady(true);
+    } catch (error) {
+      console.error('Error setting language:', error);
+      setIsReady(true); // Continue anyway
+    }
   }, [language]);
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations['ar']] || key;
+    try {
+      const translation = translations[language]?.[key as keyof typeof translations['ar']];
+      return translation || key;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return key;
+    }
   };
 
   const isRTL = language === 'ar';
+
+  // Wait for initial setup before rendering children (iOS Safari fix)
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, isRTL }}>

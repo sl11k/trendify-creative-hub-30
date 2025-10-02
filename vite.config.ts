@@ -50,22 +50,30 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    target: 'es2017',
+    target: ['es2017', 'safari11', 'ios11'],
     minify: 'terser',
     sourcemap: true,
     cssTarget: 'safari11',
+    cssMinify: true,
     terserOptions: {
       safari10: true,
       compress: {
         drop_console: false,
         passes: 2,
+        dead_code: true,
+        drop_debugger: true,
+      },
+      format: {
+        safari10: true,
       },
     },
     rollupOptions: {
       output: {
         manualChunks: undefined,
         format: 'es',
+        inlineDynamicImports: true,
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000,
   },
 }));
