@@ -18,10 +18,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  Code,
-  Layout,
-  Wand,
-  Shapes
+  Code
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -91,21 +88,9 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
     },
     {
       id: "website-builder",
-      title: "منشئ المواقع المتقدم",
-      icon: Wand,
-      description: "تصميم شامل للموقع"
-    },
-    {
-      id: "icon-manager",
-      title: "مدير الأيقونات",
-      icon: Shapes,
-      description: "إدارة الأيقونات المتاحة"
-    },
-    {
-      id: "layout-customizer",
-      title: "مخصص التخطيط",
-      icon: Layout,
-      description: "تخصيص تخطيط الإدارة"
+      title: "منشئ المواقع",
+      icon: Palette,
+      description: "تصميم الموقع"
     },
     {
       id: "site-settings",

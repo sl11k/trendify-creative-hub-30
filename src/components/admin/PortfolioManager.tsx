@@ -6,27 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, Edit, Trash2, Save, X, Image, 
-  // Portfolio Icons - Extended Collection
-  Briefcase, FolderOpen, Code, Palette, Database, Server,
-  Globe, Smartphone, Monitor, Tablet, Laptop, Camera,
-  Video, Music, Headphones, Mic, Speaker, Radio,
-  GamepadIcon, Trophy, Target, Award, Star, Heart,
-  // Business Icons
-  Building, Store, ShoppingCart, CreditCard, DollarSign,
-  TrendingUp, BarChart, PieChart, Activity, Calculator,
-  // Design Icons
-  Brush, Scissors, Crop, Move, RotateCcw, Maximize,
-  Minimize, Zap, Sparkles, Wand, Layers, Eye,
-  // Tech Icons
-  Cpu, HardDrive, Wifi, Bluetooth, Battery, Power,
-  Settings, Wrench, Bug, Shield,
-  // More icons for variety
-  CloudIcon, Download, Upload, Share, Link,
-  Calendar, Clock, Timer, Bell, CheckCircle,
-  Mail, MessageCircle, Phone, Send, Inbox, AtSign
-} from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Image } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -212,105 +192,6 @@ const PortfolioManager = () => {
     setFormData(prev => ({ ...prev, technologies: techs }));
   };
 
-  // Extended icon options for portfolio items
-  const portfolioIcons = [
-    { name: 'Briefcase', icon: Briefcase, category: 'business' },
-    { name: 'Code', icon: Code, category: 'development' },
-    { name: 'Palette', icon: Palette, category: 'design' },
-    { name: 'Database', icon: Database, category: 'development' },
-    { name: 'Server', icon: Server, category: 'development' },
-    { name: 'Globe', icon: Globe, category: 'web' },
-    { name: 'Smartphone', icon: Smartphone, category: 'mobile' },
-    { name: 'Monitor', icon: Monitor, category: 'web' },
-    { name: 'Tablet', icon: Tablet, category: 'mobile' },
-    { name: 'Laptop', icon: Laptop, category: 'web' },
-    { name: 'Camera', icon: Camera, category: 'media' },
-    { name: 'Video', icon: Video, category: 'media' },
-    { name: 'Music', icon: Music, category: 'media' },
-    { name: 'Headphones', icon: Headphones, category: 'media' },
-    { name: 'Mic', icon: Mic, category: 'media' },
-    { name: 'Speaker', icon: Speaker, category: 'media' },
-    { name: 'Radio', icon: Radio, category: 'media' },
-    { name: 'GamepadIcon', icon: GamepadIcon, category: 'gaming' },
-    { name: 'Trophy', icon: Trophy, category: 'achievement' },
-    { name: 'Target', icon: Target, category: 'business' },
-    { name: 'Award', icon: Award, category: 'achievement' },
-    { name: 'Star', icon: Star, category: 'rating' },
-    { name: 'Heart', icon: Heart, category: 'social' },
-    { name: 'Building', icon: Building, category: 'business' },
-    { name: 'Store', icon: Store, category: 'business' },
-    { name: 'ShoppingCart', icon: ShoppingCart, category: 'ecommerce' },
-    { name: 'CreditCard', icon: CreditCard, category: 'finance' },
-    { name: 'DollarSign', icon: DollarSign, category: 'finance' },
-    { name: 'TrendingUp', icon: TrendingUp, category: 'analytics' },
-    { name: 'BarChart', icon: BarChart, category: 'analytics' },
-    { name: 'PieChart', icon: PieChart, category: 'analytics' },
-    { name: 'Activity', icon: Activity, category: 'analytics' },
-    { name: 'Calculator', icon: Calculator, category: 'tools' },
-    { name: 'Brush', icon: Brush, category: 'design' },
-    { name: 'Scissors', icon: Scissors, category: 'design' },
-    { name: 'Crop', icon: Crop, category: 'design' },
-    { name: 'Move', icon: Move, category: 'design' },
-    { name: 'RotateCcw', icon: RotateCcw, category: 'design' },
-    { name: 'Maximize', icon: Maximize, category: 'interface' },
-    { name: 'Minimize', icon: Minimize, category: 'interface' },
-    { name: 'Zap', icon: Zap, category: 'performance' },
-    { name: 'Sparkles', icon: Sparkles, category: 'magic' },
-    { name: 'Wand', icon: Wand, category: 'magic' },
-    { name: 'Layers', icon: Layers, category: 'design' },
-    { name: 'Eye', icon: Eye, category: 'interface' },
-    { name: 'Cpu', icon: Cpu, category: 'tech' },
-    { name: 'HardDrive', icon: HardDrive, category: 'tech' },
-    { name: 'Wifi', icon: Wifi, category: 'connectivity' },
-    { name: 'Bluetooth', icon: Bluetooth, category: 'connectivity' },
-    { name: 'Battery', icon: Battery, category: 'power' },
-    { name: 'Power', icon: Power, category: 'power' },
-    { name: 'Settings', icon: Settings, category: 'configuration' },
-    { name: 'Wrench', icon: Wrench, category: 'tools' },
-    { name: 'Wrench', icon: Wrench, category: 'tools' },
-    { name: 'Bug', icon: Bug, category: 'development' },
-    { name: 'Shield', icon: Shield, category: 'security' },
-    { name: 'CloudIcon', icon: CloudIcon, category: 'cloud' },
-    { name: 'Download', icon: Download, category: 'transfer' },
-    { name: 'Upload', icon: Upload, category: 'transfer' },
-    { name: 'Share', icon: Share, category: 'social' },
-    { name: 'Link', icon: Link, category: 'web' },
-    { name: 'External', icon: External, category: 'web' },
-    { name: 'Calendar', icon: Calendar, category: 'time' },
-    { name: 'Clock', icon: Clock, category: 'time' },
-    { name: 'Timer', icon: Timer, category: 'time' },
-    { name: 'Bell', icon: Bell, category: 'notification' },
-    { name: 'Bell', icon: Bell, category: 'notification' },
-    { name: 'CheckCircle', icon: CheckCircle, category: 'status' },
-    { name: 'Mail', icon: Mail, category: 'communication' },
-    { name: 'MessageCircle', icon: MessageCircle, category: 'communication' },
-    { name: 'Phone', icon: Phone, category: 'communication' },
-    { name: 'Send', icon: Send, category: 'communication' },
-    { name: 'Inbox', icon: Inbox, category: 'communication' },
-    { name: 'AtSign', icon: AtSign, category: 'communication' }
-  ];
-
-  const [selectedIconCategory, setSelectedIconCategory] = useState('all');
-  const [showIconSelector, setShowIconSelector] = useState(false);
-
-  const iconCategories = [
-    { id: 'all', name: 'الكل' },
-    { id: 'business', name: 'أعمال' },
-    { id: 'development', name: 'تطوير' },
-    { id: 'design', name: 'تصميم' },
-    { id: 'web', name: 'ويب' },
-    { id: 'mobile', name: 'موبايل' },
-    { id: 'media', name: 'وسائط' },
-    { id: 'gaming', name: 'ألعاب' },
-    { id: 'analytics', name: 'تحليلات' },
-    { id: 'tech', name: 'تقنية' },
-    { id: 'communication', name: 'تواصل' }
-  ];
-
-  const filteredIcons = selectedIconCategory === 'all' 
-    ? portfolioIcons 
-    : portfolioIcons.filter(icon => icon.category === selectedIconCategory);
-
   if (loading) {
     return <div className="p-6">{isRTL ? 'جاري التحميل...' : 'Loading...'}</div>;
   }
@@ -424,69 +305,6 @@ const PortfolioManager = () => {
                   onChange={(e) => handleTechnologiesChange(e.target.value)}
                   placeholder={isRTL ? 'فصل بالفواصل: React, Node.js, MongoDB' : 'Comma separated: React, Node.js, MongoDB'}
                 />
-              </div>
-            </div>
-
-            {/* Icon Selector */}
-            <div>
-              <Label>{isRTL ? 'أيقونة المشروع' : 'Project Icon'}</Label>
-              <div className="mt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowIconSelector(!showIconSelector)}
-                  className="w-full justify-start gap-2"
-                >
-                  <Briefcase className="h-4 w-4" />
-                  {isRTL ? 'اختر أيقونة للمشروع' : 'Choose Project Icon'}
-                </Button>
-                
-                {showIconSelector && (
-                  <Card className="mt-2 p-4">
-                    <div className="space-y-3">
-                      {/* Category Filter */}
-                      <div className="flex flex-wrap gap-1">
-                        {iconCategories.map((category) => (
-                          <Button
-                            key={category.id}
-                            type="button"
-                            variant={selectedIconCategory === category.id ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setSelectedIconCategory(category.id)}
-                          >
-                            {category.name}
-                          </Button>
-                        ))}
-                      </div>
-                      
-                      {/* Icon Grid */}
-                      <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
-                        {filteredIcons.map((iconOption) => {
-                          const IconComponent = iconOption.icon;
-                          return (
-                            <Button
-                              key={iconOption.name}
-                              type="button"
-                              variant="ghost"
-                              className="h-12 w-12 p-2"
-                              onClick={() => {
-                                // Here you would save the icon selection
-                                // For now, we'll just close the selector
-                                setShowIconSelector(false);
-                                toast({
-                                  title: isRTL ? 'تم اختيار الأيقونة' : 'Icon Selected',
-                                  description: `${iconOption.name} icon selected`
-                                });
-                              }}
-                            >
-                              <IconComponent className="h-6 w-6" />
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </Card>
-                )}
               </div>
             </div>
 
