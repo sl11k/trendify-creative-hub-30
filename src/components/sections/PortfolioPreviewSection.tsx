@@ -18,6 +18,8 @@ const PortfolioPreviewSection = () => {
     project_url?: string;
     project_type?: string;
     category?: string;
+    logo_url?: string;
+    files?: any;
   }>>([]);
 
   useEffect(() => {
@@ -96,26 +98,42 @@ const PortfolioPreviewSection = () => {
               }}
             >
               <div className="relative overflow-hidden">
-                {project.image_url ? (
-                  <img 
-                    src={project.image_url}
-                    alt={isRTL ? project.title_ar : project.title_en}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
-                    <div className="text-white text-6xl font-bold opacity-20">
-                      {isRTL ? 'مشروع' : 'PROJECT'}
+                {(() => {
+                  const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                    ? project.files[0] 
+                    : project.image_url;
+                  
+                  return firstImage ? (
+                    <img 
+                      src={firstImage}
+                      alt={isRTL ? project.title_ar : project.title_en}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
+                      <div className="text-white text-6xl font-bold opacity-20">
+                        {isRTL ? 'مشروع' : 'PROJECT'}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
                 <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
                   <button className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform">
                     <ExternalLink className="h-6 w-6" />
                   </button>
                 </div>
-                <div className="absolute top-4 left-4">
+                {project.logo_url && (
+                  <div className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'}`}>
+                    <img 
+                      src={project.logo_url}
+                      alt="Logo"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg bg-white"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className={`absolute top-4 ${isRTL ? 'right-4' : 'left-4'}`}>
                   <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
                     {project.category || (isRTL ? 'مشروع' : 'Project')}
                   </span>
