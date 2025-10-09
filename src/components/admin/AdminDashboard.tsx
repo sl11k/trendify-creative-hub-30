@@ -18,6 +18,8 @@ import { WebsiteBuilder } from './WebsiteBuilder';
 import PortfolioManager from './PortfolioManager';
 import PartnersManager from './PartnersManager';
 import ToolsManager from './ToolsManager';
+import { AIBlogGenerator } from './AIBlogGenerator';
+import { AISeoOptimizer } from './AISeoOptimizer';
 
 // Types
 interface Blog {
@@ -223,6 +225,15 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         return <AnalyticsCodesManager />;
       case 'seo':
         return <SeoManager />;
+      case 'ai-blog':
+        return (
+          <div className="space-y-6">
+            <AIBlogGenerator />
+            <BlogManager />
+          </div>
+        );
+      case 'ai-seo':
+        return <AISeoOptimizer />;
       case 'blogs':
         return <BlogManager />;
       case 'portfolio':

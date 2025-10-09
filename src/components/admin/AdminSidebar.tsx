@@ -18,7 +18,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  Code
+  Code,
+  Sparkles
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -55,6 +56,18 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
       title: "تحسين محركات البحث",
       icon: Search,
       description: "إدارة SEO"
+    },
+    {
+      id: "ai-blog",
+      title: "AI - مولد المقالات",
+      icon: Sparkles,
+      description: "إنشاء مقالات بالذكاء الاصطناعي"
+    },
+    {
+      id: "ai-seo",
+      title: "AI - محسن SEO",
+      icon: Sparkles,
+      description: "تحسين SEO تلقائياً"
     },
     {
       id: "blogs",
