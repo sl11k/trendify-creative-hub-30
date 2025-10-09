@@ -24,7 +24,7 @@ const translations = {
     
     // Hero Section
     'hero.title': 'نحول أحلامك الرقمية إلى واقع مبهر',
-    'hero.subtitle': 'وكالة Trendify الرائدة في التسويق الرقمي والخدمات الإبداعية - نجعل علامتك التجارية تتألق في العالم الرقمي',
+    'hero.subtitle': 'Trendify - شريكك المتكامل لنمو مشروعك من الفكرة للإطلاق والنجاح - نجعل علامتك التجارية تتألق في العالم الرقمي',
     'hero.cta.primary': 'احصل على استشارة مجانية',
     'hero.cta.secondary': 'اكتشف خدماتنا',
     
@@ -46,8 +46,8 @@ const translations = {
     
     // About
     'about.title': 'من نحن',
-    'about.subtitle': 'رواد الإبداع في العالم الرقمي',
-    'about.description': 'Trendify وكالة رائدة في مجال التسويق الرقمي والخدمات الإبداعية، نجمع بين الخبرة والابتكار لتقديم حلول رقمية متميزة تساعد الشركات على النمو والازدهار في البيئة الرقمية المتطورة.',
+    'about.subtitle': 'شريكك المتكامل للنمو الرقمي',
+    'about.description': 'Trendify منصة متكاملة تجمع بين التقنية والإبداع والاستراتيجية، نساعد الشركات الناشئة والمشاريع على النمو من خلال حلول رقمية ذكية تساعدك على التميز والازدهار في البيئة الرقمية المتطورة.',
     
     // Contact
     'contact.title': 'تواصل معنا',
@@ -60,7 +60,7 @@ const translations = {
     'contact.form.submit': 'إرسال الرسالة',
     
     // Footer
-    'footer.description': 'Trendify - وكالة التسويق الرقمي والخدمات الإبداعية الرائدة',
+    'footer.description': 'Trendify - شريكك المتكامل للنمو الرقمي',
     'footer.rights': 'جميع الحقوق محفوظة',
   },
   en: {
@@ -74,7 +74,7 @@ const translations = {
     
     // Hero Section
     'hero.title': 'We Turn Your Digital Dreams Into Stunning Reality',
-    'hero.subtitle': 'Trendify - Leading Digital Marketing & Creative Services Agency. We make your brand shine in the digital world',
+    'hero.subtitle': 'Trendify - Your Complete Growth Partner from Idea to Launch & Success - We make your brand shine in the digital world',
     'hero.cta.primary': 'Get Free Consultation',
     'hero.cta.secondary': 'Explore Our Services',
     
@@ -96,8 +96,8 @@ const translations = {
     
     // About
     'about.title': 'About Us',
-    'about.subtitle': 'Digital Creativity Pioneers',
-    'about.description': 'Trendify is a leading agency in digital marketing and creative services, combining expertise and innovation to deliver outstanding digital solutions that help companies grow and thrive in the evolving digital environment.',
+    'about.subtitle': 'Your Complete Digital Growth Partner',
+    'about.description': 'Trendify is an integrated platform that combines technology, creativity, and strategy. We help startups and projects grow through smart digital solutions that help you stand out and thrive in the evolving digital landscape.',
     
     // Contact
     'contact.title': 'Contact Us',
@@ -110,7 +110,7 @@ const translations = {
     'contact.form.submit': 'Send Message',
     
     // Footer
-    'footer.description': 'Trendify - Leading Digital Marketing & Creative Services Agency',
+    'footer.description': 'Trendify - Your Complete Digital Growth Partner',
     'footer.rights': 'All Rights Reserved',
   }
 };

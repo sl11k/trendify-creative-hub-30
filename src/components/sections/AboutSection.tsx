@@ -13,8 +13,8 @@ const AboutSection = () => {
     },
     {
       icon: Code,
-      title: isRTL ? 'أدوات ذكية مجانية' : 'Free Smart Tools',
-      description: isRTL ? 'Builder & Helper لتسريع التنفيذ وتقليل التكلفة' : 'Builder & Helper for faster execution and lower cost'
+      title: isRTL ? 'أدوات ذكية' : 'Smart Tools',
+      description: isRTL ? 'أدواتنا الذكية تسرّع التنفيذ وتقلل التكلفة' : 'Our smart tools accelerate execution and reduce costs'
     },
     {
       icon: Shield,
@@ -64,8 +64,8 @@ const AboutSection = () => {
             
             <p className="text-lg text-muted-foreground leading-relaxed mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
               {isRTL 
-                ? 'نحن في Trendify لسنا وكالة تسويق تقليدية، بل شريك نمو متكامل للمشاريع والشركات الناشئة. نعمل معك منذ لحظة ولادة الفكرة حتى إطلاق المشروع وتحقيق الإيرادات والنمو المستدام.'
-                : 'At Trendify, we\'re not just another marketing agency — we\'re your growth partner. We empower startups and emerging ventures from idea to launch to sustainable growth.'
+                ? 'نحن في Trendify شريك نمو متكامل للمشاريع والشركات الناشئة. نعمل معك منذ لحظة ولادة الفكرة حتى إطلاق المشروع وتحقيق الإيرادات والنمو المستدام.'
+                : 'At Trendify, we\'re your complete growth partner for startups and emerging ventures. We work with you from idea conception through launch to revenue generation and sustainable growth.'
               }
             </p>
             
@@ -81,8 +81,8 @@ const AboutSection = () => {
                 <Lightbulb className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                 <p className="text-muted-foreground leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
                   {isRTL 
-                    ? 'من خلال أدواتنا الذكية Builder وHelper، نتيح لك تنفيذ فكرتك بسرعة وسهولة دون الحاجة إلى فرق تقنية كبيرة أو تكاليف مرتفعة. أدواتنا تساعدك على بناء منصتك، إدارة عملياتك، وتحسين أدائك بخطوات بسيطة وفعّالة.'
-                    : 'With our smart tools, Builder and Helper, you can bring your vision to life quickly and easily — without the need for large technical teams or high costs. These tools make it simple to build, manage, and optimize your business.'
+                    ? 'من خلال أدواتنا الذكية، نتيح لك تنفيذ فكرتك بسرعة وسهولة دون الحاجة إلى فرق تقنية كبيرة أو تكاليف مرتفعة. أدواتنا تساعدك على بناء منصتك، إدارة عملياتك، وتحسين أدائك بخطوات بسيطة وفعّالة.'
+                    : 'Through our smart tools, you can bring your vision to life quickly and easily — without the need for large technical teams or high costs. Our tools help you build your platform, manage operations, and improve performance with simple and effective steps.'
                   }
                 </p>
               </div>
