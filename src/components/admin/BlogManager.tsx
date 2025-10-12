@@ -44,14 +44,31 @@ const BlogManager = () => {
   const loadBlogs = async () => {
     try {
       setLoading(true);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('blogs')
         .select('*')
         .order('created_at', { ascending: false });
       
+      if (error) {
+        console.error('Error loading blogs:', error);
+        toast({
+          title: isRTL ? 'خطأ' : 'Error',
+          description: isRTL ? 'حدث خطأ في تحميل المقالات' : 'Error loading blogs',
+          variant: 'destructive'
+        });
+        setBlogs([]);
+        return;
+      }
+      
       setBlogs(data || []);
     } catch (error) {
       console.error('Error loading blogs:', error);
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: isRTL ? 'حدث خطأ في تحميل المقالات' : 'Error loading blogs',
+        variant: 'destructive'
+      });
+      setBlogs([]);
     } finally {
       setLoading(false);
     }

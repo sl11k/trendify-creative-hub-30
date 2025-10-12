@@ -28,18 +28,25 @@ export const usePortfolio = () => {
   const fetchPortfolio = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const { data, error } = await supabase
         .from('portfolio')
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching portfolio:', error);
+        throw error;
+      }
       
       console.log('Portfolio data from DB:', data);
       setPortfolio((data as any) || []);
     } catch (err) {
+      console.error('Fetch portfolio error:', err);
       setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل المشاريع');
+      setPortfolio([]);
     } finally {
       setLoading(false);
     }

@@ -12,16 +12,24 @@ export const useBlogs = () => {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const { data, error } = await supabase
         .from('blogs')
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching blogs:', error);
+        throw error;
+      }
+      
       setBlogs(data || []);
     } catch (err) {
+      console.error('Fetch blogs error:', err);
       setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل المقالات');
+      setBlogs([]);
     } finally {
       setLoading(false);
     }

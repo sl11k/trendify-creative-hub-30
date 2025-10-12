@@ -37,6 +37,8 @@ const FloatingWhatsAppButton = () => {
       const { data, error } = await supabase
         .from('whatsapp_button')
         .select('*')
+        .eq('active', true)
+        .limit(1)
         .maybeSingle();
       
       if (error) {
