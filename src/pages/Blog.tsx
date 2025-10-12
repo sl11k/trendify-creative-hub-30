@@ -15,17 +15,19 @@ const Blog = () => {
   const { t, isRTL } = useLanguage();
   const { blogs, loading, error } = useBlogs();
 
+  console.log('Blog page - Loading:', loading, 'Error:', error, 'Blogs count:', blogs?.length);
+
   if (loading) {
-  return (
-    <div className="min-h-screen bg-background">
-      <SeoHead lang="ar" />
-      <Analytics />
-      <Header />
+    return (
+      <div className="min-h-screen bg-background">
+        <SeoHead lang="ar" />
+        <Analytics />
+        <Header />
         <main className="pt-16">
           <div className="container mx-auto px-4 py-20">
-            <div className="flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <span className="mr-2">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="text-lg">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
             </div>
           </div>
         </main>

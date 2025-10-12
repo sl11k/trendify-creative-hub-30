@@ -10,32 +10,38 @@ export const useBlogs = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchBlogs = async () => {
+    console.log('Fetching blogs - START');
     try {
       setLoading(true);
       setError(null);
       
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('blogs')
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching blogs:', error);
-        throw error;
+      console.log('Blogs fetch result:', { data, error: fetchError });
+
+      if (fetchError) {
+        console.error('Error fetching blogs:', fetchError);
+        throw fetchError;
       }
       
       setBlogs(data || []);
+      console.log('Blogs loaded successfully:', data?.length || 0);
     } catch (err) {
       console.error('Fetch blogs error:', err);
       setError(err instanceof Error ? err.message : 'حدث خطأ في تحميل المقالات');
       setBlogs([]);
     } finally {
       setLoading(false);
+      console.log('Fetching blogs - END');
     }
   };
 
   useEffect(() => {
+    console.log('useBlogs hook mounted');
     fetchBlogs();
   }, []);
 
