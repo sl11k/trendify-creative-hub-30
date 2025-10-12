@@ -15,9 +15,11 @@ const Blog = () => {
   const { t, isRTL } = useLanguage();
   const { blogs, loading, error } = useBlogs();
 
-  console.log('Blog page - Loading:', loading, 'Error:', error, 'Blogs count:', blogs?.length);
+  console.log('Blog page render - Loading:', loading, 'Error:', error, 'Blogs count:', blogs?.length);
+  console.log('First 2 blogs:', blogs?.slice(0, 2));
 
   if (loading) {
+    console.log('Showing loading screen');
     return (
       <div className="min-h-screen bg-background">
         <SeoHead lang="ar" />
@@ -37,6 +39,7 @@ const Blog = () => {
   }
 
   if (error) {
+    console.log('Showing error screen:', error);
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -51,6 +54,8 @@ const Blog = () => {
       </div>
     );
   }
+
+  console.log('Rendering main blog page with', blogs.length, 'blogs');
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,7 +77,16 @@ const Blog = () => {
 
             {/* Blog Posts Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogs.map((post, index) => (
+              {blogs.length === 0 ? (
+                <div className="col-span-full text-center py-20">
+                  <p className="text-lg text-muted-foreground">
+                    {isRTL ? 'لا توجد مقالات متاحة حالياً' : 'No articles available at the moment'}
+                  </p>
+                </div>
+              ) : (
+                blogs.map((post, index) => {
+                  console.log('Rendering blog post:', post.id, index);
+                  return (
                 <Card
                   key={post.id}
                   className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
@@ -122,7 +136,9 @@ const Blog = () => {
                     </a>
                   </CardContent>
                 </Card>
-              ))}
+                  );
+                })
+              )}
             </div>
 
             {/* Newsletter Section */}
