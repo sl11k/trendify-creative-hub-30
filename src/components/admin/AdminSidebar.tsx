@@ -112,12 +112,6 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
       description: "زر واتساب"
     },
     {
-      id: "website-builder",
-      title: "منشئ المواقع",
-      icon: Palette,
-      description: "تصميم الموقع"
-    },
-    {
       id: "site-settings",
       title: "إعدادات الموقع",
       icon: Globe,

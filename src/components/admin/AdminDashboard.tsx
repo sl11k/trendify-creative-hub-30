@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { AdminSidebar } from './AdminSidebar';
+import { Loader2 } from 'lucide-react';
 
-// Import all admin components
-import AnalyticsDashboard from './AnalyticsDashboard';
-import SeoManager from './SeoManager';
-import ServicesManager from './ServicesManager';
-import SocialLinksManager from './SocialLinksManager';
-import WhatsAppButtonManager from './WhatsAppButtonManager';
-import BlogManager from './BlogManager';
-import SiteSettingsManager from './SiteSettingsManager';
-import AnalyticsCodesManager from './AnalyticsCodesManager';
-import UsersManager from './UsersManager';
-import MaintenanceManager from './MaintenanceManager';
-import { WebsiteBuilder } from './WebsiteBuilder';
-import PortfolioManager from './PortfolioManager';
-import PartnersManager from './PartnersManager';
-import ToolsManager from './ToolsManager';
-import { AIBlogGenerator } from './AIBlogGenerator';
-import { AISeoOptimizer } from './AISeoOptimizer';
+// Lazy load heavy components
+const AnalyticsDashboard = lazy(() => import('./AnalyticsDashboard'));
+const SeoManager = lazy(() => import('./SeoManager'));
+const ServicesManager = lazy(() => import('./ServicesManager'));
+const SocialLinksManager = lazy(() => import('./SocialLinksManager'));
+const WhatsAppButtonManager = lazy(() => import('./WhatsAppButtonManager'));
+const BlogManager = lazy(() => import('./BlogManager'));
+const SiteSettingsManager = lazy(() => import('./SiteSettingsManager'));
+const AnalyticsCodesManager = lazy(() => import('./AnalyticsCodesManager'));
+const UsersManager = lazy(() => import('./UsersManager'));
+const MaintenanceManager = lazy(() => import('./MaintenanceManager'));
+const PortfolioManager = lazy(() => import('./PortfolioManager'));
+const PartnersManager = lazy(() => import('./PartnersManager'));
+const ToolsManager = lazy(() => import('./ToolsManager'));
+const AIBlogGenerator = lazy(() => import('./AIBlogGenerator').then(m => ({ default: m.AIBlogGenerator })));
+const AISeoOptimizer = lazy(() => import('./AISeoOptimizer').then(m => ({ default: m.AISeoOptimizer })));
 
 // Types
 interface Blog {
@@ -126,54 +126,28 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    loadAllData();
-  }, []);
+    // Load data only when needed for overview
+    if (activeTab === 'overview') {
+      loadOverviewData();
+    }
+  }, [activeTab]);
 
-  const loadAllData = async () => {
+  const loadOverviewData = async () => {
     try {
-      // Load all data in parallel
-      const [
-        blogsData,
-        portfolioData, 
-        servicesData,
-        socialLinksData,
-        analyticsData,
-        seoData,
-        statsData,
-        settingsData
-      ] = await Promise.all([
-        supabase.from('blogs').select('*').order('created_at', { ascending: false }),
-        supabase.from('portfolio').select('*').order('created_at', { ascending: false }),
-        supabase.from('services').select('*').order('sort_order', { ascending: true }),
-        supabase.from('social_links').select('*').order('created_at', { ascending: false }),
-        supabase.from('analytics_codes').select('*').order('created_at', { ascending: false }),
-        supabase.from('page_seo').select('*').order('page_slug', { ascending: true }),
-        supabase.from('daily_stats').select('*').order('date', { ascending: false }).limit(30),
-        supabase.from('site_settings').select('*')
+      // Load only counts for overview
+      const [blogsData, portfolioData, servicesData, socialLinksData] = await Promise.all([
+        supabase.from('blogs').select('id', { count: 'exact', head: true }),
+        supabase.from('portfolio').select('id', { count: 'exact', head: true }),
+        supabase.from('services').select('id', { count: 'exact', head: true }),
+        supabase.from('social_links').select('id', { count: 'exact', head: true })
       ]);
 
-      if (blogsData.data) setBlogs(blogsData.data);
-      if (portfolioData.data) setPortfolio(portfolioData.data);
-      if (servicesData.data) setServices(servicesData.data);
-      if (socialLinksData.data) setSocialLinks(socialLinksData.data);
-      if (analyticsData.data) setAnalyticsCodes(analyticsData.data);
-      if (seoData.data) setPageSEO(seoData.data);
-      if (statsData.data) setDailyStats(statsData.data);
-      
-      if (settingsData.data) {
-        const settings = settingsData.data.reduce((acc, item) => {
-          acc[item.setting_key] = item.setting_value || '';
-          return acc;
-        }, {} as Record<string, string>);
-        setSiteSettings(settings);
-      }
+      setBlogs(Array(blogsData.count || 0).fill({}));
+      setPortfolio(Array(portfolioData.count || 0).fill({}));
+      setServices(Array(servicesData.count || 0).fill({}));
+      setSocialLinks(Array(socialLinksData.count || 0).fill({}));
     } catch (error) {
-      console.error('Error loading data:', error);
-      toast({
-        title: 'خطأ في تحميل البيانات',
-        description: 'حدث خطأ أثناء تحميل البيانات',
-        variant: 'destructive',
-      });
+      console.error('Error loading overview data:', error);
     }
   };
 
@@ -215,50 +189,62 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
     </div>
   );
 
+  const LoadingFallback = () => (
+    <div className="flex items-center justify-center p-8">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  );
+
   const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <OverviewDashboard />;
-      case 'analytics':
-        return <AnalyticsDashboard />;
-      case 'analytics-codes':
-        return <AnalyticsCodesManager />;
-      case 'seo':
-        return <SeoManager />;
-      case 'ai-blog':
-        return (
-          <div className="space-y-6">
-            <AIBlogGenerator />
-            <BlogManager />
-          </div>
-        );
-      case 'ai-seo':
-        return <AISeoOptimizer />;
-      case 'blogs':
-        return <BlogManager />;
-      case 'portfolio':
-        return <PortfolioManager />;
-      case 'partners':
-        return <PartnersManager />;
-      case 'tools':
-        return <ToolsManager />;
-      case 'services':
-        return <ServicesManager />;
-      case 'social-links':
-        return <SocialLinksManager />;
-      case 'whatsapp':
-        return <WhatsAppButtonManager />;
-      case 'website-builder':
-        return <WebsiteBuilder />;
-      case 'site-settings':
-        return <SiteSettingsManager />;
-      case 'users':
-        return <UsersManager />;
-      case 'maintenance':
-        return <MaintenanceManager />;
-      default:
-        return <OverviewDashboard />;
-    }
+    const content = (() => {
+      switch (activeTab) {
+        case 'overview':
+          return <OverviewDashboard />;
+        case 'analytics':
+          return <AnalyticsDashboard />;
+        case 'analytics-codes':
+          return <AnalyticsCodesManager />;
+        case 'seo':
+          return <SeoManager />;
+        case 'ai-blog':
+          return (
+            <div className="space-y-6">
+              <AIBlogGenerator />
+              <BlogManager />
+            </div>
+          );
+        case 'ai-seo':
+          return <AISeoOptimizer />;
+        case 'blogs':
+          return <BlogManager />;
+        case 'portfolio':
+          return <PortfolioManager />;
+        case 'partners':
+          return <PartnersManager />;
+        case 'tools':
+          return <ToolsManager />;
+        case 'services':
+          return <ServicesManager />;
+        case 'social-links':
+          return <SocialLinksManager />;
+        case 'whatsapp':
+          return <WhatsAppButtonManager />;
+        case 'site-settings':
+          return <SiteSettingsManager />;
+        case 'users':
+          return <UsersManager />;
+        case 'maintenance':
+          return <MaintenanceManager />;
+        default:
+          return <OverviewDashboard />;
+      }
+    })();
+
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        {content}
+      </Suspense>
+    );
   };
 
   return (
