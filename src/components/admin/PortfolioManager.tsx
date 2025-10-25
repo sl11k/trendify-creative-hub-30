@@ -441,13 +441,21 @@ const PortfolioManager = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="category">{isRTL ? 'الفئة' : 'Category'}</Label>
-                <Input
+                <Label htmlFor="category">{isRTL ? 'القسم' : 'Category'}</Label>
+                <select
                   id="category"
                   value={formData.category}
                   onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                  placeholder={isRTL ? 'فئة المشروع' : 'Project category'}
-                />
+                  className="w-full px-3 py-2 border border-input bg-background rounded-md"
+                >
+                  <option value="">{isRTL ? 'اختر القسم' : 'Select Category'}</option>
+                  <option value="المواقع الإلكترونية">{isRTL ? 'المواقع الإلكترونية' : 'Websites'}</option>
+                  <option value="الحلول التقنية">{isRTL ? 'الحلول التقنية' : 'Tech Solutions'}</option>
+                  <option value="التصميم">{isRTL ? 'التصميم' : 'Design'}</option>
+                  <option value="التصوير">{isRTL ? 'التصوير' : 'Photography'}</option>
+                  <option value="الهوية البصرية">{isRTL ? 'الهوية البصرية' : 'Branding'}</option>
+                  <option value="المحتوى">{isRTL ? 'المحتوى' : 'Content'}</option>
+                </select>
               </div>
               <div>
                 <Label htmlFor="technologies">{isRTL ? 'التقنيات المستخدمة' : 'Technologies'}</Label>

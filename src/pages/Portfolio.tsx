@@ -18,6 +18,21 @@ const Portfolio = () => {
   const { portfolio, loading, error } = usePortfolio();
   const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const categories = [
+    { value: 'all', label_ar: 'جميع الأعمال', label_en: 'All Works' },
+    { value: 'المواقع الإلكترونية', label_ar: 'المواقع الإلكترونية', label_en: 'Websites' },
+    { value: 'الحلول التقنية', label_ar: 'الحلول التقنية', label_en: 'Tech Solutions' },
+    { value: 'التصميم', label_ar: 'التصميم', label_en: 'Design' },
+    { value: 'التصوير', label_ar: 'التصوير', label_en: 'Photography' },
+    { value: 'الهوية البصرية', label_ar: 'الهوية البصرية', label_en: 'Branding' },
+    { value: 'المحتوى', label_ar: 'المحتوى', label_en: 'Content' },
+  ];
+
+  const filteredPortfolio = selectedCategory === 'all' 
+    ? portfolio 
+    : portfolio.filter(project => project.category === selectedCategory);
 
   if (loading) {
     return (
@@ -64,7 +79,7 @@ const Portfolio = () => {
           <section className="py-20 bg-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               {/* Page Header */}
-              <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
+              <div className="text-center max-w-3xl mx-auto mb-12 animate-fade-in-up">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-primary mb-6">
                   {isRTL ? 'معرض أعمالنا' : 'Our Portfolio'}
                 </h1>
@@ -73,9 +88,33 @@ const Portfolio = () => {
                 </p>
               </div>
 
+              {/* Category Filter */}
+              <div className="flex flex-wrap justify-center gap-3 mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                {categories.map((category) => (
+                  <button
+                    key={category.value}
+                    onClick={() => setSelectedCategory(category.value)}
+                    className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 ${
+                      selectedCategory === category.value
+                        ? 'bg-primary text-primary-foreground shadow-glow scale-105'
+                        : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:scale-105'
+                    }`}
+                  >
+                    {isRTL ? category.label_ar : category.label_en}
+                  </button>
+                ))}
+              </div>
+
               {/* Portfolio Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {portfolio.map((project, index) => (
+              {filteredPortfolio.length === 0 ? (
+                <div className="text-center py-20">
+                  <p className="text-xl text-muted-foreground">
+                    {isRTL ? 'لا توجد مشاريع في هذا القسم' : 'No projects in this category'}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredPortfolio.map((project, index) => (
                   <Card
                     key={project.id}
                     className="group border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
@@ -188,8 +227,9 @@ const Portfolio = () => {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         </main>
