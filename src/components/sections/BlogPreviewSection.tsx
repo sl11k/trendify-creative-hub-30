@@ -79,11 +79,11 @@ const BlogPreviewSection = () => {
         {/* Featured Posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {displayPosts.map((post, index) => (
-            <Card
-              key={post.id}
-              className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
+            <Link key={post.id} to={`/blog/${post.id}`}>
+              <Card
+                className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
               <div className="relative overflow-hidden">
                 {post.image_url ? (
                   <img
@@ -126,7 +126,8 @@ const BlogPreviewSection = () => {
                   {isRTL ? (post.excerpt_ar || post.title_ar) : (post.excerpt_en || post.title_en)}
                 </CardDescription>
               </CardContent>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
 

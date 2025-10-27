@@ -25,7 +25,7 @@ const translations = {
     // Hero Section
     'hero.title': 'نحول أحلامك الرقمية إلى واقع مبهر',
     'hero.subtitle': 'Trendify - شريكك المتكامل لنمو مشروعك من الفكرة للإطلاق والنجاح - نجعل علامتك التجارية تتألق في العالم الرقمي',
-    'hero.cta.primary': 'احصل على استشارة مجانية',
+    'hero.cta.primary': 'احصل على استشارة',
     'hero.cta.secondary': 'اكتشف خدماتنا',
     
     // Services
@@ -75,7 +75,7 @@ const translations = {
     // Hero Section
     'hero.title': 'We Turn Your Digital Dreams Into Stunning Reality',
     'hero.subtitle': 'Trendify - Your Complete Growth Partner from Idea to Launch & Success - We make your brand shine in the digital world',
-    'hero.cta.primary': 'Get Free Consultation',
+    'hero.cta.primary': 'Get Consultation',
     'hero.cta.secondary': 'Explore Our Services',
     
     // Services
