@@ -450,6 +450,7 @@ const PortfolioManager = () => {
                 >
                   <option value="">{isRTL ? 'اختر القسم' : 'Select Category'}</option>
                   <option value="المواقع الإلكترونية">{isRTL ? 'المواقع الإلكترونية' : 'Websites'}</option>
+                  <option value="المتاجر الإلكترونية">{isRTL ? 'المتاجر الإلكترونية' : 'E-Stores'}</option>
                   <option value="الحلول التقنية">{isRTL ? 'الحلول التقنية' : 'Tech Solutions'}</option>
                   <option value="التصميم">{isRTL ? 'التصميم' : 'Design'}</option>
                   <option value="التصوير">{isRTL ? 'التصوير' : 'Photography'}</option>

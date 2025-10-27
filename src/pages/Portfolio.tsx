@@ -20,15 +20,22 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const categories = [
+  const allCategories = [
     { value: 'all', label_ar: 'جميع الأعمال', label_en: 'All Works' },
     { value: 'المواقع الإلكترونية', label_ar: 'المواقع الإلكترونية', label_en: 'Websites' },
+    { value: 'المتاجر الإلكترونية', label_ar: 'المتاجر الإلكترونية', label_en: 'E-Stores' },
     { value: 'الحلول التقنية', label_ar: 'الحلول التقنية', label_en: 'Tech Solutions' },
     { value: 'التصميم', label_ar: 'التصميم', label_en: 'Design' },
     { value: 'التصوير', label_ar: 'التصوير', label_en: 'Photography' },
     { value: 'الهوية البصرية', label_ar: 'الهوية البصرية', label_en: 'Branding' },
     { value: 'المحتوى', label_ar: 'المحتوى', label_en: 'Content' },
   ];
+
+  // Filter out empty categories
+  const categories = allCategories.filter(category => {
+    if (category.value === 'all') return true;
+    return portfolio.some(project => project.category === category.value);
+  });
 
   const filteredPortfolio = selectedCategory === 'all' 
     ? portfolio 

@@ -16,9 +16,34 @@ const Tools = () => {
   usePageTracking();
   const { t, isRTL } = useLanguage();
   const { tools, loading, error } = useTools();
+  const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
 
-  // تجميع الأدوات حسب الفئة
-  const groupedTools = tools.reduce((acc, tool) => {
+  // Get all unique categories
+  const allCategories = Array.from(
+    new Set(
+      tools.map(tool => isRTL ? tool.category_ar : tool.category_en).filter(Boolean)
+    )
+  ).sort();
+
+  const categories = [
+    { value: 'all', label_ar: 'جميع الأدوات', label_en: 'All Tools' },
+    ...allCategories.map(cat => ({
+      value: cat,
+      label_ar: cat,
+      label_en: cat
+    }))
+  ];
+
+  // Filter tools based on selected category
+  const filteredTools = selectedCategory === 'all' 
+    ? tools 
+    : tools.filter(tool => {
+        const toolCategory = isRTL ? tool.category_ar : tool.category_en;
+        return toolCategory === selectedCategory;
+      });
+
+  // Group filtered tools by category
+  const groupedTools = filteredTools.reduce((acc, tool) => {
     const category = isRTL ? (tool.category_ar || 'أخرى') : (tool.category_en || 'Other');
     if (!acc[category]) {
       acc[category] = [];
@@ -72,7 +97,7 @@ const Tools = () => {
           <section className="py-20 bg-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               {/* Page Header */}
-              <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
+              <div className="text-center max-w-3xl mx-auto mb-12 animate-fade-in-up">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-primary mb-6">
                   {isRTL ? 'أدواتنا المميزة' : 'Our Premium Tools'}
                 </h1>
@@ -81,13 +106,31 @@ const Tools = () => {
                 </p>
               </div>
 
+              {/* Category Filter */}
+              <div className="flex flex-wrap justify-center gap-3 mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                {categories.map((category) => (
+                  <button
+                    key={category.value}
+                    onClick={() => setSelectedCategory(category.value)}
+                    className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 ${
+                      selectedCategory === category.value
+                        ? 'bg-primary text-primary-foreground shadow-glow scale-105'
+                        : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:scale-105'
+                    }`}
+                  >
+                    {isRTL ? category.label_ar : category.label_en}
+                  </button>
+                ))}
+              </div>
+
               {/* Tools Grid by Category */}
-              {Object.entries(groupedTools).map(([category, categoryTools], categoryIndex) => (
-                <div key={category} className="mb-16">
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
-                    {category}
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {selectedCategory === 'all' ? (
+                Object.entries(groupedTools).map(([category, categoryTools], categoryIndex) => (
+                  <div key={category} className="mb-16">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+                      {category}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categoryTools.map((tool, index) => (
                       <Card
                         key={tool.id}
@@ -123,9 +166,46 @@ const Tools = () => {
                     ))}
                   </div>
                 </div>
-              ))}
+              ))
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredTools.map((tool, index) => (
+                    <Card
+                      key={tool.id}
+                      className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <CardHeader>
+                        <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                          {isRTL ? tool.name_ar : tool.name_en}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <CardDescription className="text-muted-foreground mb-4 line-clamp-3">
+                          {isRTL ? tool.description_ar : tool.description_en}
+                        </CardDescription>
+                        
+                        <Button
+                          asChild
+                          className="w-full gap-2 bg-gradient-primary hover:bg-gradient-secondary transition-all"
+                        >
+                          <a
+                            href={tool.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            {isRTL ? 'تجربة الأداة' : 'Try Tool'}
+                          </a>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
 
-              {tools.length === 0 && (
+              {filteredTools.length === 0 && (
                 <div className="text-center py-12">
                   <ExternalLink className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                   <h3 className="text-lg font-semibold mb-2">
