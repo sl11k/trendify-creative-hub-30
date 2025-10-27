@@ -20,6 +20,15 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
+  // Helper function to ensure URL has protocol
+  const ensureProtocol = (url: string | undefined): string | undefined => {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   const allCategories = [
     { value: 'all', label_ar: 'جميع الأعمال', label_en: 'All Works' },
     { value: 'المواقع الإلكترونية', label_ar: 'المواقع الإلكترونية', label_en: 'Websites' },
@@ -141,7 +150,7 @@ const Portfolio = () => {
                             loading="lazy"
                             onClick={() => {
                               if (project.project_type === 'website' && project.project_url) {
-                                window.open(project.project_url, '_blank');
+                                window.open(ensureProtocol(project.project_url), '_blank');
                               } else {
                                 setSelectedProject(project);
                               }
@@ -159,7 +168,7 @@ const Portfolio = () => {
                         className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
                         onClick={() => {
                           if (project.project_type === 'website' && project.project_url) {
-                            window.open(project.project_url, '_blank');
+                            window.open(ensureProtocol(project.project_url), '_blank');
                           } else {
                             setSelectedProject(project);
                           }
@@ -168,7 +177,7 @@ const Portfolio = () => {
                         <div className="flex space-x-4">
                           {project.project_url && (
                             <a
-                              href={project.project_url}
+                              href={ensureProtocol(project.project_url)}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
@@ -179,7 +188,7 @@ const Portfolio = () => {
                           )}
                           {project.github_url && (
                             <a
-                              href={project.github_url}
+                              href={ensureProtocol(project.github_url)}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}

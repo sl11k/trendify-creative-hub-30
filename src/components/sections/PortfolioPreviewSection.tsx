@@ -22,6 +22,15 @@ const PortfolioPreviewSection = () => {
     files?: any;
   }>>([]);
 
+  // Helper function to ensure URL has protocol
+  const ensureProtocol = (url: string | undefined): string | undefined => {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   useEffect(() => {
     loadPortfolio();
   }, []);
@@ -91,7 +100,7 @@ const PortfolioPreviewSection = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => {
                 if (project.project_type === 'website' && project.project_url) {
-                  window.open(project.project_url, '_blank');
+                  window.open(ensureProtocol(project.project_url), '_blank');
                 } else {
                   window.location.href = '/portfolio';
                 }
