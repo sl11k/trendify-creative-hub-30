@@ -123,52 +123,19 @@ const Tools = () => {
                 ))}
               </div>
 
-              {/* Tools Grid by Category */}
-              {selectedCategory === 'all' ? (
-                Object.entries(groupedTools).map(([category, categoryTools], categoryIndex) => (
-                  <div key={category} className="mb-16">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
-                      {category}
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categoryTools.map((tool, index) => (
-                      <Card
-                        key={tool.id}
-                        className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
-                        style={{ animationDelay: `${(categoryIndex * categoryTools.length + index) * 0.1}s` }}
-                      >
-                        <CardHeader>
-                          <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                            {isRTL ? tool.name_ar : tool.name_en}
-                          </CardTitle>
-                        </CardHeader>
-                        
-                        <CardContent>
-                          <CardDescription className="text-muted-foreground mb-4 line-clamp-3">
-                            {isRTL ? tool.description_ar : tool.description_en}
-                          </CardDescription>
-                          
-                          <Button
-                            asChild
-                            className="w-full gap-2 bg-gradient-primary hover:bg-gradient-secondary transition-all"
-                          >
-                            <a
-                              href={tool.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              {isRTL ? 'تجربة الأداة' : 'Try Tool'}
-                            </a>
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+              {/* Tools Grid */}
+              {filteredTools.length === 0 ? (
+                <div className="text-center py-20">
+                  <ExternalLink className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    {isRTL ? 'لا توجد أدوات في هذا القسم' : 'No tools in this category'}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {isRTL ? 'تحقق مرة أخرى قريباً' : 'Check back soon'}
+                  </p>
                 </div>
-              ))
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredTools.map((tool, index) => (
                     <Card
                       key={tool.id}
@@ -176,6 +143,13 @@ const Tools = () => {
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
                       <CardHeader>
+                        <div className="flex justify-between items-start mb-2">
+                          {(tool.category_ar || tool.category_en) && (
+                            <Badge variant="outline" className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
+                              {isRTL ? tool.category_ar : tool.category_en}
+                            </Badge>
+                          )}
+                        </div>
                         <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
                           {isRTL ? tool.name_ar : tool.name_en}
                         </CardTitle>
@@ -202,18 +176,6 @@ const Tools = () => {
                       </CardContent>
                     </Card>
                   ))}
-                </div>
-              )}
-
-              {filteredTools.length === 0 && (
-                <div className="text-center py-12">
-                  <ExternalLink className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">
-                    {isRTL ? 'لا توجد أدوات متاحة حالياً' : 'No tools available at the moment'}
-                  </h3>
-                  <p className="text-muted-foreground">
-                    {isRTL ? 'تحقق مرة أخرى قريباً' : 'Check back soon'}
-                  </p>
                 </div>
               )}
             </div>
