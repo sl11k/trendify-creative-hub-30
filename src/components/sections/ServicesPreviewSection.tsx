@@ -5,25 +5,24 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useServices } from '@/hooks/useServices';
-import { 
-  Search, Code, Palette, Monitor, Smartphone, Globe, 
-  ShoppingCart, BarChart, Camera, Megaphone, Brush, 
-  Lightbulb, Target, Zap, Star, Heart, Rocket
-} from 'lucide-react';
+
+// Icon mapping function
+const getIconComponent = (iconName: string | null) => {
+  // Dynamic icon import using lucide-react
+  const icons = require('lucide-react');
+  
+  // Return the icon component if it exists in lucide-react
+  if (iconName && icons[iconName]) {
+    return icons[iconName];
+  }
+  
+  // Default fallback icon
+  return icons.Star;
+};
 
 const ServicesPreviewSection = () => {
   const { t, isRTL } = useLanguage();
   const { services, loading, error } = useServices();
-
-  // Icon mapping function
-  const getIconComponent = (iconName: string | null) => {
-    const iconMap: Record<string, any> = {
-      Search, Code, Palette, Monitor, Smartphone, Globe,
-      ShoppingCart, BarChart, Camera, Megaphone, Brush,
-      Lightbulb, Target, Zap, Star, Heart, Rocket
-    };
-    return iconMap[iconName || 'Star'] || Star;
-  };
 
   // Get first 3 services for preview
   const previewServices = services.slice(0, 3);
@@ -56,9 +55,9 @@ const ServicesPreviewSection = () => {
           </div>
         )}
 
-        {/* Services Preview Grid */}
+        {/* Services Preview Grid - 3 columns on mobile, 3 columns on desktop */}
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-8 mb-12">
             {previewServices.map((service, index) => {
               const IconComponent = getIconComponent(service.icon_name);
               return (

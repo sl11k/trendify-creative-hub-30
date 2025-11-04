@@ -58,8 +58,8 @@ const ToolsPreviewSection = () => {
           </p>
         </div>
 
-        {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        {/* Tools Grid - 2 columns on mobile, 3 columns on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
           {tools.map((tool, index) => (
             <Card
               key={tool.id}

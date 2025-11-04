@@ -23,17 +23,16 @@ const ServicesSection = () => {
   const { services, loading, error } = useServices();
 
   const getIconComponent = (iconName: string | null) => {
-    switch (iconName) {
-      case 'megaphone': return Megaphone;
-      case 'code': return Code;
-      case 'palette': return Palette;
-      case 'smartphone': return Smartphone;
-      case 'bar-chart': return BarChart3;
-      case 'globe': return Globe;
-      case 'zap': return Zap;
-      case 'target': return Target;
-      default: return Zap;
+    // Dynamic icon import using lucide-react
+    const icons = require('lucide-react');
+    
+    // Return the icon component if it exists in lucide-react
+    if (iconName && icons[iconName]) {
+      return icons[iconName];
     }
+    
+    // Default fallback icon
+    return icons.Zap;
   };
 
   if (loading) {
