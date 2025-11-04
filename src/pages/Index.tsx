@@ -8,7 +8,6 @@ import Analytics from "@/components/Analytics";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { supabase } from "@/integrations/supabase/client";
 import { WebsiteDesignRenderer } from "@/components/WebsiteDesignRenderer";
-import commercialRegisterQR from "@/assets/commercial-register-qr.png";
 
 // Lazy load heavy sections
 const AboutPreviewSection = lazy(() => import("@/components/sections/AboutPreviewSection"));
@@ -94,20 +93,6 @@ const Index = () => {
               >
                 {consultationButton.text_ar}
               </Button>
-            </div>
-          </div>
-          
-          {/* Commercial Register QR Code Section */}
-          <div className="py-12 bg-background text-center">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h3 className="text-2xl font-bold text-foreground mb-6">السجل التجاري</h3>
-              <div className="flex justify-center">
-                <img 
-                  src={commercialRegisterQR} 
-                  alt="رمز QR للسجل التجاري" 
-                  className="w-64 h-64 object-contain"
-                />
-              </div>
             </div>
           </div>
         </main>

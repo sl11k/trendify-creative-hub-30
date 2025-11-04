@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import commercialRegisterQR from '@/assets/commercial-register-qr.png';
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
@@ -188,6 +189,22 @@ const Footer = () => {
                 <strong>{isRTL ? 'العنوان:' : 'Address:'}</strong><br />
                 {isRTL ? contactInfo.address_ar : contactInfo.address_en}
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Commercial Register QR Code Section */}
+        <div className="border-t border-white/20 py-8">
+          <div className="text-center">
+            <h4 className="text-lg font-semibold mb-4">
+              {isRTL ? 'السجل التجاري' : 'Commercial Register'}
+            </h4>
+            <div className="flex justify-center">
+              <img 
+                src={commercialRegisterQR} 
+                alt={isRTL ? 'رمز QR للسجل التجاري' : 'Commercial Register QR Code'} 
+                className="w-48 h-48 object-contain bg-white rounded-lg p-2"
+              />
             </div>
           </div>
         </div>
