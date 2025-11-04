@@ -128,7 +128,10 @@ const PortfolioPreviewSection = () => {
                   );
                 })()}
                 <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
-                  <button className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform">
+                  <button 
+                    className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform"
+                    aria-label={isRTL ? 'عرض المشروع' : 'View Project'}
+                  >
                     <ExternalLink className="h-6 w-6" />
                   </button>
                 </div>

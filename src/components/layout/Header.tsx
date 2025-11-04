@@ -62,6 +62,7 @@ const Header = () => {
               size="sm"
               onClick={toggleLanguage}
               className="flex items-center gap-2"
+              aria-label={isRTL ? 'تغيير اللغة' : 'Change Language'}
             >
               <Globe className="h-4 w-4" />
               {language === 'ar' ? 'EN' : 'العربية'}
@@ -85,6 +86,7 @@ const Header = () => {
               size="sm"
               onClick={toggleLanguage}
               className="flex items-center gap-1 px-2"
+              aria-label={isRTL ? 'تغيير اللغة' : 'Change Language'}
             >
               <Globe className="h-4 w-4" />
               {language === 'ar' ? 'EN' : 'ع'}
@@ -93,6 +95,7 @@ const Header = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? (isRTL ? 'إغلاق القائمة' : 'Close Menu') : (isRTL ? 'فتح القائمة' : 'Open Menu')}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
