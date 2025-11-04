@@ -91,8 +91,8 @@ const PortfolioPreviewSection = () => {
           </p>
         </div>
 
-        {/* Featured Projects - 2 columns on mobile, 2 columns on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 mb-12">
+        {/* Featured Projects */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {displayProjects.map((project, index) => (
             <Card
               key={project.id}

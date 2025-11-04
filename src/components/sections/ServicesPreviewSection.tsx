@@ -55,9 +55,9 @@ const ServicesPreviewSection = () => {
           </div>
         )}
 
-        {/* Services Preview Grid - 3 columns on mobile, 3 columns on desktop */}
+        {/* Services Preview Grid */}
         {!loading && !error && (
-          <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {previewServices.map((service, index) => {
               const IconComponent = getIconComponent(service.icon_name);
               return (

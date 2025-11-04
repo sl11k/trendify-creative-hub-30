@@ -76,8 +76,8 @@ const BlogPreviewSection = () => {
           </p>
         </div>
 
-        {/* Featured Posts - 2 columns on mobile, 2 columns on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 mb-12">
+        {/* Featured Posts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {displayPosts.map((post, index) => (
             <Link key={post.id} to={`/blog/${post.id}`}>
               <Card
