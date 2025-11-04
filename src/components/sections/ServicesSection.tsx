@@ -6,33 +6,22 @@ import { Loader2 } from 'lucide-react';
 import { useServices } from '@/hooks/useServices';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import { 
-  Palette, 
-  Code, 
-  Megaphone, 
-  BarChart3, 
-  Smartphone, 
-  Globe,
-  Zap,
-  Target
-} from 'lucide-react';
+import * as Icons from 'lucide-react';
 
 const ServicesSection = () => {
   const { t, isRTL } = useLanguage();
   const { services, loading, error } = useServices();
 
   const getIconComponent = (iconName: string | null) => {
-    // Dynamic icon import using lucide-react
-    const icons = require('lucide-react');
+    if (!iconName) return Icons.Zap;
     
-    // Return the icon component if it exists in lucide-react
-    if (iconName && icons[iconName]) {
-      return icons[iconName];
-    }
+    // Convert icon name to PascalCase if needed
+    const iconKey = iconName.charAt(0).toUpperCase() + iconName.slice(1);
     
-    // Default fallback icon
-    return icons.Zap;
+    // Get the icon from lucide-react
+    const IconComponent = (Icons as any)[iconKey] || (Icons as any)[iconName] || Icons.Zap;
+    
+    return IconComponent;
   };
 
   if (loading) {
