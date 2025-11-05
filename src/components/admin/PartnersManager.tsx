@@ -119,13 +119,16 @@ const PartnersManager = () => {
       const filePath = `partners/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('portfolio')
-        .upload(filePath, file);
+        .from('partners_logos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('portfolio')
+        .from('partners_logos')
         .getPublicUrl(filePath);
 
       setFormData(prev => ({ ...prev, logo_url: publicUrl }));
