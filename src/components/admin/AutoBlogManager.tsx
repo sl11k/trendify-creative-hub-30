@@ -26,9 +26,9 @@ export const AutoBlogManager = () => {
         .from('site_settings')
         .select('setting_value')
         .eq('setting_key', 'auto_blog_enabled')
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
 
       if (data) {
         setIsEnabled(data.setting_value === 'true');
@@ -40,7 +40,7 @@ export const AutoBlogManager = () => {
         .select('created_at')
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (lastBlog) {
         setLastRun(new Date(lastBlog.created_at).toLocaleString('ar-SA'));
@@ -81,13 +81,18 @@ export const AutoBlogManager = () => {
 
   const toggleAutoGeneration = async (enabled: boolean) => {
     try {
-      // Save to database
+      // Save to database with proper upsert
       const { error } = await supabase
         .from('site_settings')
-        .upsert({
-          setting_key: 'auto_blog_enabled',
-          setting_value: enabled ? 'true' : 'false'
-        });
+        .upsert(
+          {
+            setting_key: 'auto_blog_enabled',
+            setting_value: enabled ? 'true' : 'false'
+          },
+          {
+            onConflict: 'setting_key'
+          }
+        );
 
       if (error) throw error;
 
