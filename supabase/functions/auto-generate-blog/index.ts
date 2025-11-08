@@ -108,7 +108,12 @@ serve(async (req) => {
     }
 
     const aiData = await aiResponse.json();
-    const blogData = JSON.parse(aiData.choices[0].message.content);
+    
+    // Clean the response - remove markdown code blocks if present
+    let content = aiData.choices[0].message.content;
+    content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const blogData = JSON.parse(content);
 
     console.log('Generated blog:', blogData.title_ar);
 
