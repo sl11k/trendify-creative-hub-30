@@ -323,7 +323,7 @@ export const AISeoOptimizer = () => {
               </div>
 
               <p className="text-xs text-muted-foreground mt-2">
-                💡 عند الانتهاء، سيقوم الـ AI بتطبيق التحسينات تلقائياً
+                ✨ التحسينات يتم تطبيقها تلقائياً بمجرد انتهاء الـ AI من التوليد
               </p>
             </>
           )}
