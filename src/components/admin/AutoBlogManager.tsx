@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -13,6 +13,44 @@ export const AutoBlogManager = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [lastRun, setLastRun] = useState<string | null>(null);
+  const [loadingSettings, setLoadingSettings] = useState(true);
+
+  // Load settings on mount
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('setting_value')
+        .eq('setting_key', 'auto_blog_enabled')
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      if (data) {
+        setIsEnabled(data.setting_value === 'true');
+      }
+
+      // Load last run info
+      const { data: lastBlog } = await supabase
+        .from('blogs')
+        .select('created_at')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (lastBlog) {
+        setLastRun(new Date(lastBlog.created_at).toLocaleString('ar-SA'));
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    } finally {
+      setLoadingSettings(false);
+    }
+  };
 
   const testGeneration = async () => {
     setIsLoading(true);
@@ -42,17 +80,36 @@ export const AutoBlogManager = () => {
   };
 
   const toggleAutoGeneration = async (enabled: boolean) => {
-    setIsEnabled(enabled);
-    
-    if (enabled) {
+    try {
+      // Save to database
+      const { error } = await supabase
+        .from('site_settings')
+        .upsert({
+          setting_key: 'auto_blog_enabled',
+          setting_value: enabled ? 'true' : 'false'
+        });
+
+      if (error) throw error;
+
+      setIsEnabled(enabled);
+      
+      if (enabled) {
+        toast({
+          title: 'تم تفعيل التوليد التلقائي ✅',
+          description: 'سيتم توليد مقالة جديدة كل 24 ساعة تلقائياً',
+        });
+      } else {
+        toast({
+          title: 'تم إيقاف التوليد التلقائي',
+          description: 'لن يتم توليد مقالات جديدة تلقائياً',
+          variant: 'destructive'
+        });
+      }
+    } catch (error: any) {
+      console.error('Error toggling auto generation:', error);
       toast({
-        title: 'تم تفعيل التوليد التلقائي ✅',
-        description: 'سيتم توليد مقالة جديدة كل 24 ساعة تلقائياً',
-      });
-    } else {
-      toast({
-        title: 'تم إيقاف التوليد التلقائي',
-        description: 'لن يتم توليد مقالات جديدة تلقائياً',
+        title: 'خطأ في الحفظ',
+        description: error.message,
         variant: 'destructive'
       });
     }
@@ -70,21 +127,27 @@ export const AutoBlogManager = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Status */}
-        <Alert>
-          <Clock className="h-4 w-4" />
-          <AlertDescription>
-            {isEnabled ? (
-              <span className="text-green-600 font-medium">
-                ✅ التوليد التلقائي مفعّل - مقالة جديدة كل 24 ساعة
-              </span>
-            ) : (
-              <span className="text-amber-600 font-medium">
-                ⏸️ التوليد التلقائي متوقف
-              </span>
-            )}
-          </AlertDescription>
-        </Alert>
+        {loadingSettings ? (
+          <div className="flex items-center justify-center p-8">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          </div>
+        ) : (
+          <>
+            {/* Status */}
+            <Alert>
+              <Clock className="h-4 w-4" />
+              <AlertDescription>
+                {isEnabled ? (
+                  <span className="text-green-600 font-medium">
+                    ✅ التوليد التلقائي مفعّل - مقالة جديدة كل 24 ساعة
+                  </span>
+                ) : (
+                  <span className="text-amber-600 font-medium">
+                    ⏸️ التوليد التلقائي متوقف
+                  </span>
+                )}
+              </AlertDescription>
+            </Alert>
 
         {/* Toggle Switch */}
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -178,6 +241,8 @@ export const AutoBlogManager = () => {
             راجع التعليمات في لوحة Supabase → SQL Editor.
           </AlertDescription>
         </Alert>
+        </>
+        )}
       </CardContent>
     </Card>
   );
