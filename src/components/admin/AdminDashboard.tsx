@@ -20,6 +20,7 @@ const PartnersManager = lazy(() => import('./PartnersManager'));
 const ToolsManager = lazy(() => import('./ToolsManager'));
 const AIBlogGenerator = lazy(() => import('./AIBlogGenerator').then(m => ({ default: m.AIBlogGenerator })));
 const AISeoOptimizer = lazy(() => import('./AISeoOptimizer').then(m => ({ default: m.AISeoOptimizer })));
+const AutoBlogManager = lazy(() => import('./AutoBlogManager').then(m => ({ default: m.AutoBlogManager })));
 
 // Types
 interface Blog {
@@ -209,6 +210,7 @@ export const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         case 'ai-blog':
           return (
             <div className="space-y-6">
+              <AutoBlogManager />
               <AIBlogGenerator />
               <BlogManager />
             </div>
