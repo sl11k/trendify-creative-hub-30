@@ -63,6 +63,8 @@ const HeroSection = () => {
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
         }}
+        role="img"
+        aria-label="Hero background"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
       </div>
