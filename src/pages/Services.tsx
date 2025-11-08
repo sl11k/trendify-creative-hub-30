@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ServicesSection from '@/components/sections/ServicesSection';
+import ServicesHeroSection from '@/components/sections/ServicesHeroSection';
+import ServicesContentSection from '@/components/sections/ServicesContentSection';
 import SeoHead from '@/components/SeoHead';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 import { WebsiteDesignRenderer } from '@/components/WebsiteDesignRenderer';
+import { useUpdateSeo } from '@/hooks/useUpdateSeo';
 
 const Services = () => {
-  usePageTracking(); // Track page views
+  usePageTracking();
+  const { updateServicesPageSeo } = useUpdateSeo();
+
+  useEffect(() => {
+    updateServicesPageSeo();
+  }, []);
 
   return (
     <WebsiteDesignRenderer pageSlug="services">
@@ -16,7 +24,9 @@ const Services = () => {
         <SeoHead lang="ar" />
         <Analytics />
         <Header />
-        <main className="pt-16">
+        <main>
+          <ServicesHeroSection />
+          <ServicesContentSection />
           <ServicesSection />
         </main>
         <Footer />
