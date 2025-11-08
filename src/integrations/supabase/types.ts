@@ -68,6 +68,138 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_analytics: {
+        Row: {
+          avg_time_on_page: number
+          blog_id: string
+          bounce_rate: number
+          created_at: string
+          id: string
+          scroll_depth: number
+          social_shares: number
+          unique_visitors: number
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          avg_time_on_page?: number
+          blog_id: string
+          bounce_rate?: number
+          created_at?: string
+          id?: string
+          scroll_depth?: number
+          social_shares?: number
+          unique_visitors?: number
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          avg_time_on_page?: number
+          blog_id?: string
+          bounce_rate?: number
+          created_at?: string
+          id?: string
+          scroll_depth?: number
+          social_shares?: number
+          unique_visitors?: number
+          updated_at?: string
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_analytics_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_backlinks: {
+        Row: {
+          anchor_text: string | null
+          blog_id: string
+          created_at: string
+          discovered_at: string
+          domain_authority: number | null
+          id: string
+          is_active: boolean
+          last_checked: string
+          link_type: string | null
+          source_domain: string
+          source_url: string
+        }
+        Insert: {
+          anchor_text?: string | null
+          blog_id: string
+          created_at?: string
+          discovered_at?: string
+          domain_authority?: number | null
+          id?: string
+          is_active?: boolean
+          last_checked?: string
+          link_type?: string | null
+          source_domain: string
+          source_url: string
+        }
+        Update: {
+          anchor_text?: string | null
+          blog_id?: string
+          created_at?: string
+          discovered_at?: string
+          domain_authority?: number | null
+          id?: string
+          is_active?: boolean
+          last_checked?: string
+          link_type?: string | null
+          source_domain?: string
+          source_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_backlinks_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_engagement: {
+        Row: {
+          blog_id: string
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          visitor_id: string | null
+        }
+        Insert: {
+          blog_id: string
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          visitor_id?: string | null
+        }
+        Update: {
+          blog_id?: string
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          visitor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_engagement_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blogs: {
         Row: {
           canonical_url: string | null

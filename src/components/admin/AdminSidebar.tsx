@@ -64,6 +64,12 @@ export const AdminSidebar = ({ activeTab, onTabChange, onLogout }: AdminSidebarP
       description: "إنشاء مقالات بالذكاء الاصطناعي"
     },
     {
+      id: "blog-analytics",
+      title: "تحليلات المقالات",
+      icon: BarChart,
+      description: "مراقبة أداء المقالات"
+    },
+    {
       id: "ai-seo",
       title: "AI - محسن SEO",
       icon: Sparkles,
