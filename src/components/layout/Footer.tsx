@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import commercialRegisterQR from '@/assets/commercial-register-qr.png';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
@@ -88,33 +89,28 @@ const Footer = () => {
   }).filter(Boolean);
 
   const quickLinks = [
-    { key: 'nav.home', href: '#home' },
-    { key: 'nav.about', href: '#about' },
-    { key: 'nav.services', href: '#services' },
-    { key: 'nav.contact', href: '#contact' }
-  ];
-
-  const services = [
-    'services.digital-marketing.title',
-    'services.web-dev.title',
-    'services.graphic-design.title',
-    'services.social-media.title'
+    { key: 'nav.home', href: '/' },
+    { key: 'nav.about', href: '/about' },
+    { key: 'nav.services', href: '/services' },
+    { key: 'nav.portfolio', href: '/portfolio' },
+    { key: 'nav.blog', href: '/blog' },
+    { key: 'nav.contact', href: '/contact' }
   ];
 
   return (
-    <footer className="bg-gradient-hero text-white">
+    <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-4">Trendify</h3>
-            <p className="text-white/80 mb-6 leading-relaxed">
+            <h3 className="text-3xl font-bold text-primary text-glow-sm mb-4">Trendify</h3>
+            <p className="text-muted-foreground mb-6 leading-relaxed">
               {t('footer.description')}
             </p>
             
             {/* Social Links */}
-            <div className="flex space-x-3">
+            <div className="flex flex-wrap gap-3">
               {socialLinksData.map((social, index) => {
                 const IconComponent = social!.icon;
                 return (
@@ -124,9 +120,9 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social!.label}
-                    className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 mx-1"
+                    className="w-10 h-10 rounded-lg border border-border bg-secondary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all duration-300 group"
                   >
-                    <IconComponent className="h-5 w-5" />
+                    <IconComponent className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </a>
                 );
               })}
@@ -135,18 +131,18 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">
+            <h4 className="text-lg font-semibold text-foreground mb-6">
               {isRTL ? 'روابط سريعة' : 'Quick Links'}
             </h4>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-white/80 hover:text-white transition-colors duration-200"
+                  <Link
+                    to={link.href}
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   >
                     {t(link.key)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -154,44 +150,58 @@ const Footer = () => {
 
           {/* Commercial Register */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">
+            <h4 className="text-lg font-semibold text-foreground mb-6">
               {isRTL ? 'السجل التجاري' : 'Commercial Register'}
             </h4>
             <div className="flex justify-center md:justify-start">
-              <img 
-                src={commercialRegisterQR} 
-                alt={isRTL ? 'رمز QR للسجل التجاري' : 'Commercial Register QR Code'} 
-                className="w-40 h-40 object-contain bg-white rounded-lg p-2"
-              />
+              <div className="p-3 rounded-xl border border-border bg-secondary">
+                <img 
+                  src={commercialRegisterQR} 
+                  alt={isRTL ? 'رمز QR للسجل التجاري' : 'Commercial Register QR Code'} 
+                  className="w-32 h-32 object-contain"
+                />
+              </div>
             </div>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">
+            <h4 className="text-lg font-semibold text-foreground mb-6">
               {isRTL ? 'تواصل معنا' : 'Contact Us'}
             </h4>
-            <div className="space-y-3">
-              <p className="text-white/80">
-                <strong>{isRTL ? 'البريد الإلكتروني:' : 'Email:'}</strong><br />
-                {contactInfo.email}
-              </p>
-              <p className="text-white/80">
-                <strong>{isRTL ? 'الهاتف:' : 'Phone:'}</strong><br />
-                <span dir="ltr" className="inline-block">{contactInfo.phone}</span>
-              </p>
-              <p className="text-white/80">
-                <strong>{isRTL ? 'العنوان:' : 'Address:'}</strong><br />
-                {isRTL ? contactInfo.address_ar : contactInfo.address_en}
-              </p>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {isRTL ? 'البريد الإلكتروني' : 'Email'}
+                </p>
+                <a href={`mailto:${contactInfo.email}`} className="text-foreground hover:text-primary transition-colors">
+                  {contactInfo.email}
+                </a>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {isRTL ? 'الهاتف' : 'Phone'}
+                </p>
+                <a href={`tel:${contactInfo.phone}`} className="text-foreground hover:text-primary transition-colors">
+                  <span dir="ltr" className="inline-block">{contactInfo.phone}</span>
+                </a>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {isRTL ? 'العنوان' : 'Address'}
+                </p>
+                <p className="text-foreground">
+                  {isRTL ? contactInfo.address_ar : contactInfo.address_en}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Footer */}
-        <div className="border-t border-white/20 py-6 text-center">
-          <p className="text-white/80">
-            © 2024 Trendify. {t('footer.rights')}
+        <div className="border-t border-border py-6 text-center">
+          <p className="text-muted-foreground text-sm">
+            © {new Date().getFullYear()} Trendify. {t('footer.rights')}
           </p>
         </div>
       </div>
