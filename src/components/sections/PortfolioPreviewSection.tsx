@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const PortfolioPreviewSection = () => {
-  const { t, isRTL } = useLanguage();
+  const { isRTL } = useLanguage();
   const [portfolio, setPortfolio] = useState<Array<{
     id: string;
     title_ar: string;
@@ -22,12 +21,9 @@ const PortfolioPreviewSection = () => {
     files?: any;
   }>>([]);
 
-  // Helper function to ensure URL has protocol
   const ensureProtocol = (url: string | undefined): string | undefined => {
     if (!url) return url;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
     return `https://${url}`;
   };
 
@@ -42,17 +38,13 @@ const PortfolioPreviewSection = () => {
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false })
-        .limit(2);
-      
-      if (data) {
-        setPortfolio(data);
-      }
+        .limit(3);
+      if (data) setPortfolio(data);
     } catch (error) {
       console.error('Error loading portfolio:', error);
     }
   };
 
-  // Fallback projects when no portfolio items are available
   const fallbackProjects = [
     {
       id: '1',
@@ -79,104 +71,83 @@ const PortfolioPreviewSection = () => {
   const displayProjects = portfolio.length > 0 ? portfolio : fallbackProjects;
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
-            {isRTL ? 'معرض أعمالنا' : 'Our Portfolio'}
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            {isRTL ? 'اطلع على بعض من أفضل مشاريعنا المميزة' : 'Check out some of our finest featured projects'}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            {isRTL ? 'أعمالنا' : 'SUCCESS STORIES'}
           </p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            {isRTL ? 'بعض دراسات الحالة' : 'A Few Case Studies'}
+          </h2>
         </div>
 
-        {/* Featured Projects */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {displayProjects.map((project, index) => (
-            <Card
-              key={project.id}
-              className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
-              style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => {
-                if (project.project_type === 'website' && project.project_url) {
-                  window.open(ensureProtocol(project.project_url), '_blank');
-                } else {
-                  window.location.href = '/portfolio';
-                }
-              }}
-            >
-              <div className="relative overflow-hidden">
-                {(() => {
-                  const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
-                    ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
-                    : project.image_url;
-                  
-                  return firstImage ? (
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {displayProjects.map((project) => {
+            const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+              ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
+              : project.image_url;
+
+            return (
+              <Card
+                key={project.id}
+                className="group cursor-pointer border border-border/50 bg-background hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                onClick={() => {
+                  if (project.project_type === 'website' && project.project_url) {
+                    window.open(ensureProtocol(project.project_url), '_blank');
+                  } else {
+                    window.location.href = '/portfolio';
+                  }
+                }}
+              >
+                <div className="relative overflow-hidden aspect-video">
+                  {firstImage ? (
                     <img
                       src={firstImage}
                       alt={isRTL ? project.title_ar : project.title_en}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
-                      <div className="text-white text-6xl font-bold opacity-20">
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <span className="text-4xl font-bold text-muted-foreground/20">
                         {isRTL ? 'مشروع' : 'PROJECT'}
-                      </div>
+                      </span>
                     </div>
-                  );
-                })()}
-                <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
-                  <button 
-                    className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform"
-                    aria-label={isRTL ? 'عرض المشروع' : 'View Project'}
-                  >
-                    <ExternalLink className="h-6 w-6" />
-                  </button>
-                </div>
-                {project.logo_url && (
-                  <div className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'}`}>
-                    <img 
-                      src={project.logo_url}
-                      alt="Logo"
-                      className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg bg-white"
-                      loading="lazy"
-                    />
+                  )}
+                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/60 transition-colors duration-300 flex items-center justify-center">
+                    <ExternalLink className="h-6 w-6 text-background opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                )}
-                <div className={`absolute top-4 ${isRTL ? 'right-4' : 'left-4'}`}>
-                  <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    {project.category || (isRTL ? 'مشروع' : 'Project')}
-                  </span>
                 </div>
-              </div>
-              
-              <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                  {isRTL ? project.title_ar : project.title_en}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent>
-                <CardDescription className="text-muted-foreground">
-                  {isRTL ? (project.description_ar || project.title_ar) : (project.description_en || project.title_en)}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+                
+                <CardContent className="p-6">
+                  {project.category && (
+                    <span className="text-xs font-semibold text-primary mb-2 block">
+                      {project.category}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {isRTL ? project.title_ar : project.title_en}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {isRTL ? (project.description_ar || project.title_ar) : (project.description_en || project.title_en)}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        {/* CTA Section */}
+        {/* CTA */}
         <div className="text-center">
-          <Link to="/portfolio">
-            <Button 
-              size="xl" 
-              className="group bg-primary hover:bg-primary-hover transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
-            >
-              {isRTL ? 'شاهد جميع أعمالنا' : 'View All Our Work'}
-              <ArrowRight className={`ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 ml-0 mr-2 group-hover:-translate-x-1' : ''}`} />
-            </Button>
+          <Link 
+            to="/portfolio"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
+          >
+            {isRTL ? 'شاهد جميع أعمالنا' : 'View all our work'}
+            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
           </Link>
         </div>
       </div>

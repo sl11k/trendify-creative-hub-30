@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowRight, Calendar, Clock } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const BlogPreviewSection = () => {
-  const { t, isRTL } = useLanguage();
+  const { isRTL } = useLanguage();
   const [blogs, setBlogs] = useState<Array<{
     id: string;
     title_ar: string;
@@ -29,17 +28,13 @@ const BlogPreviewSection = () => {
         .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false })
-        .limit(2);
-      
-      if (data) {
-        setBlogs(data);
-      }
+        .limit(3);
+      if (data) setBlogs(data);
     } catch (error) {
       console.error('Error loading blogs:', error);
     }
   };
 
-  // Fallback content when no blogs are available
   const fallbackPosts = [
     {
       id: '1',
@@ -64,83 +59,61 @@ const BlogPreviewSection = () => {
   const displayPosts = blogs.length > 0 ? blogs : fallbackPosts;
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
-            {isRTL ? 'مدونتنا' : 'Our Blog'}
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            {isRTL ? 'اطلع على أحدث المقالات والنصائح في عالم التكنولوجيا' : 'Check out the latest articles and tips in the tech world'}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            {isRTL ? 'المدونة' : 'BLOG'}
           </p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            {isRTL ? 'أحدث المقالات' : 'Latest Articles'}
+          </h2>
         </div>
 
-        {/* Featured Posts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {displayPosts.map((post, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {displayPosts.map((post) => (
             <Link key={post.id} to={`/blog/${post.id}`}>
-              <Card
-                className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-              <div className="relative overflow-hidden">
-                {post.image_url ? (
-                  <img
-                    src={post.image_url}
-                    alt={isRTL ? post.title_ar : post.title_en}
-                    className="w-full h-48 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
-                    <div className="text-white text-6xl font-bold opacity-20">
-                      {isRTL ? 'مق' : 'B'}
+              <Card className="group border border-border/50 bg-background hover:border-primary/30 transition-all duration-300 overflow-hidden h-full">
+                <div className="relative overflow-hidden aspect-video">
+                  {post.image_url ? (
+                    <img
+                      src={post.image_url}
+                      alt={isRTL ? post.title_ar : post.title_en}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <span className="text-4xl font-bold text-muted-foreground/20">
+                        {isRTL ? 'مقال' : 'BLOG'}
+                      </span>
                     </div>
-                  </div>
-                )}
-                <div className="absolute top-4 left-4">
-                  <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    {isRTL ? 'مدونة' : 'Blog'}
-                  </span>
+                  )}
                 </div>
-              </div>
-              
-              <CardHeader>
-                <div className="flex items-center text-xs text-muted-foreground mb-2 gap-4">
-                  <div className="flex items-center gap-1">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
                     <Calendar className="h-3 w-3" />
                     <span>{new Date(post.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    <span>{isRTL ? '5 دقائق' : '5 min read'}</span>
-                  </div>
-                </div>
-                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
-                  {isRTL ? post.title_ar : post.title_en}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent>
-                <CardDescription className="text-muted-foreground line-clamp-3">
-                  {isRTL ? (post.excerpt_ar || post.title_ar) : (post.excerpt_en || post.title_en)}
-                </CardDescription>
-              </CardContent>
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                    {isRTL ? post.title_ar : post.title_en}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {isRTL ? (post.excerpt_ar || post.title_ar) : (post.excerpt_en || post.title_en)}
+                  </p>
+                </CardContent>
               </Card>
             </Link>
           ))}
         </div>
 
-        {/* CTA Section */}
         <div className="text-center">
-          <Link to="/blog">
-            <Button 
-              size="xl" 
-              className="group bg-secondary hover:bg-secondary-hover transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
-            >
-              {isRTL ? 'اقرأ المزيد من المقالات' : 'Read More Articles'}
-              <ArrowRight className={`ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 ml-0 mr-2 group-hover:-translate-x-1' : ''}`} />
-            </Button>
+          <Link 
+            to="/blog"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
+          >
+            {isRTL ? 'اقرأ المزيد من المقالات' : 'Read more articles'}
+            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
           </Link>
         </div>
       </div>

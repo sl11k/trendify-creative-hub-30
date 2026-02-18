@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Menu, X, Globe } from 'lucide-react';
@@ -24,96 +24,78 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-gradient-primary hover:scale-105 transition-transform duration-300">
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">
                 Trendify
               </h1>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-6' : 'space-x-6'}`}>
+          {/* Desktop Navigation - Right aligned */}
+          <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-8' : 'space-x-8'}`}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.key}
                   to={item.href}
-                  className={`text-foreground hover:text-primary transition-colors duration-200 font-medium px-1 ${
-                    isActive ? 'text-primary border-b-2 border-primary' : ''
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   {t(item.key)}
                 </Link>
               );
             })}
-          </nav>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+            
             {/* Language Toggle */}
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={toggleLanguage}
-              className="flex items-center gap-2"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1.5"
               aria-label={isRTL ? 'تغيير اللغة' : 'Change Language'}
             >
               <Globe className="h-4 w-4" />
               {language === 'ar' ? 'EN' : 'العربية'}
-            </Button>
-
-            {/* CTA Button */}
-            <Link to="/contact">
-              <Button
-                variant="hero"
-                className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all duration-300 glow-effect font-medium loading-pulse"
-              >
-                {t('hero.cta.primary')}
-              </Button>
-            </Link>
-          </div>
+            </button>
+          </nav>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
+          <div className="md:hidden flex items-center gap-3">
+            <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-2"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1"
               aria-label={isRTL ? 'تغيير اللغة' : 'Change Language'}
             >
               <Globe className="h-4 w-4" />
               {language === 'ar' ? 'EN' : 'ع'}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
+            </button>
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-foreground p-1"
               aria-label={isMenuOpen ? (isRTL ? 'إغلاق القائمة' : 'Close Menu') : (isRTL ? 'فتح القائمة' : 'Open Menu')}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-card border-t border-border">
+          <div className="md:hidden border-t border-border/50">
+            <div className="py-4 space-y-1">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
                     key={item.key}
                     to={item.href}
-                    className={`block px-3 py-2 text-foreground hover:text-primary transition-colors duration-200 font-medium ${
-                      isActive ? 'text-primary bg-primary/5' : ''
+                    className={`block px-3 py-2.5 text-sm font-medium transition-colors duration-200 rounded-lg ${
+                      isActive ? 'text-foreground bg-muted' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -121,16 +103,6 @@ const Header = () => {
                   </Link>
                 );
               })}
-              <div className="px-3 py-2">
-                <Link to="/contact" className="block">
-                  <Button
-                    variant="default"
-                    className="w-full bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300"
-                  >
-                    {t('hero.cta.primary')}
-                  </Button>
-                </Link>
-              </div>
             </div>
           </div>
         )}
