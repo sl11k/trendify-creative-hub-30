@@ -22,21 +22,25 @@ const ServicesPreviewSection = () => {
   const gridRef = useStaggerAnimation();
 
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 relative overflow-hidden">
+      {/* Background with subtle gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-muted/30 to-background" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-6">
             {isRTL ? 'خدماتنا' : 'OUR EXPERTISE'}
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+          </div>
+          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
             {isRTL ? 'خدمات نقدمها لك' : 'Services We Offer'}
           </h2>
         </div>
 
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
           </div>
         )}
 
@@ -48,26 +52,26 @@ const ServicesPreviewSection = () => {
 
         {/* Bento Grid */}
         {!loading && !error && (
-          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 stagger-container">
+          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12 stagger-container">
             {previewServices.map((service, index) => {
               const IconComponent = getIconComponent(service.icon_name);
               return (
                 <Card
                   key={service.id}
-                  className="group border border-border/50 bg-background hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                  className="group border border-border/50 bg-background/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-lg transition-all duration-300 overflow-hidden"
                 >
                   <CardContent className="p-8">
                     <div 
-                      className="w-12 h-12 mb-6 rounded-xl flex items-center justify-center"
+                      className="w-14 h-14 mb-6 rounded-2xl flex items-center justify-center shadow-lg"
                       style={{
                         background: service.gradient_from && service.gradient_to
                           ? `linear-gradient(135deg, ${service.gradient_from}, ${service.gradient_to})`
                           : 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))'
                       }}
                     >
-                      <IconComponent className="h-6 w-6 text-white" />
+                      <IconComponent className="h-7 w-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-3">
                       {isRTL ? service.title_ar : service.title_en}
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
@@ -84,7 +88,7 @@ const ServicesPreviewSection = () => {
         <div className="text-center">
           <Link 
             to="/services"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-sm font-semibold group"
           >
             {isRTL ? 'استكشف جميع خدماتنا' : 'Explore all services'}
             <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />

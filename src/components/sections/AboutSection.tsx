@@ -47,15 +47,19 @@ const AboutSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-background relative overflow-hidden">
+      {/* Decorative */}
+      <div className="absolute top-40 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-40 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-[150px]" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Heading */}
         <div ref={headerRef} className="text-center mb-20 pt-8 scroll-hidden">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-6">
             {isRTL ? 'من نحن' : 'ABOUT US'}
-          </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-6">
+          </div>
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-6">
             {isRTL ? 'شريك نموك الرقمي' : 'Your Digital Growth Partner'}
           </h1>
         </div>
@@ -79,10 +83,10 @@ const AboutSection = () => {
         {/* USPs Grid */}
         <div className="mb-24">
           <div ref={uspsHeaderRef} className="text-center mb-12 scroll-hidden">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/10 text-secondary text-xs font-semibold tracking-wider uppercase mb-4">
               {isRTL ? 'ما يميزنا' : 'WHAT SETS US APART'}
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+            </div>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground tracking-tight">
               {isRTL ? 'ما يميزنا' : 'What Makes Us Different'}
             </h2>
           </div>
@@ -91,12 +95,12 @@ const AboutSection = () => {
             {usps.map((usp, index) => {
               const IconComponent = usp.icon;
               return (
-                <Card key={index} className="border border-border/50 bg-background hover:border-primary/30 transition-all duration-300">
+                <Card key={index} className="border border-border/50 bg-background/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-8">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                      <IconComponent className="h-5 w-5 text-primary" />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/10 flex items-center justify-center mb-4">
+                      <IconComponent className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-foreground mb-2">{usp.title}</h3>
+                    <h3 className="font-heading font-bold text-foreground mb-2">{usp.title}</h3>
                     <p className="text-sm text-muted-foreground">{usp.description}</p>
                   </CardContent>
                 </Card>
@@ -107,9 +111,9 @@ const AboutSection = () => {
 
         {/* Vision & Mission */}
         <div ref={visionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-24 stagger-container">
-          <div className="bg-foreground rounded-2xl p-10 text-background">
-            <div className="w-10 h-10 bg-background/10 rounded-xl flex items-center justify-center mb-6">
-              <Target className="h-5 w-5 text-background" />
+          <div className="bg-gradient-to-br from-foreground to-foreground/90 rounded-2xl p-10 text-background relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[60px]" />
+            <div className="w-12 h-12 bg-background/10 rounded-2xl flex items-center justify-center mb-6 relative z-10">
             </div>
             <h3 className="text-2xl font-bold mb-4">
               {isRTL ? 'رؤيتنا' : 'Our Vision'}
@@ -122,9 +126,9 @@ const AboutSection = () => {
             </p>
           </div>
 
-          <div className="bg-primary rounded-2xl p-10 text-primary-foreground">
-            <div className="w-10 h-10 bg-primary-foreground/10 rounded-xl flex items-center justify-center mb-6">
-              <Award className="h-5 w-5 text-primary-foreground" />
+          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-10 text-primary-foreground relative overflow-hidden">
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-accent/20 rounded-full blur-[60px]" />
+            <div className="w-12 h-12 bg-primary-foreground/10 rounded-2xl flex items-center justify-center mb-6 relative z-10">
             </div>
             <h3 className="text-2xl font-bold mb-4">
               {isRTL ? 'مهمتنا' : 'Our Mission'}
@@ -139,12 +143,12 @@ const AboutSection = () => {
         </div>
 
         {/* Stats */}
-        <div ref={statsRef} className="border border-border/50 rounded-2xl p-12 scroll-hidden">
+        <div ref={statsRef} className="bg-gradient-to-br from-muted/50 to-muted/30 border border-border/50 rounded-2xl p-12 scroll-hidden">
           <div className="text-center mb-12">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-semibold tracking-wider uppercase mb-4">
               {isRTL ? 'الأرقام' : 'BY THE NUMBERS'}
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+            </div>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground tracking-tight">
               {isRTL ? 'أرقامنا تتحدث' : 'Our Numbers Speak'}
             </h2>
           </div>
@@ -157,7 +161,7 @@ const AboutSection = () => {
               { value: '5+', label: isRTL ? 'سنوات خبرة' : 'Years Experience' },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">{stat.value}</div>
+                <div className="text-3xl md:text-4xl font-bold font-heading text-gradient-primary mb-1">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
