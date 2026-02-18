@@ -4,9 +4,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const ToolsPreviewSection = () => {
   const { isRTL } = useLanguage();
+  const headerRef = useScrollAnimation();
+  const gridRef = useStaggerAnimation();
   const [tools, setTools] = useState<Array<{
     id: string;
     name_ar: string;
@@ -41,7 +44,7 @@ const ToolsPreviewSection = () => {
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'أدواتنا' : 'OUR TOOLS'}
           </p>
@@ -50,7 +53,7 @@ const ToolsPreviewSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 stagger-container">
           {tools.map((tool) => (
             <Card
               key={tool.id}

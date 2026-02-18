@@ -3,9 +3,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Mail, Phone, MapPin, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Youtube, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const ContactSection = () => {
   const { t, isRTL } = useLanguage();
+  const headerRef = useScrollAnimation();
+  const cardsRef = useStaggerAnimation();
   const [contactInfo, setContactInfo] = useState({
     email: 'hello@trendify.agency',
     phone: '+966 50 123 4567',
@@ -89,7 +92,7 @@ const ContactSection = () => {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 pt-8">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 pt-8 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'تواصل معنا' : 'CONTACT'}
           </p>
@@ -103,7 +106,7 @@ const ContactSection = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Cards */}
-          <div className="lg:col-span-1 space-y-4">
+          <div ref={cardsRef} className="lg:col-span-1 space-y-4 stagger-container">
             {contactInfoData.map((info, index) => {
               const IconComponent = info.icon;
               return (

@@ -4,9 +4,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const BlogPreviewSection = () => {
   const { isRTL } = useLanguage();
+  const headerRef = useScrollAnimation();
+  const gridRef = useStaggerAnimation();
   const [blogs, setBlogs] = useState<Array<{
     id: string;
     title_ar: string;
@@ -61,7 +64,7 @@ const BlogPreviewSection = () => {
   return (
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'المدونة' : 'BLOG'}
           </p>
@@ -70,7 +73,7 @@ const BlogPreviewSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 stagger-container">
           {displayPosts.map((post) => (
             <Link key={post.id} to={`/blog/${post.id}`}>
               <Card className="group border border-border/50 bg-background hover:border-primary/30 transition-all duration-300 overflow-hidden h-full">
