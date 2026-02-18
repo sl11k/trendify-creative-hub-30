@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -31,86 +30,65 @@ const ToolsPreviewSection = () => {
         .eq('active', true)
         .order('sort_order', { ascending: true })
         .limit(3);
-      
-      if (data) {
-        setTools(data);
-      }
+      if (data) setTools(data);
     } catch (error) {
       console.error('Error loading tools:', error);
     }
   };
 
-  // لا تعرض القسم إذا لم يكن هناك أدوات
-  if (tools.length === 0) {
-    return null;
-  }
+  if (tools.length === 0) return null;
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
-            {isRTL ? 'أدواتنا المميزة' : 'Our Premium Tools'}
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            {isRTL ? 'مجموعة من الأدوات المميزة لمساعدتك' : 'A collection of premium tools to help you'}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            {isRTL ? 'أدواتنا' : 'OUR TOOLS'}
           </p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            {isRTL ? 'أدوات مميزة لمساعدتك' : 'Premium Tools to Help You'}
+          </h2>
         </div>
 
-        {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {tools.map((tool, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          {tools.map((tool) => (
             <Card
               key={tool.id}
-              className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="group border border-border/50 bg-background hover:border-primary/30 transition-all duration-300"
             >
-              <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+              <CardContent className="p-8">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   {isRTL ? tool.name_ar : tool.name_en}
-                </CardTitle>
+                </h3>
                 {(tool.category_ar || tool.category_en) && (
-                  <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full w-fit">
+                  <span className="text-xs font-medium text-primary mb-3 block">
                     {isRTL ? tool.category_ar : tool.category_en}
                   </span>
                 )}
-              </CardHeader>
-              
-              <CardContent>
-                <CardDescription className="text-muted-foreground mb-4 line-clamp-2">
+                <p className="text-sm text-muted-foreground mb-6 line-clamp-2">
                   {isRTL ? tool.description_ar : tool.description_en}
-                </CardDescription>
-                
-                <Button
-                  asChild
-                  size="sm"
-                  className="w-full gap-2 bg-gradient-primary hover:bg-gradient-secondary transition-all"
+                </p>
+                <a
+                  href={tool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group/link"
                 >
-                  <a
-                    href={tool.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    {isRTL ? 'تجربة الأداة' : 'Try Tool'}
-                  </a>
-                </Button>
+                  <ExternalLink className="h-4 w-4" />
+                  {isRTL ? 'تجربة الأداة' : 'Try Tool'}
+                </a>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* CTA Section */}
         <div className="text-center">
-          <Link to="/tools">
-            <Button 
-              size="xl" 
-              className="group bg-primary hover:bg-primary-hover transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
-            >
-              {isRTL ? 'شاهد جميع الأدوات' : 'View All Tools'}
-              <ArrowRight className={`ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 ml-0 mr-2 group-hover:-translate-x-1' : ''}`} />
-            </Button>
+          <Link 
+            to="/tools"
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
+          >
+            {isRTL ? 'شاهد جميع الأدوات' : 'View all tools'}
+            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
           </Link>
         </div>
       </div>

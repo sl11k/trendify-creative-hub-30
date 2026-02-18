@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Mail, Phone, MapPin, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Youtube, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,13 +29,11 @@ const ContactSection = () => {
         .from('site_settings')
         .select('*')
         .in('setting_key', ['contact_email', 'contact_phone', 'contact_address_ar', 'contact_address_en']);
-      
       if (data) {
         const settings = data.reduce((acc, item) => {
           acc[item.setting_key] = item.setting_value;
           return acc;
         }, {} as Record<string, string>);
-
         setContactInfo({
           email: settings.contact_email || 'hello@trendify.agency',
           phone: settings.contact_phone || '+966 50 123 4567',
@@ -56,10 +54,7 @@ const ContactSection = () => {
         .eq('active', true)
         .not('url', 'is', null)
         .neq('url', '');
-      
-      if (data) {
-        setSocialLinks(data);
-      }
+      if (data) setSocialLinks(data);
     } catch (error) {
       console.error('Error loading social links:', error);
     }
@@ -80,98 +75,73 @@ const ContactSection = () => {
 
   const socialLinksData = socialLinks.map(link => {
     const IconComponent = getSocialIcon(link.platform);
-    return IconComponent ? {
-      icon: IconComponent,
-      url: link.url!,
-      label: link.platform
-    } : null;
+    return IconComponent ? { icon: IconComponent, url: link.url!, label: link.platform } : null;
   }).filter(Boolean);
 
   const contactInfoData = [
-    {
-      icon: Mail,
-      title: isRTL ? 'البريد الإلكتروني' : 'Email',
-      value: contactInfo.email,
-      link: `mailto:${contactInfo.email}`
-    },
-    {
-      icon: Phone,
-      title: isRTL ? 'الهاتف' : 'Phone',
-      value: contactInfo.phone,
-      link: `tel:${contactInfo.phone.replace(/\s/g, '')}`
-    },
-    {
-      icon: MessageSquare,
-      title: isRTL ? 'واتساب' : 'WhatsApp',
-      value: contactInfo.phone,
-      link: `https://wa.me/${contactInfo.phone.replace(/\s|\+/g, '')}`
-    },
-    {
-      icon: MapPin,
-      title: isRTL ? 'العنوان' : 'Address',
-      value: isRTL ? contactInfo.address_ar : contactInfo.address_en,
-      link: null
-    }
+    { icon: Mail, title: isRTL ? 'البريد الإلكتروني' : 'Email', value: contactInfo.email, link: `mailto:${contactInfo.email}` },
+    { icon: Phone, title: isRTL ? 'الهاتف' : 'Phone', value: contactInfo.phone, link: `tel:${contactInfo.phone.replace(/\s/g, '')}` },
+    { icon: MessageSquare, title: isRTL ? 'واتساب' : 'WhatsApp', value: contactInfo.phone, link: `https://wa.me/${contactInfo.phone.replace(/\s|\+/g, '')}` },
+    { icon: MapPin, title: isRTL ? 'العنوان' : 'Address', value: isRTL ? contactInfo.address_ar : contactInfo.address_en, link: null }
   ];
 
   return (
-    <section id="contact" className="py-20 bg-muted/30">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 pt-8">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            {isRTL ? 'تواصل معنا' : 'CONTACT'}
+          </p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-6">
             {t('contact.title')}
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+          </h1>
+          <p className="text-lg text-muted-foreground">
             {t('contact.subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Information */}
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {contactInfoData.map((info, index) => {
-                const IconComponent = info.icon;
-                return (
-                  <Card key={index} className="border-0 shadow-card bg-card-gradient">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow flex-shrink-0">
-                          <IconComponent className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-semibold text-foreground mb-1">{info.title}</h3>
-                          {info.link ? (
-                            <a 
-                              href={info.link}
-                              className="text-primary hover:text-secondary transition-colors duration-200 break-words"
-                              dir={info.title.includes('Phone') || info.title.includes('الهاتف') ? 'ltr' : 'auto'}
-                            >
-                              {info.value}
-                            </a>
-                          ) : (
-                            <p className="text-muted-foreground break-words">{info.value}</p>
-                          )}
-                        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Contact Cards */}
+          <div className="lg:col-span-1 space-y-4">
+            {contactInfoData.map((info, index) => {
+              const IconComponent = info.icon;
+              return (
+                <Card key={index} className="border border-border/50 bg-background hover:border-primary/30 transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <IconComponent className="h-5 w-5 text-primary" />
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-medium text-muted-foreground mb-0.5">{info.title}</h3>
+                        {info.link ? (
+                          <a 
+                            href={info.link}
+                            className="text-sm font-medium text-foreground hover:text-primary transition-colors break-words"
+                            dir={info.title.includes('Phone') || info.title.includes('الهاتف') ? 'ltr' : 'auto'}
+                          >
+                            {info.value}
+                          </a>
+                        ) : (
+                          <p className="text-sm font-medium text-foreground break-words">{info.value}</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
-          {/* Social Media Links */}
+          {/* Social Links */}
           <div className="lg:col-span-2">
-            <Card className="border-0 shadow-hero bg-card-gradient">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-gradient-primary">
-                  {isRTL ? 'تابعنا على وسائل التواصل' : 'Follow Us on Social Media'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="border border-border/50 bg-background h-full">
+              <CardContent className="p-8">
+                <h3 className="text-lg font-semibold text-foreground mb-6">
+                  {isRTL ? 'تابعنا على وسائل التواصل' : 'Follow Us'}
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {socialLinksData.length > 0 ? (
                     socialLinksData.map((social, index) => {
                       const IconComponent = social!.icon;
@@ -181,15 +151,15 @@ const ContactSection = () => {
                           href={social!.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex flex-col items-center gap-2 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors group"
+                          className="flex flex-col items-center gap-2 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors group border border-border/50"
                         >
-                          <IconComponent className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
-                          <span className="text-sm font-medium capitalize">{social!.label}</span>
+                          <IconComponent className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <span className="text-xs font-medium text-muted-foreground capitalize">{social!.label}</span>
                         </a>
                       );
                     })
                   ) : (
-                    <p className="col-span-full text-center text-muted-foreground">
+                    <p className="col-span-full text-center text-sm text-muted-foreground">
                       {isRTL ? 'لا توجد روابط متاحة' : 'No social links available'}
                     </p>
                   )}
