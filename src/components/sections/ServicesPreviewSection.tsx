@@ -5,6 +5,7 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useServices } from '@/hooks/useServices';
 import * as Icons from 'lucide-react';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const getIconComponent = (iconName: string | null) => {
   if (!iconName) return Icons.Star;
@@ -17,12 +18,14 @@ const ServicesPreviewSection = () => {
   const { t, isRTL } = useLanguage();
   const { services, loading, error } = useServices();
   const previewServices = services.slice(0, 4);
+  const headerRef = useScrollAnimation();
+  const gridRef = useStaggerAnimation();
 
   return (
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'خدماتنا' : 'OUR EXPERTISE'}
           </p>
@@ -45,7 +48,7 @@ const ServicesPreviewSection = () => {
 
         {/* Bento Grid */}
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 stagger-container">
             {previewServices.map((service, index) => {
               const IconComponent = getIconComponent(service.icon_name);
               return (

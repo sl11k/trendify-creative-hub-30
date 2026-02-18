@@ -2,15 +2,18 @@ import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 import { useCounterAnimation } from '@/hooks/useCounterAnimation';
 
 const AboutPreviewSection = () => {
   const { isRTL } = useLanguage();
   useCounterAnimation();
+  const sectionRef = useScrollAnimation();
+  const gridRef = useStaggerAnimation();
 
   return (
     <section className="py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div ref={sectionRef} className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Content Side */}
           <div className="space-y-6">
@@ -36,7 +39,7 @@ const AboutPreviewSection = () => {
           </div>
 
           {/* Bento Grid */}
-          <div className="grid grid-cols-2 gap-4">
+          <div ref={gridRef} className="grid grid-cols-2 gap-4 stagger-container">
             <div className="bg-muted/50 rounded-2xl p-6 border border-border/50">
               <div className="text-3xl font-bold text-foreground mb-1 counter-animation" data-target="99">0%</div>
               <div className="text-sm text-muted-foreground">{isRTL ? 'رضا العملاء' : 'Client Satisfaction'}</div>

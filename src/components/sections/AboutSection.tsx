@@ -2,9 +2,16 @@ import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Award, Users, Target, Zap, Rocket, TrendingUp, Code, Shield } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const AboutSection = () => {
   const { t, isRTL } = useLanguage();
+  const headerRef = useScrollAnimation();
+  const descRef = useScrollAnimation();
+  const uspsHeaderRef = useScrollAnimation();
+  const uspsGridRef = useStaggerAnimation();
+  const visionRef = useStaggerAnimation();
+  const statsRef = useScrollAnimation();
 
   const usps = [
     {
@@ -44,7 +51,7 @@ const AboutSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Heading */}
-        <div className="text-center mb-20 pt-8">
+        <div ref={headerRef} className="text-center mb-20 pt-8 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'من نحن' : 'ABOUT US'}
           </p>
@@ -54,7 +61,7 @@ const AboutSection = () => {
         </div>
 
         {/* Hero Description */}
-        <div className="max-w-3xl mx-auto mb-24 text-center">
+        <div ref={descRef} className="max-w-3xl mx-auto mb-24 text-center scroll-hidden">
           <p className="text-lg text-muted-foreground leading-relaxed mb-6">
             {isRTL 
               ? 'نحن في Trendify شريك نمو متكامل للمشاريع والشركات الناشئة. نعمل معك منذ لحظة ولادة الفكرة حتى إطلاق المشروع وتحقيق الإيرادات والنمو المستدام.'
@@ -71,7 +78,7 @@ const AboutSection = () => {
 
         {/* USPs Grid */}
         <div className="mb-24">
-          <div className="text-center mb-12">
+          <div ref={uspsHeaderRef} className="text-center mb-12 scroll-hidden">
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
               {isRTL ? 'ما يميزنا' : 'WHAT SETS US APART'}
             </p>
@@ -80,7 +87,7 @@ const AboutSection = () => {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div ref={uspsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-container">
             {usps.map((usp, index) => {
               const IconComponent = usp.icon;
               return (
@@ -99,7 +106,7 @@ const AboutSection = () => {
         </div>
 
         {/* Vision & Mission */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-24">
+        <div ref={visionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-24 stagger-container">
           <div className="bg-foreground rounded-2xl p-10 text-background">
             <div className="w-10 h-10 bg-background/10 rounded-xl flex items-center justify-center mb-6">
               <Target className="h-5 w-5 text-background" />
@@ -132,7 +139,7 @@ const AboutSection = () => {
         </div>
 
         {/* Stats */}
-        <div className="border border-border/50 rounded-2xl p-12">
+        <div ref={statsRef} className="border border-border/50 rounded-2xl p-12 scroll-hidden">
           <div className="text-center mb-12">
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
               {isRTL ? 'الأرقام' : 'BY THE NUMBERS'}

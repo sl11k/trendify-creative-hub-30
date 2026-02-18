@@ -4,9 +4,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
 const PortfolioPreviewSection = () => {
   const { isRTL } = useLanguage();
+  const headerRef = useScrollAnimation();
+  const gridRef = useStaggerAnimation();
   const [portfolio, setPortfolio] = useState<Array<{
     id: string;
     title_ar: string;
@@ -74,7 +77,7 @@ const PortfolioPreviewSection = () => {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
             {isRTL ? 'أعمالنا' : 'SUCCESS STORIES'}
           </p>
@@ -84,7 +87,7 @@ const PortfolioPreviewSection = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 stagger-container">
           {displayProjects.map((project) => {
             const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
               ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)

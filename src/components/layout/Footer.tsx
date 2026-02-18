@@ -4,9 +4,11 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Music, 
 import { supabase } from '@/integrations/supabase/client';
 import commercialRegisterQR from '@/assets/commercial-register-qr.png';
 import { Link } from 'react-router-dom';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const Footer = () => {
   const { t, isRTL } = useLanguage();
+  const ctaRef = useScrollAnimation();
   const [socialLinks, setSocialLinks] = useState<Array<{
     platform: string;
     url?: string;
@@ -83,7 +85,7 @@ const Footer = () => {
     <footer className="bg-foreground text-background">
       {/* CTA Section */}
       <div className="border-b border-background/10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div ref={ctaRef} className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center scroll-hidden">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-background/50 mb-4">
             {isRTL ? 'هل أنت مستعد؟' : 'Ready to create?'}
           </p>
