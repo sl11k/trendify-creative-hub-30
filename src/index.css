@@ -6,53 +6,53 @@
 
 @layer base {
   :root {
-    /* Core Brand Colors - Bold & Creative */
+    /* Core Brand Colors - Bold & Vibrant */
     --background: 0 0% 100%;
-    --foreground: 230 25% 10%;
+    --foreground: 240 20% 6%;
 
     --card: 0 0% 100%;
-    --card-foreground: 230 25% 10%;
+    --card-foreground: 240 20% 6%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 10%;
+    --popover-foreground: 240 20% 6%;
 
-    /* Primary - Creative Purple */
-    --primary: 270 75% 60%;
+    /* Primary - Vibrant Purple */
+    --primary: 265 85% 55%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 270 75% 55%;
-    --primary-glow: 270 75% 70%;
+    --primary-hover: 265 85% 48%;
+    --primary-glow: 265 85% 68%;
 
-    /* Secondary - Digital Blue */
-    --secondary: 220 90% 60%;
+    /* Secondary - Electric Blue */
+    --secondary: 215 95% 55%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-hover: 220 90% 55%;
+    --secondary-hover: 215 95% 48%;
 
-    /* Accent - Innovation Pink */
-    --accent: 330 80% 65%;
+    /* Accent - Hot Pink */
+    --accent: 330 90% 58%;
     --accent-foreground: 0 0% 100%;
-    --accent-hover: 330 80% 60%;
+    --accent-hover: 330 90% 52%;
 
-    /* Muted - Subtle Grays */
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 36%;
+    /* Muted */
+    --muted: 240 10% 96%;
+    --muted-foreground: 240 8% 40%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 270 75% 60%;
+    --border: 240 10% 90%;
+    --input: 240 10% 90%;
+    --ring: 265 85% 55%;
 
     /* Creative Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(270 75% 60%), hsl(220 90% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(220 90% 60%), hsl(330 80% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(270 75% 60%) 0%, hsl(220 90% 60%) 50%, hsl(330 80% 65%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 15% 98%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(265 85% 55%), hsl(215 95% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(215 95% 55%), hsl(330 90% 58%));
+    --gradient-hero: linear-gradient(135deg, hsl(265 85% 55%) 0%, hsl(215 95% 55%) 50%, hsl(330 90% 58%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(265 30% 97%) 100%);
 
     /* Shadows & Effects */
-    --shadow-glow: 0 10px 40px -10px hsl(270 75% 60% / 0.3);
-    --shadow-card: 0 4px 20px -4px hsl(220 10% 45% / 0.1);
-    --shadow-hero: 0 25px 50px -12px hsl(270 75% 60% / 0.25);
+    --shadow-glow: 0 10px 40px -10px hsl(265 85% 55% / 0.35);
+    --shadow-card: 0 4px 20px -4px hsl(240 10% 45% / 0.12);
+    --shadow-hero: 0 25px 50px -12px hsl(265 85% 55% / 0.3);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,36 +73,36 @@
 
   .dark {
     /* Dark Mode Colors */
-    --background: 230 25% 8%;
-    --foreground: 0 0% 95%;
+    --background: 240 15% 6%;
+    --foreground: 0 0% 96%;
 
-    --card: 230 25% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 240 15% 9%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 230 25% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 240 15% 9%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 270 75% 65%;
+    --primary: 265 85% 65%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 270 75% 60%;
+    --primary-hover: 265 85% 58%;
 
-    --secondary: 220 90% 65%;
+    --secondary: 215 95% 65%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-hover: 220 90% 60%;
+    --secondary-hover: 215 95% 58%;
 
-    --accent: 330 80% 70%;
+    --accent: 330 90% 65%;
     --accent-foreground: 0 0% 100%;
-    --accent-hover: 330 80% 65%;
+    --accent-hover: 330 90% 58%;
 
-    --muted: 230 20% 15%;
-    --muted-foreground: 230 10% 60%;
+    --muted: 240 12% 14%;
+    --muted-foreground: 240 8% 55%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 230 20% 20%;
-    --input: 230 20% 20%;
-    --ring: 270 75% 65%;
+    --border: 240 12% 18%;
+    --input: 240 12% 18%;
+    --ring: 265 85% 65%;
     
     /* Dark Sidebar Variables */
     --sidebar-background: 240 5.9% 10%;

@@ -74,14 +74,16 @@ const PortfolioPreviewSection = () => {
   const displayProjects = portfolio.length > 0 ? portfolio : fallbackProjects;
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-background relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-6">
             {isRTL ? 'أعمالنا' : 'SUCCESS STORIES'}
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+          </div>
+          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
             {isRTL ? 'بعض دراسات الحالة' : 'A Few Case Studies'}
           </h2>
         </div>
@@ -96,7 +98,7 @@ const PortfolioPreviewSection = () => {
             return (
               <Card
                 key={project.id}
-                className="group cursor-pointer border border-border/50 bg-background hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                className="group cursor-pointer border border-border/50 bg-background hover:border-primary/30 hover:shadow-xl transition-all duration-500 overflow-hidden"
                 onClick={() => {
                   if (project.project_type === 'website' && project.project_url) {
                     window.open(ensureProtocol(project.project_url), '_blank');
@@ -110,18 +112,18 @@ const PortfolioPreviewSection = () => {
                     <img
                       src={firstImage}
                       alt={isRTL ? project.title_ar : project.title_en}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <span className="text-4xl font-bold text-muted-foreground/20">
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 flex items-center justify-center">
+                      <span className="text-4xl font-bold font-heading text-primary/20">
                         {isRTL ? 'مشروع' : 'PROJECT'}
                       </span>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/60 transition-colors duration-300 flex items-center justify-center">
-                    <ExternalLink className="h-6 w-6 text-background opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/0 to-foreground/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                    <ExternalLink className="h-6 w-6 text-background" />
                   </div>
                 </div>
                 
@@ -131,7 +133,7 @@ const PortfolioPreviewSection = () => {
                       {project.category}
                     </span>
                   )}
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                  <h3 className="font-heading text-lg font-bold text-foreground mb-2">
                     {isRTL ? project.title_ar : project.title_en}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">
@@ -147,7 +149,7 @@ const PortfolioPreviewSection = () => {
         <div className="text-center">
           <Link 
             to="/portfolio"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-sm font-semibold group"
           >
             {isRTL ? 'شاهد جميع أعمالنا' : 'View all our work'}
             <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
