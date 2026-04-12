@@ -1,82 +1,92 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useServices } from '@/hooks/useServices';
 import * as Icons from 'lucide-react';
-import { useScrollAnimation, useStaggerAnimation } from '@/hooks/useScrollAnimation';
 
+// Icon mapping function
 const getIconComponent = (iconName: string | null) => {
   if (!iconName) return Icons.Star;
+  
+  // Convert icon name to PascalCase if needed
   const iconKey = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+  
+  // Get the icon from lucide-react
   const IconComponent = (Icons as any)[iconKey] || (Icons as any)[iconName] || Icons.Star;
+  
   return IconComponent;
 };
 
 const ServicesPreviewSection = () => {
   const { t, isRTL } = useLanguage();
   const { services, loading, error } = useServices();
-  const previewServices = services.slice(0, 4);
-  const headerRef = useScrollAnimation();
-  const gridRef = useStaggerAnimation();
+
+  // Get first 3 services for preview
+  const previewServices = services.slice(0, 3);
 
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-muted/30 to-background" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="services" className="py-20 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16 scroll-hidden">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-6">
-            {isRTL ? 'خدماتنا' : 'OUR EXPERTISE'}
-          </div>
-          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
-            {isRTL ? 'خدمات نقدمها لك' : 'Services We Offer'}
+        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
+            {t('services.title')}
           </h2>
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            {isRTL ? 'نقدم مجموعة واسعة من الخدمات الرقمية المتطورة' : 'We offer a wide range of advanced digital services'}
+          </p>
         </div>
 
+        {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span className="mr-2 text-muted-foreground">{isRTL ? 'جاري التحميل...' : 'Loading...'}</span>
           </div>
         )}
 
+        {/* Error State */}
         {error && (
           <div className="text-center py-12">
-            <p className="text-destructive text-sm">{error}</p>
+            <p className="text-destructive">{error}</p>
           </div>
         )}
 
-        {/* Bento Grid */}
+        {/* Services Preview Grid */}
         {!loading && !error && (
-          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12 stagger-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {previewServices.map((service, index) => {
               const IconComponent = getIconComponent(service.icon_name);
               return (
                 <Card
                   key={service.id}
-                  className="group border border-border/50 bg-background/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-lg transition-all duration-300 overflow-hidden"
+                  className="group cursor-pointer border-0 shadow-card hover:shadow-glow bg-card-gradient overflow-hidden transition-all duration-300 hover:scale-105 stagger-animation"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <CardContent className="p-8">
+                  <CardHeader className="text-center pb-4">
                     <div 
-                      className="w-14 h-14 mb-6 rounded-2xl flex items-center justify-center shadow-lg"
+                      className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300"
                       style={{
                         background: service.gradient_from && service.gradient_to
                           ? `linear-gradient(135deg, ${service.gradient_from}, ${service.gradient_to})`
                           : 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))'
                       }}
                     >
-                      <IconComponent className="h-7 w-7 text-white" />
+                      <IconComponent className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-heading text-xl font-bold text-foreground mb-3">
+                    
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
                       {isRTL ? service.title_ar : service.title_en}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    </CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="text-center">
+                    <CardDescription className="text-muted-foreground leading-relaxed">
                       {isRTL ? service.description_ar : service.description_en}
-                    </p>
+                    </CardDescription>
                   </CardContent>
                 </Card>
               );
@@ -84,14 +94,16 @@ const ServicesPreviewSection = () => {
           </div>
         )}
 
-        {/* CTA */}
+        {/* CTA Section */}
         <div className="text-center">
-          <Link 
-            to="/services"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-sm font-semibold group"
-          >
-            {isRTL ? 'استكشف جميع خدماتنا' : 'Explore all services'}
-            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+          <Link to="/services">
+            <Button 
+              size="xl" 
+              className="group bg-gradient-primary text-primary-foreground border-0 hover:shadow-glow transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4"
+            >
+              {isRTL ? 'استكشف جميع خدماتنا' : 'Explore All Our Services'}
+              <ArrowRight className={`ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 ml-0 mr-2 group-hover:-translate-x-1' : ''}`} />
+            </Button>
           </Link>
         </div>
       </div>

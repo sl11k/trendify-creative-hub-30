@@ -5,44 +5,43 @@ const PartnersSection = () => {
   const { isRTL } = useLanguage();
   const { partners, loading } = usePartners();
 
+  console.log('Partners data:', partners, 'Loading:', loading);
+
+  // لا تعرض القسم إذا لم يكن هناك شركاء نشطين
   if (loading || partners.length === 0) {
     return null;
   }
 
-  // Duplicate for seamless infinite scroll
-  const duplicatedPartners = [...partners, ...partners, ...partners];
-
   return (
-    <section className="py-16 bg-gradient-to-b from-background to-muted/30 border-y border-border/30">
-      <div className="container mx-auto px-4 mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mx-auto block text-center w-fit">
-          {isRTL ? 'موثوق من الأفضل' : 'TRUSTED BY THE BEST'}
+    <section className="py-20 bg-muted/30">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-primary mb-6">
+            {isRTL ? 'شركاء نجاحنا' : 'Our Success Partners'}
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            {isRTL ? 'نفخر بشراكتنا مع أفضل الشركات والمؤسسات' : 'We are proud to partner with the best companies and institutions'}
+          </p>
         </div>
-      </div>
 
-      {/* Marquee */}
-      <div className="relative overflow-hidden">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10" />
-        
-        <div className="flex animate-marquee items-center gap-16">
-          {duplicatedPartners.map((partner, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {partners.map((partner, index) => (
             <div
-              key={`${partner.id}-${index}`}
-              className="flex-shrink-0 flex items-center justify-center px-4"
+              key={partner.id}
+              className="group flex items-center justify-center p-6 bg-card rounded-lg border border-border hover:border-primary transition-all duration-300 hover:shadow-glow"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               {partner.website_url ? (
                 <a
                   href={partner.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block"
+                  className="w-full h-full flex items-center justify-center"
                 >
                   <img
                     src={partner.logo_url}
                     alt={isRTL ? partner.name_ar : partner.name_en}
-                    className="h-10 md:h-12 w-auto object-contain opacity-40 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0 hover:scale-110"
+                    className="max-w-full max-h-24 object-contain filter group-hover:brightness-110 transition-all duration-300"
                     loading="lazy"
                   />
                 </a>
@@ -50,7 +49,7 @@ const PartnersSection = () => {
                 <img
                   src={partner.logo_url}
                   alt={isRTL ? partner.name_ar : partner.name_en}
-                  className="h-10 md:h-12 w-auto object-contain opacity-40 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0 hover:scale-110"
+                  className="max-w-full max-h-24 object-contain filter group-hover:brightness-110 transition-all duration-300"
                   loading="lazy"
                 />
               )}

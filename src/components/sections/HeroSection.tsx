@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroBackground from '@/assets/hero-background.jpg';
 import { useCounterAnimation } from '@/hooks/useCounterAnimation';
 import { supabase } from '@/integrations/supabase/client';
 
-const rotatingWordsAr = ['مبتكرة', 'احترافية', 'مميزة', 'إبداعية'];
-const rotatingWordsEn = ['innovative', 'professional', 'unique', 'creative'];
-
 const HeroSection = () => {
   const { t, isRTL } = useLanguage();
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [consultationButton, setConsultationButton] = useState({
     text_ar: 'احصل على استشارة مجانية',
     text_en: 'Get Free Consultation',
@@ -20,20 +17,14 @@ const HeroSection = () => {
   
   useCounterAnimation();
 
-  const rotatingWords = isRTL ? rotatingWordsAr : rotatingWordsEn;
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
-        setIsAnimating(false);
-      }, 300);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [rotatingWords.length]);
+    // Stagger animation for statistics
+    const staggerElements = document.querySelectorAll('.stagger-animation');
+    staggerElements.forEach((element, index) => {
+      element.setAttribute('data-delay', (index * 150).toString());
+    });
 
-  useEffect(() => {
+    // Load consultation button settings
     loadConsultationButton();
   }, []);
 
@@ -62,95 +53,87 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
-      
-      {/* Decorative Blobs */}
-      <div className="absolute top-20 right-[10%] w-72 h-72 bg-primary/15 rounded-full blur-[100px] animate-pulse" />
-      <div className="absolute bottom-20 left-[10%] w-96 h-96 bg-secondary/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[150px]" />
-      
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: 'linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)',
-        backgroundSize: '60px 60px'
-      }} />
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Parallax Background */}
+      <div 
+        className="absolute inset-0 z-0 parallax-bg"
+        style={{
+          backgroundImage: `url(${heroBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        }}
+        role="img"
+        aria-label="Hero background"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
+      </div>
 
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Trust Badge */}
-        <div className="mb-8 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 text-sm font-medium text-primary backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            {isRTL ? 'موثوق من أكبر الشركات' : 'Trusted by Leading Brands'}
+      {/* Floating Elements */}
+      <div className="absolute inset-0 z-10 overflow-hidden">
+        <div className="animate-float absolute top-20 left-10 w-20 h-20 bg-primary-glow/20 rounded-full blur-xl"></div>
+        <div className="animate-float absolute top-40 right-20 w-32 h-32 bg-secondary/20 rounded-full blur-2xl" style={{animationDelay: '2s'}}></div>
+        <div className="animate-float absolute bottom-20 left-1/4 w-16 h-16 bg-accent/20 rounded-full blur-lg" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Main Title */}
+          <h1 className="text-responsive-xl font-bold text-white mb-6 animate-fade-in-up">
+            {t('hero.title')}
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-responsive-lg text-white/90 mb-8 leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+            {t('hero.subtitle')}
+          </p>
+
+          {/* CTA Buttons */}
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{animationDelay: '0.4s'}}>
+            <Link to={consultationButton.url}>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
+              >
+                {isRTL ? consultationButton.text_ar : consultationButton.text_en}
+                <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
+              </Button>
+            </Link>
+            
+            <Link to="/services">
+              <Button
+                size="lg"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
+              >
+                <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
+                {t('hero.cta.secondary')}
+              </Button>
+            </Link>
+          </div>
+
+          {/* Stats or Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="500">0+</div>
+              <div className="text-white/80">{isRTL ? 'عميل راضٍ' : 'Happy Clients'}</div>
+            </div>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="1000">0+</div>
+              <div className="text-white/80">{isRTL ? 'مشروع مكتمل' : 'Projects Completed'}</div>
+            </div>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="5">0+</div>
+              <div className="text-white/80">{isRTL ? 'سنوات خبرة' : 'Years Experience'}</div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Main Headline */}
-        <div className="text-center max-w-5xl mx-auto px-4 animate-fade-in-up">
-          <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground leading-[1.1] tracking-tight">
-            {isRTL ? (
-              <>
-                نصنع حلولاً رقمية
-                <br />
-                <span
-                  className={`inline-block transition-all duration-300 text-gradient-primary ${
-                    isAnimating ? 'opacity-0 translate-y-3 scale-95' : 'opacity-100 translate-y-0 scale-100'
-                  }`}
-                >
-                  {rotatingWords[currentWordIndex]}
-                </span>
-              </>
-            ) : (
-              <>
-                We create digital solutions
-                <br />
-                that are{' '}
-                <span
-                  className={`inline-block transition-all duration-300 text-gradient-primary ${
-                    isAnimating ? 'opacity-0 translate-y-3 scale-95' : 'opacity-100 translate-y-0 scale-100'
-                  }`}
-                >
-                  {rotatingWords[currentWordIndex]}
-                </span>
-              </>
-            )}
-          </h1>
-        </div>
-
-        {/* Subtitle */}
-        <p className="mt-8 text-lg md:text-xl text-muted-foreground text-center max-w-2xl mx-auto px-4 animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.1s' }}>
-          {isRTL
-            ? 'شريكك المتكامل لنمو مشروعك من الفكرة للإطلاق والنجاح'
-            : 'Your integrated partner for business growth from idea to launch and success'}
-        </p>
-
-        {/* Stats */}
-        <div className="flex items-center gap-8 md:gap-14 mt-14 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          {[
-            { target: '500', label: isRTL ? 'عميل راضٍ' : 'Happy Clients' },
-            { target: '1000', label: isRTL ? 'مشروع مكتمل' : 'Projects Done' },
-            { target: '5', label: isRTL ? 'سنوات خبرة' : 'Years Experience' },
-          ].map((stat, i) => (
-            <React.Fragment key={i}>
-              {i > 0 && <div className="w-px h-14 bg-gradient-to-b from-transparent via-border to-transparent" />}
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold font-heading text-foreground counter-animation" data-target={stat.target}>0+</div>
-                <div className="text-sm text-muted-foreground mt-1.5">{stat.label}</div>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-
-        {/* CTA Button */}
-        <div className="mt-14 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <Link
-            to={consultationButton.url}
-            className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-primary text-primary-foreground hover:shadow-glow transition-all duration-300 text-sm font-semibold hover:scale-105"
-          >
-            {isRTL ? consultationButton.text_ar : consultationButton.text_en}
-            <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
-          </Link>
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
         </div>
       </div>
     </section>
