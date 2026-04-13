@@ -79,8 +79,12 @@ export default {
 				'hero': 'var(--shadow-hero)'
 			},
 			fontFamily: {
-				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'sans': ['Geist Sans', 'system-ui', 'sans-serif'],
+				'headline': ['General Sans', 'system-ui', 'sans-serif'],
 				'arabic': ['Tajawal', 'system-ui', 'sans-serif']
+			},
+			colors: {
+				'hero-sub': 'hsl(var(--hero-sub))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
