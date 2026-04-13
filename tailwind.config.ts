@@ -24,6 +24,7 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				'hero-sub': 'hsl(var(--hero-sub))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
@@ -66,25 +67,6 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
-			},
-			backgroundImage: {
-				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-secondary': 'var(--gradient-secondary)',
-				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-card': 'var(--gradient-card)'
-			},
-			boxShadow: {
-				'glow': 'var(--shadow-glow)',
-				'card': 'var(--shadow-card)',
-				'hero': 'var(--shadow-hero)'
-			},
-			fontFamily: {
-				'sans': ['Geist Sans', 'system-ui', 'sans-serif'],
-				'headline': ['General Sans', 'system-ui', 'sans-serif'],
-				'arabic': ['Tajawal', 'system-ui', 'sans-serif']
-			},
-			colors: {
-				'hero-sub': 'hsl(var(--hero-sub))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
