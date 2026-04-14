@@ -100,7 +100,6 @@ const UsersManager = () => {
             .insert([{
               id: authData.user.id,
               email: formData.email,
-              password_hash: 'managed_by_supabase_auth',
               role: formData.role,
               active: formData.active
             }]);
