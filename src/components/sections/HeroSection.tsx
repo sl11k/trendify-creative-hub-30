@@ -70,14 +70,14 @@ const HeroSection = () => {
         muted
         playsInline
         loop
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover md:object-cover object-[center_center] scale-[1.0] md:scale-100"
         style={{ opacity: 0 }}
       />
 
       {/* Blurred overlay shape */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ width: 984, height: 527, opacity: 0.9, background: 'hsl(260 10% 5%)', filter: 'blur(82px)' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[320px] h-[400px] md:w-[984px] md:h-[527px]"
+        style={{ opacity: 0.85, background: 'hsl(260 10% 5%)', filter: 'blur(60px)' }}
       />
 
       {/* Hero Content */}
@@ -89,7 +89,7 @@ const HeroSection = () => {
           Trendify
         </h1>
 
-        <p className="text-hero-sub text-responsive-lg mb-8 leading-relaxed animate-fade-in-up mt-4 opacity-80" style={{ animationDelay: '0.2s' }}>
+        <p className="text-foreground text-responsive-lg mb-8 leading-relaxed animate-fade-in-up mt-4 opacity-95" style={{ animationDelay: '0.2s' }}>
           {t('hero.subtitle')}
         </p>
 
