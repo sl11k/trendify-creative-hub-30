@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 
 const VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_065045_c44942da-53c6-4804-b734-f9e07fc22e08.mp4';
 
-const BRAND_LOGOS = ['Vortex', 'Nimbus', 'Prysma', 'Cirrus', 'Kynder', 'Halcyn'];
-
 const HeroSection = () => {
   const { t, isRTL } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -71,6 +69,7 @@ const HeroSection = () => {
         src={VIDEO_URL}
         muted
         playsInline
+        loop
         className="absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0 }}
       />
@@ -87,15 +86,13 @@ const HeroSection = () => {
           className="text-responsive-xl font-bold leading-tight tracking-tight animate-fade-in-up"
           style={{ fontFamily: "'General Sans', sans-serif" }}
         >
-          <span className="text-foreground">{isRTL ? 'Trendify' : 'Trendify'}</span>
-          {' - '}
           <span
             className="bg-clip-text text-transparent"
             style={{
               backgroundImage: 'linear-gradient(to left, #6366f1, #a855f7, #fcd34d)',
             }}
           >
-            {t('hero.title.highlight')}
+            Trendify
           </span>
         </h1>
 
@@ -122,31 +119,6 @@ const HeroSection = () => {
               {t('hero.cta.secondary')}
             </Button>
           </Link>
-        </div>
-      </div>
-
-      {/* Logo Marquee */}
-      <div className="absolute bottom-0 left-0 right-0 pb-10 px-8">
-        <div className="max-w-5xl mx-auto flex items-center gap-12">
-          <p className="text-foreground/50 text-sm shrink-0 leading-5">
-            {isRTL ? 'يعتمد علينا عملاء' : 'Relied on by brands'}
-            <br />
-            {isRTL ? 'حول العالم' : 'across the globe'}
-          </p>
-          <div className="flex-1 overflow-hidden">
-            <div className="flex gap-16 animate-marquee" style={{ width: 'max-content' }}>
-              {[...BRAND_LOGOS, ...BRAND_LOGOS].map((name, i) => (
-                <div key={`${name}-${i}`} className="flex items-center gap-2.5 shrink-0">
-                  <div className="liquid-glass w-[24px] h-[24px] rounded-lg flex items-center justify-center text-xs font-semibold text-foreground">
-                    {name[0]}
-                  </div>
-                  <span className="text-base font-semibold text-foreground whitespace-nowrap">
-                    {name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>

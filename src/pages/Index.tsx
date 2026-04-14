@@ -8,13 +8,10 @@ import { WebsiteDesignRenderer } from "@/components/WebsiteDesignRenderer";
 import Footer from "@/components/layout/Footer";
 
 // Lazy load below-the-fold sections
-const AboutPreviewSection = lazy(() => import("@/components/sections/AboutPreviewSection"));
-const ServicesPreviewSection = lazy(() => import("@/components/sections/ServicesPreviewSection"));
 const PortfolioPreviewSection = lazy(() => import("@/components/sections/PortfolioPreviewSection"));
+const PartnersSection = lazy(() => import("@/components/sections/PartnersSection"));
 const ToolsPreviewSection = lazy(() => import("@/components/sections/ToolsPreviewSection"));
 const BlogPreviewSection = lazy(() => import("@/components/sections/BlogPreviewSection"));
-const PartnersSection = lazy(() => import("@/components/sections/PartnersSection"));
-const ContactSection = lazy(() => import("@/components/sections/ContactSection"));
 
 const SectionLoader = () => (
   <div className="py-16 flex items-center justify-center">
@@ -34,25 +31,16 @@ const Index = () => {
         <main>
           <HeroSection />
           <Suspense fallback={<SectionLoader />}>
-            <AboutPreviewSection />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <ServicesPreviewSection />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
             <PortfolioPreviewSection />
+          </Suspense>
+          <Suspense fallback={<SectionLoader />}>
+            <PartnersSection />
           </Suspense>
           <Suspense fallback={<SectionLoader />}>
             <ToolsPreviewSection />
           </Suspense>
           <Suspense fallback={<SectionLoader />}>
             <BlogPreviewSection />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <PartnersSection />
-          </Suspense>
-          <Suspense fallback={<SectionLoader />}>
-            <ContactSection />
           </Suspense>
         </main>
         <Footer />
