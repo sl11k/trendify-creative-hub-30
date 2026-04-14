@@ -1,139 +1,173 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowRight, Play } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import heroBackground from '@/assets/hero-background.jpg';
-import { useCounterAnimation } from '@/hooks/useCounterAnimation';
-import { supabase } from '@/integrations/supabase/client';
+import { ChevronDown } from 'lucide-react';
+import logoImg from '@/assets/logo.png';
+
+const VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_065045_c44942da-53c6-4804-b734-f9e07fc22e08.mp4';
+
+const BRAND_LOGOS = ['Vortex', 'Nimbus', 'Prysma', 'Cirrus', 'Kynder', 'Halcyn'];
 
 const HeroSection = () => {
-  const { t, isRTL } = useLanguage();
-  const [consultationButton, setConsultationButton] = useState({
-    text_ar: 'احصل على استشارة مجانية',
-    text_en: 'Get Free Consultation',
-    url: '/contact'
-  });
-  
-  useCounterAnimation();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    // Stagger animation for statistics
-    const staggerElements = document.querySelectorAll('.stagger-animation');
-    staggerElements.forEach((element, index) => {
-      element.setAttribute('data-delay', (index * 150).toString());
-    });
+  const fadeLoop = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-    // Load consultation button settings
-    loadConsultationButton();
+    let rafId: number;
+    const FADE_DURATION = 0.5;
+
+    const tick = () => {
+      if (!video || video.paused) return;
+      const t = video.currentTime;
+      const dur = video.duration;
+
+      if (Number.isNaN(dur)) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (t < FADE_DURATION) {
+        video.style.opacity = String(Math.min(t / FADE_DURATION, 1));
+      } else if (t > dur - FADE_DURATION) {
+        video.style.opacity = String(Math.max((dur - t) / FADE_DURATION, 0));
+      } else {
+        video.style.opacity = '1';
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const handleEnded = () => {
+      video.style.opacity = '0';
+      setTimeout(() => {
+        video.currentTime = 0;
+        video.play();
+      }, 100);
+    };
+
+    video.addEventListener('ended', handleEnded);
+    video.style.opacity = '0';
+    video.play().catch(() => {});
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      video.removeEventListener('ended', handleEnded);
+    };
   }, []);
 
-  const loadConsultationButton = async () => {
-    try {
-      const { data } = await supabase
-        .from('site_settings')
-        .select('*')
-        .in('setting_key', ['consultation_button_text_ar', 'consultation_button_text_en', 'consultation_button_url']);
-      
-      if (data) {
-        const settings = data.reduce((acc, item) => {
-          acc[item.setting_key] = item.setting_value;
-          return acc;
-        }, {} as Record<string, string>);
-
-        setConsultationButton({
-          text_ar: settings.consultation_button_text_ar || 'احصل على استشارة مجانية',
-          text_en: settings.consultation_button_text_en || 'Get Free Consultation',
-          url: settings.consultation_button_url || '/contact'
-        });
-      }
-    } catch (error) {
-      console.error('Error loading consultation button:', error);
-    }
-  };
+  useEffect(() => {
+    const cleanup = fadeLoop();
+    return cleanup;
+  }, [fadeLoop]);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Parallax Background */}
-      <div 
-        className="absolute inset-0 z-0 parallax-bg"
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-        }}
-        role="img"
-        aria-label="Hero background"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
-      </div>
+    <section className="relative min-h-screen flex flex-col overflow-hidden bg-background">
+      {/* Background Video */}
+      <video
+        ref={videoRef}
+        src={VIDEO_URL}
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0 }}
+      />
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0 z-10 overflow-hidden">
-        <div className="animate-float absolute top-20 left-10 w-20 h-20 bg-primary-glow/20 rounded-full blur-xl"></div>
-        <div className="animate-float absolute top-40 right-20 w-32 h-32 bg-secondary/20 rounded-full blur-2xl" style={{animationDelay: '2s'}}></div>
-        <div className="animate-float absolute bottom-20 left-1/4 w-16 h-16 bg-accent/20 rounded-full blur-lg" style={{animationDelay: '4s'}}></div>
-      </div>
+      {/* Blurred overlay shape */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        style={{ width: 984, height: 527, opacity: 0.9, background: 'hsl(260 10% 5%)', filter: 'blur(82px)' }}
+      />
 
-      {/* Content */}
-      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Main Title */}
-          <h1 className="text-responsive-xl font-bold text-white mb-6 animate-fade-in-up">
-            {t('hero.title')}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-responsive-lg text-white/90 mb-8 leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-            {t('hero.subtitle')}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{animationDelay: '0.4s'}}>
-            <Link to={consultationButton.url}>
-              <Button
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
+      {/* Content layer */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Navbar */}
+        <nav className="w-full py-5 px-8 flex items-center justify-between">
+          <img src={logoImg} alt="Logo" className="h-8 w-auto" />
+          <div className="hidden md:flex items-center gap-1">
+            {[
+              { label: 'Features', chevron: true },
+              { label: 'Solutions', chevron: false },
+              { label: 'Plans', chevron: false },
+              { label: 'Learning', chevron: true },
+            ].map((item) => (
+              <button
+                key={item.label}
+                className="flex items-center gap-1 px-3 py-2 text-sm text-foreground/90 hover:text-foreground transition-colors rounded-md"
               >
-                {isRTL ? consultationButton.text_ar : consultationButton.text_en}
-                <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
-              </Button>
-            </Link>
-            
-            <Link to="/services">
-              <Button
-                size="lg"
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
-              >
-                <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
-                {t('hero.cta.secondary')}
-              </Button>
-            </Link>
+                {item.label}
+                {item.chevron && <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+            ))}
           </div>
+          <Button
+            variant="outline"
+            className="rounded-full px-4 py-2 border-foreground/20 text-foreground hover:bg-foreground/10"
+          >
+            Sign Up
+          </Button>
+        </nav>
 
-          {/* Stats or Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
-            <div className="text-center stagger-animation">
-              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="500">0+</div>
-              <div className="text-white/80">{isRTL ? 'عميل راضٍ' : 'Happy Clients'}</div>
-            </div>
-            <div className="text-center stagger-animation">
-              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="1000">0+</div>
-              <div className="text-white/80">{isRTL ? 'مشروع مكتمل' : 'Projects Completed'}</div>
-            </div>
-            <div className="text-center stagger-animation">
-              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="5">0+</div>
-              <div className="text-white/80">{isRTL ? 'سنوات خبرة' : 'Years Experience'}</div>
-            </div>
+        {/* Gradient divider */}
+        <div className="mt-[3px] h-px w-full bg-gradient-to-r from-transparent via-foreground/20 to-transparent" />
+
+        {/* Hero Content */}
+        <div className="flex-1 flex items-center justify-center overflow-visible">
+          <div className="text-center">
+            <h1
+              className="text-[80px] sm:text-[120px] md:text-[160px] lg:text-[220px] font-normal leading-[1.02] tracking-[-0.024em]"
+              style={{ fontFamily: "'General Sans', sans-serif" }}
+            >
+              <span className="text-foreground">Power </span>
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(to left, #6366f1, #a855f7, #fcd34d)',
+                }}
+              >
+                AI
+              </span>
+            </h1>
+
+            <p className="text-hero-sub text-lg leading-8 max-w-md mx-auto mt-[9px] opacity-80">
+              The most powerful AI ever deployed
+              <br />
+              in talent acquisition
+            </p>
+
+            <Button
+              variant="outline"
+              className="mt-[25px] rounded-full px-[29px] py-[24px] border-foreground/20 text-foreground hover:bg-foreground/10 text-base"
+            >
+              Schedule a Consult
+            </Button>
           </div>
         </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
+        {/* Logo Marquee */}
+        <div className="pb-10 px-8">
+          <div className="max-w-5xl mx-auto flex items-center gap-12">
+            <p className="text-foreground/50 text-sm shrink-0 leading-5">
+              Relied on by brands
+              <br />
+              across the globe
+            </p>
+            <div className="flex-1 overflow-hidden">
+              <div className="flex gap-16 animate-marquee" style={{ width: 'max-content' }}>
+                {[...BRAND_LOGOS, ...BRAND_LOGOS].map((name, i) => (
+                  <div key={`${name}-${i}`} className="flex items-center gap-2.5 shrink-0">
+                    <div className="liquid-glass w-[24px] h-[24px] rounded-lg flex items-center justify-center text-xs font-semibold text-foreground">
+                      {name[0]}
+                    </div>
+                    <span className="text-base font-semibold text-foreground whitespace-nowrap">
+                      {name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
