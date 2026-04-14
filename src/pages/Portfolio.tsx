@@ -138,16 +138,26 @@ const Portfolio = () => {
                   >
                     <div className="relative overflow-hidden h-64">
                       {(() => {
-                        const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
-                          ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
-                          : project.image_url;
+                        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+                        const firstFileImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                          ? project.files
+                              .map((f: any) => typeof f === 'string' ? f : f?.url)
+                              .find((url: string) => url && imageExtensions.some(ext => url.toLowerCase().endsWith(ext)))
+                          : null;
                         
-                        return firstImage ? (
+                        const displayImage = firstFileImage || project.image_url;
+                        
+                        return displayImage ? (
                           <img
-                            src={firstImage}
+                            src={displayImage}
                             alt={isRTL ? project.title_ar : project.title_en}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
                             loading="lazy"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.parentElement?.querySelector('.fallback-bg')?.classList.remove('hidden');
+                            }}
                             onClick={() => {
                               if (project.project_type === 'website' && project.project_url) {
                                 window.open(ensureProtocol(project.project_url), '_blank');
@@ -156,14 +166,23 @@ const Portfolio = () => {
                               }
                             }}
                           />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
-                            <div className="text-white text-6xl font-bold opacity-20">
-                              {isRTL ? 'مشروع' : 'PROJECT'}
-                            </div>
-                          </div>
-                        );
+                        ) : null;
                       })()}
+                      <div className={`w-full h-full bg-gradient-hero flex items-center justify-center fallback-bg ${
+                        (() => {
+                          const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+                          const firstFileImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                            ? project.files
+                                .map((f: any) => typeof f === 'string' ? f : f?.url)
+                                .find((url: string) => url && imageExtensions.some(ext => url.toLowerCase().endsWith(ext)))
+                            : null;
+                          return (firstFileImage || project.image_url) ? 'hidden' : '';
+                        })()
+                      }`}>
+                        <div className="text-foreground/20 text-6xl font-bold">
+                          {isRTL ? 'مشروع' : 'PROJECT'}
+                        </div>
+                      </div>
                       <div 
                         className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
                         onClick={() => {
