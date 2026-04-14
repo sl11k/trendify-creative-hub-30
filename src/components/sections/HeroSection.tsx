@@ -83,17 +83,10 @@ const HeroSection = () => {
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <h1
-          className="text-responsive-xl font-bold leading-tight tracking-tight animate-fade-in-up"
+          className="text-responsive-xl font-bold leading-tight tracking-tight animate-fade-in-up text-gradient-primary"
           style={{ fontFamily: "'General Sans', sans-serif" }}
         >
-          <span
-            className="bg-clip-text text-transparent"
-            style={{
-              backgroundImage: 'linear-gradient(to left, #6366f1, #a855f7, #fcd34d)',
-            }}
-          >
-            Trendify
-          </span>
+          Trendify
         </h1>
 
         <p className="text-hero-sub text-responsive-lg mb-8 leading-relaxed animate-fade-in-up mt-4 opacity-80" style={{ animationDelay: '0.2s' }}>
