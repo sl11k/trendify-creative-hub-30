@@ -125,8 +125,8 @@ const Header = () => {
               <div className="px-3 py-2">
                 <Link to="/contact" className="block">
                   <Button
-                    variant="default"
-                    className="w-full bg-gradient-primary hover:bg-gradient-secondary transition-all duration-300"
+                    variant="hero"
+                    className="w-full rounded-full"
                   >
                     {t('hero.cta.primary')}
                   </Button>
