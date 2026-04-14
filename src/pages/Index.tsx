@@ -34,6 +34,12 @@ const Index = () => {
         <main>
           <HeroSection />
           <Suspense fallback={<SectionLoader />}>
+            <AboutPreviewSection />
+          </Suspense>
+          <Suspense fallback={<SectionLoader />}>
+            <ServicesPreviewSection />
+          </Suspense>
+          <Suspense fallback={<SectionLoader />}>
             <PortfolioPreviewSection />
           </Suspense>
           <Suspense fallback={<SectionLoader />}>
@@ -44,6 +50,9 @@ const Index = () => {
           </Suspense>
           <Suspense fallback={<SectionLoader />}>
             <BlogPreviewSection />
+          </Suspense>
+          <Suspense fallback={<SectionLoader />}>
+            <ContactSection />
           </Suspense>
         </main>
         <Footer />
