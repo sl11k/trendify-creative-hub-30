@@ -108,25 +108,46 @@ const PortfolioPreviewSection = () => {
             >
               <div className="relative overflow-hidden">
                 {(() => {
-                  const firstImage = project.files && Array.isArray(project.files) && project.files.length > 0 
-                    ? (typeof project.files[0] === 'string' ? project.files[0] : project.files[0]?.url)
-                    : project.image_url;
+                  // Get first valid image from files array (skip PDFs and non-image files)
+                  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+                  const firstFileImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                    ? project.files
+                        .map((f: any) => typeof f === 'string' ? f : f?.url)
+                        .find((url: string) => url && imageExtensions.some(ext => url.toLowerCase().endsWith(ext)))
+                    : null;
                   
-                  return firstImage ? (
+                  const displayImage = firstFileImage || project.image_url;
+                  
+                  return displayImage ? (
                     <img
-                      src={firstImage}
+                      src={displayImage}
                       alt={isRTL ? project.title_ar : project.title_en}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => {
+                        // If image fails to load, replace with fallback
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.parentElement?.querySelector('.fallback-bg')?.classList.remove('hidden');
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-48 bg-gradient-hero flex items-center justify-center">
-                      <div className="text-white text-6xl font-bold opacity-20">
-                        {isRTL ? 'مشروع' : 'PROJECT'}
-                      </div>
-                    </div>
-                  );
+                  ) : null;
                 })()}
+                <div className={`w-full h-56 bg-gradient-hero flex items-center justify-center ${
+                  (() => {
+                    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+                    const firstFileImage = project.files && Array.isArray(project.files) && project.files.length > 0 
+                      ? project.files
+                          .map((f: any) => typeof f === 'string' ? f : f?.url)
+                          .find((url: string) => url && imageExtensions.some(ext => url.toLowerCase().endsWith(ext)))
+                      : null;
+                    return (firstFileImage || project.image_url) ? 'hidden' : '';
+                  })()
+                } fallback-bg`}>
+                  <div className="text-foreground/20 text-6xl font-bold">
+                    {isRTL ? 'مشروع' : 'PROJECT'}
+                  </div>
+                </div>
                 <div className="absolute inset-0 bg-gradient-hero opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center">
                   <button 
                     className="bg-white text-primary p-3 rounded-full hover:scale-110 transition-transform"
