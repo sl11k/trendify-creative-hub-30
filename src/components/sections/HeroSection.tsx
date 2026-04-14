@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroBackground from '@/assets/hero-background.jpg';
 import { useCounterAnimation } from '@/hooks/useCounterAnimation';
 import { supabase } from '@/integrations/supabase/client';
-import LogoMarquee from '@/components/sections/LogoMarquee';
 
 const HeroSection = () => {
   const { t, isRTL } = useLanguage();
@@ -14,14 +14,17 @@ const HeroSection = () => {
     text_en: 'Get Free Consultation',
     url: '/contact'
   });
-
+  
   useCounterAnimation();
 
   useEffect(() => {
+    // Stagger animation for statistics
     const staggerElements = document.querySelectorAll('.stagger-animation');
     staggerElements.forEach((element, index) => {
       element.setAttribute('data-delay', (index * 150).toString());
     });
+
+    // Load consultation button settings
     loadConsultationButton();
   }, []);
 
@@ -31,7 +34,7 @@ const HeroSection = () => {
         .from('site_settings')
         .select('*')
         .in('setting_key', ['consultation_button_text_ar', 'consultation_button_text_en', 'consultation_button_url']);
-
+      
       if (data) {
         const settings = data.reduce((acc, item) => {
           acc[item.setting_key] = item.setting_value;
@@ -50,85 +53,88 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex flex-col overflow-visible">
-      {/* Blurred overlay shape */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[984px] h-[527px] opacity-90 bg-gray-950 blur-[82px] pointer-events-none"
-        aria-hidden="true"
-      />
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Parallax Background */}
+      <div 
+        className="absolute inset-0 z-0 parallax-bg"
+        style={{
+          backgroundImage: `url(${heroBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        }}
+        role="img"
+        aria-label="Hero background"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-secondary/70 to-accent/80"></div>
+      </div>
 
-      {/* Hero content - centered */}
-      <div className="relative z-10 flex-1 flex items-center justify-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Main Title */}
-            <h1
-              className="font-bold text-foreground mb-6 animate-fade-in-up"
-              style={{
-                fontFamily: "'General Sans', sans-serif",
-                fontSize: 'clamp(3rem, 12vw, 220px)',
-                lineHeight: 1.02,
-                letterSpacing: '-0.024em',
-                fontWeight: 400,
-              }}
-            >
-              {t('hero.title')}
-            </h1>
+      {/* Floating Elements */}
+      <div className="absolute inset-0 z-10 overflow-hidden">
+        <div className="animate-float absolute top-20 left-10 w-20 h-20 bg-primary-glow/20 rounded-full blur-xl"></div>
+        <div className="animate-float absolute top-40 right-20 w-32 h-32 bg-secondary/20 rounded-full blur-2xl" style={{animationDelay: '2s'}}></div>
+        <div className="animate-float absolute bottom-20 left-1/4 w-16 h-16 bg-accent/20 rounded-full blur-lg" style={{animationDelay: '4s'}}></div>
+      </div>
 
-            {/* Subtitle */}
-            <p
-              className="text-lg leading-8 max-w-md mx-auto mt-[9px] opacity-80 animate-fade-in-up"
-              style={{ color: 'hsl(var(--hero-sub))', animationDelay: '0.2s' }}
-            >
-              {t('hero.subtitle')}
-            </p>
+      {/* Content */}
+      <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Main Title */}
+          <h1 className="text-responsive-xl font-bold text-white mb-6 animate-fade-in-up">
+            {t('hero.title')}
+          </h1>
 
-            {/* CTA Buttons */}
-            <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up mt-[25px] ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{ animationDelay: '0.4s' }}>
-              <Link to={consultationButton.url}>
-                <Button
-                  variant="heroSecondary"
-                  className="px-[29px] py-[24px] text-lg font-semibold"
-                >
-                  {isRTL ? consultationButton.text_ar : consultationButton.text_en}
-                  <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
-                </Button>
-              </Link>
+          {/* Subtitle */}
+          <p className="text-responsive-lg text-white/90 mb-8 leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+            {t('hero.subtitle')}
+          </p>
 
-              <Link to="/services">
-                <Button
-                  variant="glass"
-                  size="lg"
-                  className="font-semibold px-8 py-4 text-lg"
-                >
-                  <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
-                  {t('hero.cta.secondary')}
-                </Button>
-              </Link>
+          {/* CTA Buttons */}
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up ${isRTL ? 'sm:flex-row-reverse' : ''}`} style={{animationDelay: '0.4s'}}>
+            <Link to={consultationButton.url}>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 transition-all duration-300 transform hover:scale-105 hero-shadow font-semibold px-8 py-4 text-lg loading-pulse"
+              >
+                {isRTL ? consultationButton.text_ar : consultationButton.text_en}
+                <ArrowRight className={`ml-2 h-5 w-5 ${isRTL ? 'rotate-180 ml-0 mr-2' : ''}`} />
+              </Button>
+            </Link>
+            
+            <Link to="/services">
+              <Button
+                size="lg"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-300 transform hover:scale-105 font-semibold px-8 py-4 text-lg"
+              >
+                <Play className={`mr-2 h-5 w-5 ${isRTL ? 'mr-0 ml-2' : ''}`} />
+                {t('hero.cta.secondary')}
+              </Button>
+            </Link>
+          </div>
+
+          {/* Stats or Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="500">0+</div>
+              <div className="text-white/80">{isRTL ? 'عميل راضٍ' : 'Happy Clients'}</div>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-              <div className="text-center stagger-animation">
-                <div className="text-3xl font-bold text-foreground mb-2 counter-animation" data-target="500">0+</div>
-                <div style={{ color: 'hsl(var(--hero-sub))' }}>{isRTL ? 'عميل راضٍ' : 'Happy Clients'}</div>
-              </div>
-              <div className="text-center stagger-animation">
-                <div className="text-3xl font-bold text-foreground mb-2 counter-animation" data-target="1000">0+</div>
-                <div style={{ color: 'hsl(var(--hero-sub))' }}>{isRTL ? 'مشروع مكتمل' : 'Projects Completed'}</div>
-              </div>
-              <div className="text-center stagger-animation">
-                <div className="text-3xl font-bold text-foreground mb-2 counter-animation" data-target="5">0+</div>
-                <div style={{ color: 'hsl(var(--hero-sub))' }}>{isRTL ? 'سنوات خبرة' : 'Years Experience'}</div>
-              </div>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="1000">0+</div>
+              <div className="text-white/80">{isRTL ? 'مشروع مكتمل' : 'Projects Completed'}</div>
+            </div>
+            <div className="text-center stagger-animation">
+              <div className="text-3xl font-bold text-white mb-2 counter-animation" data-target="5">0+</div>
+              <div className="text-white/80">{isRTL ? 'سنوات خبرة' : 'Years Experience'}</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Logo Marquee at bottom */}
-      <div className="relative z-10 pb-10">
-        <LogoMarquee />
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
+        </div>
       </div>
     </section>
   );
