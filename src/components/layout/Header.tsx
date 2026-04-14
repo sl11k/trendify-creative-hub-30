@@ -72,7 +72,8 @@ const Header = () => {
             <Link to="/contact">
               <Button
                 variant="hero"
-                className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all duration-300 glow-effect font-medium loading-pulse"
+                size="sm"
+                className="rounded-full"
               >
                 {t('hero.cta.primary')}
               </Button>
