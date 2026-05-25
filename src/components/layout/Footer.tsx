@@ -12,10 +12,10 @@ const Footer = () => {
     active: boolean;
   }>>([]);
   const [contactInfo, setContactInfo] = useState({
-    email: 'hello@trendify.agency',
+    email: 'info@trendify.sa',
     phone: '+966 50 123 4567',
-    address_ar: 'الرياض، المملكة العربية السعودية',
-    address_en: 'Riyadh, Saudi Arabia'
+    address_ar: 'المملكة العربية السعودية',
+    address_en: 'Saudi Arabia'
   });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Footer = () => {
         .eq('active', true)
         .not('url', 'is', null)
         .neq('url', '');
-      
+
       if (data) {
         setSocialLinks(data);
       }
@@ -46,7 +46,7 @@ const Footer = () => {
         .from('site_settings')
         .select('*')
         .in('setting_key', ['contact_email', 'contact_phone', 'contact_address_ar', 'contact_address_en']);
-      
+
       if (data) {
         const settings = data.reduce((acc, item) => {
           acc[item.setting_key] = item.setting_value;
@@ -54,10 +54,10 @@ const Footer = () => {
         }, {} as Record<string, string>);
 
         setContactInfo({
-          email: settings.contact_email || 'hello@trendify.agency',
+          email: settings.contact_email || 'info@trendify.sa',
           phone: settings.contact_phone || '+966 50 123 4567',
-          address_ar: settings.contact_address_ar || 'الرياض، المملكة العربية السعودية',
-          address_en: settings.contact_address_en || 'Riyadh, Saudi Arabia'
+          address_ar: settings.contact_address_ar || 'المملكة العربية السعودية',
+          address_en: settings.contact_address_en || 'Saudi Arabia'
         });
       }
     } catch (error) {
@@ -88,17 +88,11 @@ const Footer = () => {
   }).filter(Boolean);
 
   const quickLinks = [
-    { key: 'nav.home', href: '#home' },
-    { key: 'nav.about', href: '#about' },
-    { key: 'nav.services', href: '#services' },
-    { key: 'nav.contact', href: '#contact' }
-  ];
-
-  const services = [
-    'services.digital-marketing.title',
-    'services.web-dev.title',
-    'services.graphic-design.title',
-    'services.social-media.title'
+    { key: 'nav.home', href: '/' },
+    { key: 'nav.about', href: '/about' },
+    { key: 'nav.services', href: '/services' },
+    { key: 'nav.portfolio', href: '/portfolio' },
+    { key: 'nav.contact', href: '/contact' }
   ];
 
   return (
@@ -108,11 +102,11 @@ const Footer = () => {
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-4">Trendify</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gradient-primary">Trendify</h3>
             <p className="text-white/80 mb-6 leading-relaxed">
               {t('footer.description')}
             </p>
-            
+
             {/* Social Links */}
             <div className="flex space-x-3">
               {socialLinksData.map((social, index) => {
@@ -158,9 +152,9 @@ const Footer = () => {
               {isRTL ? 'السجل التجاري' : 'Commercial Register'}
             </h4>
             <div className="flex justify-center md:justify-start">
-              <img 
-                src={commercialRegisterQR} 
-                alt={isRTL ? 'رمز QR للسجل التجاري' : 'Commercial Register QR Code'} 
+              <img
+                src={commercialRegisterQR}
+                alt={isRTL ? 'رمز QR للسجل التجاري' : 'Commercial Register QR Code'}
                 className="w-40 h-40 object-contain bg-white rounded-lg p-2"
               />
             </div>
@@ -177,8 +171,8 @@ const Footer = () => {
                 {contactInfo.email}
               </p>
               <p className="text-white/80">
-                <strong>{isRTL ? 'الهاتف:' : 'Phone:'}</strong><br />
-                <span dir="ltr" className="inline-block">{contactInfo.phone}</span>
+                <strong>{isRTL ? 'الموقع:' : 'Website:'}</strong><br />
+                <a href="https://www.trendify.sa" className="hover:text-white" dir="ltr">www.trendify.sa</a>
               </p>
               <p className="text-white/80">
                 <strong>{isRTL ? 'العنوان:' : 'Address:'}</strong><br />
@@ -191,7 +185,7 @@ const Footer = () => {
         {/* Bottom Footer */}
         <div className="border-t border-white/20 py-6 text-center">
           <p className="text-white/80">
-            © 2024 Trendify. {t('footer.rights')}
+            © {new Date().getFullYear()} Trendify. {t('footer.rights')}
           </p>
         </div>
       </div>
