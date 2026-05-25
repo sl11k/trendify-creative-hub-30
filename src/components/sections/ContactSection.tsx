@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Mail, Phone, MapPin, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Youtube, Music } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, Globe, Facebook, Twitter, Instagram, Linkedin, Youtube, Music } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const ContactSection = () => {
   const { t, isRTL } = useLanguage();
   const [contactInfo, setContactInfo] = useState({
-    email: 'hello@trendify.agency',
+    email: 'info@trendify.sa',
     phone: '+966 50 123 4567',
-    address_ar: 'الرياض، المملكة العربية السعودية',
-    address_en: 'Riyadh, Saudi Arabia'
+    address_ar: 'المملكة العربية السعودية',
+    address_en: 'Saudi Arabia',
+    website: 'www.trendify.sa'
   });
   const [socialLinks, setSocialLinks] = useState<Array<{
     platform: string;
@@ -29,7 +30,7 @@ const ContactSection = () => {
         .from('site_settings')
         .select('*')
         .in('setting_key', ['contact_email', 'contact_phone', 'contact_address_ar', 'contact_address_en']);
-      
+
       if (data) {
         const settings = data.reduce((acc, item) => {
           acc[item.setting_key] = item.setting_value;
@@ -37,10 +38,11 @@ const ContactSection = () => {
         }, {} as Record<string, string>);
 
         setContactInfo({
-          email: settings.contact_email || 'hello@trendify.agency',
+          email: settings.contact_email || 'info@trendify.sa',
           phone: settings.contact_phone || '+966 50 123 4567',
-          address_ar: settings.contact_address_ar || 'الرياض، المملكة العربية السعودية',
-          address_en: settings.contact_address_en || 'Riyadh, Saudi Arabia'
+          address_ar: settings.contact_address_ar || 'المملكة العربية السعودية',
+          address_en: settings.contact_address_en || 'Saudi Arabia',
+          website: 'www.trendify.sa'
         });
       }
     } catch (error) {
@@ -56,7 +58,7 @@ const ContactSection = () => {
         .eq('active', true)
         .not('url', 'is', null)
         .neq('url', '');
-      
+
       if (data) {
         setSocialLinks(data);
       }
@@ -95,20 +97,20 @@ const ContactSection = () => {
       link: `mailto:${contactInfo.email}`
     },
     {
-      icon: Phone,
-      title: isRTL ? 'الهاتف' : 'Phone',
-      value: contactInfo.phone,
-      link: `tel:${contactInfo.phone.replace(/\s/g, '')}`
+      icon: Globe,
+      title: isRTL ? 'الموقع الإلكتروني' : 'Website',
+      value: contactInfo.website,
+      link: `https://${contactInfo.website}`
     },
     {
       icon: MessageSquare,
-      title: isRTL ? 'واتساب' : 'WhatsApp',
-      value: contactInfo.phone,
-      link: `https://wa.me/${contactInfo.phone.replace(/\s|\+/g, '')}`
+      title: isRTL ? 'تابعنا' : 'Follow Us',
+      value: '@trendify_sa',
+      link: 'https://instagram.com/trendify_sa'
     },
     {
       icon: MapPin,
-      title: isRTL ? 'العنوان' : 'Address',
+      title: isRTL ? 'الموقع' : 'Location',
       value: isRTL ? contactInfo.address_ar : contactInfo.address_en,
       link: null
     }
@@ -143,10 +145,10 @@ const ContactSection = () => {
                         <div className="min-w-0 flex-1">
                           <h3 className="font-semibold text-foreground mb-1">{info.title}</h3>
                           {info.link ? (
-                            <a 
+                            <a
                               href={info.link}
                               className="text-primary hover:text-secondary transition-colors duration-200 break-words"
-                              dir={info.title.includes('Phone') || info.title.includes('الهاتف') ? 'ltr' : 'auto'}
+                              dir="ltr"
                             >
                               {info.value}
                             </a>

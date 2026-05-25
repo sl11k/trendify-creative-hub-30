@@ -7,41 +7,41 @@ const AboutSection = () => {
 
   const usps = [
     {
-      icon: Rocket,
-      title: isRTL ? 'شريك نمو متكامل' : 'End-to-End Growth Partner',
-      description: isRTL ? 'ندعمك من الفكرة حتى تحقيق الإيرادات والنمو المستدام' : 'From idea to revenue and sustainable growth'
-    },
-    {
       icon: Code,
-      title: isRTL ? 'أدوات ذكية' : 'Smart Tools',
-      description: isRTL ? 'أدواتنا الذكية تسرّع التنفيذ وتقلل التكلفة' : 'Our smart tools accelerate execution and reduce costs'
+      title: isRTL ? 'نهج تقني حديث' : 'Modern Tech Approach',
+      description: isRTL ? 'نعتمد على أحدث التقنيات وأدوات الذكاء الاصطناعي.' : 'We rely on the latest technologies and AI tools.'
     },
     {
-      icon: Shield,
-      title: isRTL ? 'حلول مرنة' : 'Flexible Solutions',
-      description: isRTL ? 'تناسب ميزانيات الشركات الناشئة' : 'Designed for startup budgets'
-    },
-    {
-      icon: TrendingUp,
-      title: isRTL ? 'منظومة متكاملة' : 'Integrated System',
-      description: isRTL ? 'تجمع بين التقنية والتسويق والتشغيل' : 'Combining tech, marketing, and operations'
-    },
-    {
-      icon: Users,
-      title: isRTL ? 'فريق موحد' : 'Unified Team',
-      description: isRTL ? 'يجمع الخبرة الإبداعية والتقنية' : 'Creative and technical expertise'
+      icon: Sparkles,
+      title: isRTL ? 'تركيز على تجربة المستخدم' : 'User Experience Focus',
+      description: isRTL ? 'نصمّم تجارب حديثة وسهلة الاستخدام.' : 'We design modern, easy-to-use experiences.'
     },
     {
       icon: Zap,
-      title: isRTL ? 'سرعة في الإنجاز' : 'Fast Delivery',
-      description: isRTL ? 'تركيز على النتائج الملموسة' : 'Results-oriented with measurable impact'
+      title: isRTL ? 'سرعة ومرونة في التنفيذ' : 'Speed & Flexibility',
+      description: isRTL ? 'نعمل بأسلوب Agile يضمن سرعة التطوير والتحسين المستمر.' : 'Agile delivery with continuous improvement.'
+    },
+    {
+      icon: Rocket,
+      title: isRTL ? 'نفكر بعقلية المنتج' : 'Product-First Mindset',
+      description: isRTL ? 'لا نقدّم مجرد تنفيذ، بل نبني حلولًا قابلة للنمو.' : 'Not just delivery — we build solutions built to grow.'
+    },
+    {
+      icon: TrendingUp,
+      title: isRTL ? 'حلول قابلة للتوسع' : 'Scalable Solutions',
+      description: isRTL ? 'نطوّر أنظمة تدعم النمو المستقبلي.' : 'Systems engineered to support future growth.'
+    },
+    {
+      icon: Shield,
+      title: isRTL ? 'الأمان بالتصميم' : 'Security by Design',
+      description: isRTL ? 'الاعتمادية والاستقرار في كل ما نبنيه.' : 'Reliability and stability baked into every build.'
     }
   ];
 
   return (
     <section id="about" className="py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Main Heading */}
         <div className="text-center mb-16 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient-primary mb-6">
@@ -58,31 +58,31 @@ const AboutSection = () => {
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                {isRTL ? 'شريك نموك الرقمي' : 'Your Digital Growth Partner'}
+                {isRTL ? 'شريكك التقني لبناء حلول رقمية تدوم' : 'Your Tech Partner for Long-Lasting Digital Solutions'}
               </h2>
             </div>
-            
+
             <p className="text-lg text-muted-foreground leading-relaxed mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
-              {isRTL 
-                ? 'نحن في Trendify شريك نمو متكامل للمشاريع والشركات الناشئة. نعمل معك منذ لحظة ولادة الفكرة حتى إطلاق المشروع وتحقيق الإيرادات والنمو المستدام.'
-                : 'At Trendify, we\'re your complete growth partner for startups and emerging ventures. We work with you from idea conception through launch to revenue generation and sustainable growth.'
+              {isRTL
+                ? 'تأسست Trendify عام 2023 كشركة متخصصة في تطوير الحلول الرقمية والمنتجات الذكية، مع تركيز على هندسة البرمجيات وبناء الأنظمة الرقمية الحديثة.'
+                : 'Founded in 2023, Trendify specializes in developing digital solutions and smart products with a strong focus on software engineering and modern digital systems.'
               }
             </p>
-            
+
             <p className="text-lg text-muted-foreground leading-relaxed mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
-              {isRTL 
-                ? 'نقدّم منظومة دعم شاملة تجمع بين الاستراتيجية، البرمجة، التصميم، التسويق، إدارة المحتوى، التحليل، والتشغيل — بمرونة تتناسب مع احتياجات الشركات الناشئة وميزانياتها.'
-                : 'Our full-spectrum ecosystem covers strategy, design, development, marketing, content management, analytics, and operations — all crafted to fit the needs and budgets of startups.'
+              {isRTL
+                ? 'نساعد الشركات ورواد الأعمال على تحويل الأفكار إلى منتجات وتجارب رقمية قابلة للنمو، من خلال الجمع بين التقنية، التصميم، والذكاء الاصطناعي. تشمل خبراتنا تطوير الأنظمة المؤسسية، منصات SaaS، التطبيقات المخصصة، وأدوات الأتمتة والحلول الذكية التي تدعم الكفاءة التشغيلية وتجربة المستخدم.'
+                : 'We help companies and entrepreneurs turn ideas into scalable digital products by combining technology, design, and AI. Our expertise spans enterprise systems, SaaS platforms, custom applications, automation tools, and smart solutions that support operational efficiency and user experience.'
               }
             </p>
 
             <div className="bg-gradient-subtle p-6 rounded-2xl border border-border/50">
               <div className="flex items-start gap-4">
                 <Lightbulb className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <p className="text-muted-foreground leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
-                  {isRTL 
-                    ? 'من خلال أدواتنا الذكية، نتيح لك تنفيذ فكرتك بسرعة وسهولة دون الحاجة إلى فرق تقنية كبيرة أو تكاليف مرتفعة. أدواتنا تساعدك على بناء منصتك، إدارة عملياتك، وتحسين أدائك بخطوات بسيطة وفعّالة.'
-                    : 'Through our smart tools, you can bring your vision to life quickly and easily — without the need for large technical teams or high costs. Our tools help you build your platform, manage operations, and improve performance with simple and effective steps.'
+                <p className="text-muted-foreground leading-relaxed font-semibold" dir={isRTL ? 'rtl' : 'ltr'}>
+                  {isRTL
+                    ? 'نحن لا ننفذ مشاريع مؤقتة — بل نبني أنظمة طويلة الأمد.'
+                    : 'We don\'t deliver short-term projects — we build long-lasting systems.'
                   }
                 </p>
               </div>
@@ -93,15 +93,15 @@ const AboutSection = () => {
         {/* USPs Section */}
         <div className="mb-20">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gradient-secondary mb-12">
-            {isRTL ? 'ما يميزنا' : 'What Makes Us Different'}
+            {isRTL ? 'لماذا Trendify؟' : 'Why Trendify?'}
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {usps.map((usp, index) => {
               const IconComponent = usp.icon;
               return (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="bg-card rounded-2xl p-6 shadow-elegant border border-border hover:shadow-glow transition-all duration-300 hover:scale-105 animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
@@ -129,9 +129,9 @@ const AboutSection = () => {
                 {isRTL ? 'رؤيتنا' : 'Our Vision'}
               </h3>
               <p className="text-white/90 text-lg leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
-                {isRTL 
-                  ? 'تمكين المشاريع الناشئة من النمو من خلال حلول تقنية وتسويقية ذكية تقلل التكاليف وتسرّع الوصول إلى السوق.'
-                  : 'Empower startups to grow through smart, efficient, and scalable marketing and technology solutions.'
+                {isRTL
+                  ? 'أن نصبح شريكًا تقنيًا رائدًا في بناء الحلول الرقمية والمنتجات الذكية في المنطقة.'
+                  : 'To become a leading tech partner in building digital solutions and smart products across the region.'
                 }
               </p>
             </div>
@@ -148,9 +148,9 @@ const AboutSection = () => {
                 {isRTL ? 'مهمتنا' : 'Our Mission'}
               </h3>
               <p className="text-white/90 text-lg leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
-                {isRTL 
-                  ? 'أن نصبح الشريك المفضل لرواد الأعمال في المنطقة عبر أدوات ذكية وخدمات شاملة تجعل بناء وتشغيل المشروع عملية سهلة ومجدية.'
-                  : 'To become the go-to partner for entrepreneurs in the region through intelligent tools and full-service solutions that make launching and managing projects simple and rewarding.'
+                {isRTL
+                  ? 'تمكين الشركات ورواد الأعمال من بناء حلول ومنتجات رقمية ذكية تساعدهم على النمو، تحسين الكفاءة، وتقديم تجارب أفضل.'
+                  : 'Empower companies and entrepreneurs to build smart digital solutions and products that drive growth, improve efficiency, and deliver better experiences.'
                 }
               </p>
             </div>
@@ -160,38 +160,38 @@ const AboutSection = () => {
         {/* Stats Section */}
         <div className="bg-card rounded-3xl p-8 md:p-12 shadow-hero border border-border">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gradient-primary mb-12">
-            {isRTL ? 'أرقامنا تتحدث' : 'Our Numbers Speak'}
+            {isRTL ? 'مؤشراتنا التقنية' : 'Our Tech Numbers'}
           </h2>
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center animate-fade-in">
-              <div className="text-4xl md:text-5xl font-bold text-gradient-primary mb-3">500+</div>
-              <div className="text-muted-foreground font-medium">{isRTL ? 'مشروع ناجح' : 'Successful Projects'}</div>
+              <div className="text-4xl md:text-5xl font-bold text-gradient-primary mb-3">+70</div>
+              <div className="text-muted-foreground font-medium">{isRTL ? 'عميل' : 'Clients'}</div>
             </div>
             <div className="text-center animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="text-4xl md:text-5xl font-bold text-gradient-secondary mb-3">98%</div>
-              <div className="text-muted-foreground font-medium">{isRTL ? 'رضا العملاء' : 'Client Satisfaction'}</div>
+              <div className="text-4xl md:text-5xl font-bold text-gradient-secondary mb-3">+100</div>
+              <div className="text-muted-foreground font-medium">{isRTL ? 'منصة مطوّرة' : 'Platforms Built'}</div>
             </div>
             <div className="text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-4xl md:text-5xl font-bold text-gradient-primary mb-3">24/7</div>
-              <div className="text-muted-foreground font-medium">{isRTL ? 'دعم فني' : 'Technical Support'}</div>
+              <div className="text-4xl md:text-5xl font-bold text-gradient-primary mb-3">+50</div>
+              <div className="text-muted-foreground font-medium">{isRTL ? 'نظام تقني واسع النطاق' : 'Enterprise Systems'}</div>
             </div>
             <div className="text-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <div className="text-4xl md:text-5xl font-bold text-gradient-secondary mb-3">5+</div>
-              <div className="text-muted-foreground font-medium">{isRTL ? 'سنوات خبرة' : 'Years Experience'}</div>
+              <div className="text-4xl md:text-5xl font-bold text-gradient-secondary mb-3">100%</div>
+              <div className="text-muted-foreground font-medium">{isRTL ? 'تطوير مخصّص' : 'Custom Development'}</div>
             </div>
           </div>
 
-          {/* Value Proposition */}
+          {/* Values */}
           <div className="mt-12 pt-12 border-t border-border">
             <div className="bg-gradient-subtle p-8 rounded-2xl border border-border/50">
               <h3 className="text-xl md:text-2xl font-bold text-center text-foreground mb-4">
-                {isRTL ? 'القيمة المضافة' : 'Value Proposition'}
+                {isRTL ? 'قيمنا' : 'Our Values'}
               </h3>
               <p className="text-center text-muted-foreground text-lg leading-relaxed max-w-3xl mx-auto" dir={isRTL ? 'rtl' : 'ltr'}>
-                {isRTL 
-                  ? 'Trendify تجمع بين التقنية والتسويق في منظومة واحدة تدعم النمو المستدام للمشاريع. نؤمن أن كل فكرة تستحق أن تنمو، ولذلك نصنع حلولًا مرنة، عملية، وسريعة تحقق نتائج حقيقية وتفتح الطريق نحو مستقبلٍ مزدهرٍ لمشاريعك.'
-                  : 'Trendify merges technology and marketing into one cohesive growth platform for sustainable success. We believe every idea deserves the chance to grow — through flexible, intelligent, and results-driven solutions that turn vision into measurable success.'
+                {isRTL
+                  ? 'الدقة والجودة، قابلية التوسع، الأمان بالتصميم، الاعتمادية والاستقرار، الابتكار العملي، التركيز على العميل، السرعة والمرونة.'
+                  : 'Precision and quality, scalability, security by design, reliability and stability, practical innovation, customer focus, speed and flexibility.'
                 }
               </p>
             </div>
