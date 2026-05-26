@@ -1,17 +1,13 @@
-# Trendify - AI-Powered Business Solutions & Digital Transformation
-# https://trendify.com
+# Trendify - Digital Growth Partner
+# https://trendify.sa
 
-# Allow all crawlers
 User-agent: *
 Allow: /
 
 # Disallow admin and private areas
 Disallow: /admin
 Disallow: /admin/*
-Disallow: /api/
-Disallow: /_next/
 
-# Allow specific bots full access
 User-agent: Googlebot
 Allow: /
 
@@ -27,8 +23,4 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-# Crawl-delay for polite crawling
-Crawl-delay: 0
-
-# Sitemap location
-Sitemap: https://trendify.com/sitemap.xml
+Sitemap: https://trendify.sa/sitemap.xml
