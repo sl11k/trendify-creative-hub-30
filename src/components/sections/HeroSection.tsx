@@ -70,6 +70,10 @@ const HeroSection = () => {
         muted
         playsInline
         loop
+        preload="auto"
+        // @ts-ignore — fetchpriority is valid HTML, not yet typed in React
+        fetchpriority="high"
+        aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover md:object-cover object-[center_center] scale-[1.0] md:scale-100"
         style={{ opacity: 0 }}
       />
@@ -89,7 +93,7 @@ const HeroSection = () => {
           Trendify
         </h1>
 
-        <p className="text-foreground text-responsive-lg mb-8 leading-relaxed animate-fade-in-up mt-4 opacity-95" style={{ animationDelay: '0.2s' }}>
+        <p className="text-foreground text-responsive-lg mb-8 leading-relaxed animate-fade-in-up mt-4" style={{ animationDelay: '0.2s' }}>
           {t('hero.subtitle')}
         </p>
 
