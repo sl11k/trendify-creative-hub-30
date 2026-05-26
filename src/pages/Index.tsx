@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import Header from "@/components/layout/Header";
 import HeroSection from "@/components/sections/HeroSection";
 import SeoHead from "@/components/SeoHead";
+import { StructuredData } from "@/components/StructuredData";
 import Analytics from "@/components/Analytics";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { WebsiteDesignRenderer } from "@/components/WebsiteDesignRenderer";
@@ -29,6 +30,8 @@ const Index = () => {
     <WebsiteDesignRenderer pageSlug="home">
       <div className="min-h-screen bg-background">
         <SeoHead lang="ar" />
+        <StructuredData type="organization" />
+        <StructuredData type="website" />
         <Analytics />
         <Header />
         <main>
