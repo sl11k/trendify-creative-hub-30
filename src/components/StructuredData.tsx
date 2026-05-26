@@ -14,15 +14,11 @@ export const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) =>
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "Trendify",
-          "alternateName": "ترينديفاي",
-          "url": "https://trendify.com",
-          "logo": "https://trendify.com/logo.png",
-          "description": "Trendify - AI-Powered Business Solutions & Digital Transformation Partner in Saudi Arabia",
+          "alternateName": "ترندفاي",
+          "url": "https://trendify.sa",
+          "logo": "https://trendify.sa/trendify-logo.svg",
+          "description": "Trendify — Saudi digital growth partner offering web, brand, marketing and AI solutions.",
           "foundingDate": "2024",
-          "founders": [{
-            "@type": "Person",
-            "name": "Trendify Team"
-          }],
           "address": {
             "@type": "PostalAddress",
             "addressCountry": "SA",
@@ -34,23 +30,14 @@ export const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) =>
             "availableLanguage": ["Arabic", "English"]
           },
           "sameAs": [
-            "https://twitter.com/trendify",
+            "https://twitter.com/trendify_sa",
             "https://linkedin.com/company/trendify",
             "https://instagram.com/trendify"
           ],
           "areaServed": {
             "@type": "Country",
             "name": "Saudi Arabia"
-          },
-          "knowsAbout": [
-            "Artificial Intelligence",
-            "Digital Transformation",
-            "Business Solutions",
-            "Web Development",
-            "Mobile Apps",
-            "AI Marketing",
-            "Data Analytics"
-          ]
+          }
         };
 
       case 'website':
@@ -58,22 +45,14 @@ export const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) =>
           "@context": "https://schema.org",
           "@type": "WebSite",
           "name": "Trendify",
-          "alternateName": "ترينديفاي",
-          "url": "https://trendify.com",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://trendify.com/search?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-          },
+          "alternateName": "ترندفاي",
+          "url": "https://trendify.sa",
           "publisher": {
             "@type": "Organization",
             "name": "Trendify",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://trendify.com/logo.png"
+              "url": "https://trendify.sa/trendify-logo.svg"
             }
           },
           "inLanguage": ["ar", "en"]

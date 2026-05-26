@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import SeoHead from '@/components/SeoHead';
+import { StructuredData } from '@/components/StructuredData';
 import Analytics from '@/components/Analytics';
 import { usePageTracking } from '@/hooks/usePageTracking';
 
@@ -92,6 +93,24 @@ const BlogDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <SeoHead lang={isRTL ? "ar" : "en"} />
+      <StructuredData
+        type="article"
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: title,
+          image: blog.image_url ? [blog.image_url] : undefined,
+          datePublished: blog.created_at,
+          dateModified: blog.updated_at || blog.created_at,
+          author: { "@type": "Organization", name: "Trendify Team" },
+          publisher: {
+            "@type": "Organization",
+            name: "Trendify",
+            logo: { "@type": "ImageObject", url: "https://trendify.sa/trendify-logo.svg" },
+          },
+          mainEntityOfPage: `https://trendify.sa/blog/${blog.id}`,
+        }}
+      />
       <Analytics />
       <Header />
       

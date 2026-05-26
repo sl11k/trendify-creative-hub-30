@@ -1,0 +1,13 @@
+# Trendify
+
+> Trendify is a Saudi digital growth partner offering web development, brand identity, smart marketing, and AI-powered tools for entrepreneurs and startups.
+
+## Pages
+
+- [Home](/): Overview of Trendify's growth services and smart tools.
+- [About](/about): Who we are and how we partner with founders.
+- [Services](/services): Web development, brand identity, marketing, AI solutions.
+- [Portfolio](/portfolio): Selected client projects and case studies.
+- [Tools](/tools): Smart tools that power our delivery.
+- [Blog](/blog): Articles on digital growth, marketing, and AI.
+- [Contact](/contact): Get in touch with the Trendify team.
